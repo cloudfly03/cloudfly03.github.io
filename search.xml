@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>HashTable和HashMap的区别</title>
+      <link href="/2025/01/11/HashTable%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+      <url>/2025/01/11/HashTable%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+      
+        <content type="html"><![CDATA[<p>1、HashMap是线程不安全的，HashTable是线程安全的</p><ul><li><p>HashMap：Fail-fast 机制。表示快速失败，在集合遍历过程中，一旦发现容器中的数据被修改了，会立刻抛出ConcurrentModificationException异常，从而导致遍历失败，像这种情况：定义一个Map集合，使用Iterator迭代器进行数据遍历，在遍历过程中，对集合数据做变更时，就会发生Fail-fast。java.util包下的集合类都是快速失败机制的, 常见的的使用Fail-fast方式遍历的容器有HashMap和ArrayList等。</p></li><li><p>HashTable：公开的方法比如get都使用了synchronized描述符。而遍历视图比如keySet都使用了Collections.synchronizedXXX进行了同步包装。并且是锁住全局的</p></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Fail-fast底层实现：迭代器在遍历集合的过程，会维护一个modCount变量。如果在遍历过程modCount发生变化，在迭代器使用hasNext/next遍历下一个元素的时候，都会检测modCount是否为expectedModCount的值，如果不是抛出异常。</span><br></pre></td></tr></table></figure><p>2、 由于线程安全，HashTable效率比不上HashMap</p><p>3、HashMap允许键为NULL，值为NULL。HashTable都不允许</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HashMap是支持null键和null值的，而HashTable在遇到null时，会抛出NullPointerException异常。这并不是因为HashTable有什么特殊的实现层面的原因导致不能支持null键和null值，这仅仅是因为HashMap在实现时对null做了特殊处理，将null的hashCode值定为了0，从而将其存放在哈希表的第0个bucket中。</span><br></pre></td></tr></table></figure><p>4、HashMap默认初始化数组大小是16，HashTable是11。HashMap扩容是扩大两倍，HashTable是两倍+1</p><p>5、HashMap不能直接使用hashCode计算下标，而是使用hashCode重新计算Hash值，再计算下标。HashTable使用的是hashCode计算下标（取mod）</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/2025/01/10/hello-world/"/>
       <url>/2025/01/10/hello-world/</url>
