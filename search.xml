@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Redis持久化</title>
+      <link href="/2025/01/13/Redis%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+      <url>/2025/01/13/Redis%E6%8C%81%E4%B9%85%E5%8C%96/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Redis的持久化方式有哪些"><a href="#Redis的持久化方式有哪些" class="headerlink" title="Redis的持久化方式有哪些"></a>Redis的持久化方式有哪些</h1><p>Redis持久化有两种方式：RDB（Redis DataBase）和AOF（Append Only File）</p><p><img src="/img/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/img1.png" alt="alt text"></p><ul><li>RDB：RDB文件是一个经过压缩的二进制文件</li><li>AOF：AOF则是以追加的方式记录Redis执行的每一条写命令</li></ul><h1 id="Redis重启时加载持久化文件"><a href="#Redis重启时加载持久化文件" class="headerlink" title="Redis重启时加载持久化文件"></a>Redis重启时加载持久化文件</h1><p><img src="/img/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/img2.png" alt="alt text"></p><h1 id="RDB和AOF的区别"><a href="#RDB和AOF的区别" class="headerlink" title="RDB和AOF的区别"></a>RDB和AOF的区别</h1><ul><li>文件类型：RDB生成的是二进制文件（快照），AOF生成的是文本文件（追加日志）</li><li>安全性：缓存宕机时，RDB容易丢失较多的数据，AOF根据策略决定（默认的everysec可以保证最多有一秒的损失）</li><li>文件恢复速度：由于RDB是二进制文件，恢复比AOF快</li><li>操作的开销：每一次RDB保存都是一次全量保存，操作比较重，通常至少5分钟保存一次。而AOF的刷盘是追加操作，操作比较轻，通常设置为每一秒进行一次刷盘</li></ul><h1 id="RDB和AOF选哪种比较好"><a href="#RDB和AOF选哪种比较好" class="headerlink" title="RDB和AOF选哪种比较好"></a>RDB和AOF选哪种比较好</h1><ul><li>从业务需要来看，如果我们可以接受分钟级别的丢失，可以选择RDB。如果我们尽量让数据安全，可以考虑AOF混合持久化，</li><li>从持久化理论来看，始终开启快照是一个推荐，这也是官方默认开启RDB而不开启AOF</li></ul><h1 id="什么是AOF混合持久化"><a href="#什么是AOF混合持久化" class="headerlink" title="什么是AOF混合持久化"></a>什么是AOF混合持久化</h1><ul><li>使用RDB持久化函数，将内存数据写入到新的AOF文件中（数据格式也是RDB）</li><li>而重写期间新的命令追加到新的AOF中（数据格式是AOF）</li><li>新的AOF文件包含RDB格式和AOF格式的数据</li></ul><h1 id="RDB的触发时机"><a href="#RDB的触发时机" class="headerlink" title="RDB的触发时机"></a>RDB的触发时机</h1><ul><li>调用save和bgsave命令</li><li>根据我们的配置周期决定</li><li>redis关闭前</li><li>主从复制第二阶段：主服务器全量复制RDB文件发送给从服务器</li><li>客户点执行清空命令FLUSHALL</li></ul><h1 id="save和bgsave的区别"><a href="#save和bgsave的区别" class="headerlink" title="save和bgsave的区别"></a>save和bgsave的区别</h1><ul><li>save：会阻塞主进程，客户端无法连接redis，等SAVE完成后，主进程才开始工作，客户端可以连接</li><li>bgsave：是fork一个save的子进程，在执行save过程中，不影响主进程，客户端可以正常链接redis，等子进程fork执行save完成后，通知主进程，子进程关闭。bgsave采取的是<strong>写时复制</strong>。<br>子进程写数据到临时的RDB文件，写完之后替换旧的RDB文件</li></ul><h1 id="AOF的触发时机"><a href="#AOF的触发时机" class="headerlink" title="AOF的触发时机"></a>AOF的触发时机</h1><ul><li>Redis关闭的时候</li><li>每一次事件循环的时候</li><li>通过配置指令关闭AOF的时候</li></ul><h1 id="AOF重写流程"><a href="#AOF重写流程" class="headerlink" title="AOF重写流程"></a>AOF重写流程</h1><ol><li>子进程读取Redis DB中的数据以字符串命令的格式（也可以看作AOF格式）写入到新AOF中</li><li>如果有新数据，由主进程将数据写入到AOF重写缓冲区（aof_rewrite_buf）</li><li>当子进程完成重写操作后，主进程通过管道将AOF重写缓冲区数据传输给子进程，子进程追加到AOF文件中</li></ol><h1 id="AOF的不足"><a href="#AOF的不足" class="headerlink" title="AOF的不足"></a>AOF的不足</h1><ol><li>额外CPU的开销：<ul><li>如果有新数据，由主进程将数据写入到AOF重写缓冲区</li><li>进程通过管道将AOF重写缓冲区数据传输给子进程</li><li>子进程追加到AOF文件中</li></ul></li><li>额外内存的开销：<br>在重写的时候，Redis不仅将新的操作记录在原有的AOF缓冲区，还记录在AOF重写缓冲区</li><li>额外的磁盘开销：<br>在重写的时候，AOF缓冲需要刷入旧的AOF日志，AOF重写缓冲也需要刷入新的AOF日志，导致在重写的时候多了一份数据</li></ol><p>但是Redis在7.0做了优化？下一个问答</p><h1 id="Redis7-0对AOF做了哪些优化"><a href="#Redis7-0对AOF做了哪些优化" class="headerlink" title="Redis7.0对AOF做了哪些优化"></a>Redis7.0对AOF做了哪些优化</h1><p><img src="/img/Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/img3.png" alt="alt text"></p><p>原来的AOF重写缓存被移除，采用<br>MP-AOF（Multi Part AOF），即多部件AOF。将原来的一个AOF变成了多个AOF，由manifest（追踪管理AOF文件）来管理。重写的时候还是fork一个子进程来对Base AOF重写</p><ul><li>Base AOF：重写之前的命令</li><li>Incr AOF：追加新的命令</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Redis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Redis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis线程模型</title>
       <link href="/2025/01/13/Redis%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/"/>
       <url>/2025/01/13/Redis%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/</url>
