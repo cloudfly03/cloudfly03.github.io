@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>TCP和UDP的区别</title>
+      <link href="/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB.html/"/>
+      <url>/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB.html/</url>
+      
+        <content type="html"><![CDATA[<p>连接：TCP是面向连接，需要3次握手。UDP不需要</p><p>可靠性：TCP会通过超时重传、流量控制、拥塞控制来保证传输的可靠。UDP没有这些保证可靠性</p><p>传输方式：TCP的传输是以字节流的形式，没有边界，会有粘包问题。UDP的传输是一个包一个包发送，有边界</p><p>TCP优劣势：保证数据的可靠，但是实时性没有UDP好</p><p>UDP优劣势：实时性和速度好，但是不可靠</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>http和https有什么区别</title>
       <link href="/http%E5%92%8Chttps%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB.html/"/>
       <url>/http%E5%92%8Chttps%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB.html/</url>
