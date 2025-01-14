@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>epoll的ET和LT模式</title>
+      <link href="/epoll%E7%9A%84ET%E5%92%8CLT%E6%A8%A1%E5%BC%8F.html/"/>
+      <url>/epoll%E7%9A%84ET%E5%92%8CLT%E6%A8%A1%E5%BC%8F.html/</url>
+      
+        <content type="html"><![CDATA[<p>epoll 是 Linux 提供的一种用于处理大规模 I&#x2F;O 并发的机制，全称是 event poll。它属于 I&#x2F;O 多路复用技术的一种，旨在高效管理大量的文件描述符（file descriptors, FDs）以及响应各类 I&#x2F;O 事件</p><p>与传统的 select 和 poll 不同，epoll 使用了<strong>事件通知</strong>的方式，避免了重复遍历文件描述符集合的高开销。epoll 提供了更好的扩展性，适用于处理数以千计的并发连接，因此非常适合在网络服务器等高并发场景下使用</p><ul><li>LevelTriggered：简称LT，当FD有数据可读时，会重复通知多次，直至数据处理完成。是epoll的默认模式</li><li>EdgeTriggered：简称ET，当FD有数据可读时，只通知一次，不管数据是否处理完成</li></ul><p>Level是指信号只需要处于水平，就一直会触发；而edge则是指信号为上升沿或者下降沿时触发。和电路信号有关：水平触发是level trigger 一旦触发就能维持那个level<br>而边缘触发edge trigger 就是一次稍纵即逝的变化</p><p><strong>在ET模式下，缓冲区从不可读变成可读，会唤醒应用进程，缓冲区数据变少的情况，则不会再唤醒应用进程</strong></p><p><img src="/img/epoll%E7%9A%84ET%E5%92%8CLT%E6%A8%A1%E5%BC%8F/img1.png" alt="alt text"></p><p><img src="/img/epoll%E7%9A%84ET%E5%92%8CLT%E6%A8%A1%E5%BC%8F/img2.png" alt="alt text"></p><p>调用epoll_wait, 会将list_head链表断开，复制数据到用户空间的events中，但是还会可能残留一些数据没有读取完。这时候，如果是ET模式，链表结构将不恢复；如果是LT模式，内核将把链表结构恢复，这样下次再调用epoll_wait的时候能够继续读</p><p>似乎，ET模式好像没什么用，因为有残留数据的问题读不到，但是仍然有两种方式可以解决：</p><ol><li>既然内核不帮我们恢复链表结构，我们自己恢复，在第一次读完数据之后，如果还有残留数据，调用epoll_ctl函数，手动添加回去</li><li>在第一次从fd读取数据的时候，既然每一个fd事件就绪时只通知一次，那么可以while循环一直读取数据。但是注意不能用阻塞IO，因为阻塞IO在读取完数据后还在读，会陷入死循环。因此要用非阻塞IO，如果没数据可读要返回一个标识，跳出循环</li></ol><p>优点：</p><ul><li>ET模式避免了LT模式可能出现的惊群现象</li><li>ET模式最好结合非阻塞IO读取FD数据，相比LT会复杂一点，但是比LT模式性能好一点</li></ul><p>惊群现象：如果有n个不同的进程同时监听某个fd，并且都在调用epoll_wait获取就绪的fd，结果fd就绪后会通知这些进程。LT模式中任何一个进程通知完，fd还会存在链表当中，因此所有监听fd的进程都会被唤醒。但是真正在处理的时候，前面一两个进程可以将fd中的数据读取完，后续被唤醒的进程就没必要。然而ET模式不会出现惊群现象。因此ET模式比LT模式好一点</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 操作系统 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 操作系统 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>进程间通信</title>
       <link href="/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1.html/"/>
       <url>/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1.html/</url>
