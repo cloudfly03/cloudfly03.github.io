@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>DHCP简要概述</title>
+      <link href="/posts/DHCP%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0.html"/>
+      <url>/posts/DHCP%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="DHCP基本概念"><a href="#DHCP基本概念" class="headerlink" title="DHCP基本概念"></a>DHCP基本概念</h1><p>DHCP：动态主机配置协议，自动配置网络参数</p><ul><li>配置信息一般包括IP地址、子网掩码、默认路由器的IP地址和本地域名服务器的IP地址</li><li>DHCP服务器分配给DHCP客户的IP地址等网络参数是临时的，只能在一段有限的时间内使用，这段时间称为租用期</li><li>DHCP客户使用UDP的68号端口，DHCP服务器使用UDP的67号端口</li><li>DHCP客户端启动的时候，需要利用广播报文寻找DHCP服务器，该广播报文属于本地网络广播，不能被路由转发</li><li>因此，要求每一个网络上都有一台DHCP服务器</li></ul><h1 id="DHCP中继代理"><a href="#DHCP中继代理" class="headerlink" title="DHCP中继代理"></a>DHCP中继代理</h1><p>为了避免DHCP服务器过多，DHCP利用DHCP中继代理解决该问题</p><ol><li>DHCP中继代理配置了DHCP服务器的IP地址</li><li>DHCP中继代理收到DHCP客户以广播形式发送的发现报文后，就以单播形式向DHCP服务器转发此报文，并等待其应答</li><li>收到DHCP服务器的应答报文后，DHCP中继代理再把此应答报文发回给DHCP客户端</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HTTP协议</title>
       <link href="/posts/HTTP%E5%8D%8F%E8%AE%AE.html"/>
       <url>/posts/HTTP%E5%8D%8F%E8%AE%AE.html</url>
