@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>网络传输场景问题</title>
+      <link href="/posts/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html"/>
+      <url>/posts/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="如何浏览器没有显示页面有哪些原因"><a href="#如何浏览器没有显示页面有哪些原因" class="headerlink" title="如何浏览器没有显示页面有哪些原因"></a>如何浏览器没有显示页面有哪些原因</h1><ol><li>先确实是服务端的问题还是客户端的问题。如果客户端可以访问其他网站，如果可以说明客户端网络没问题</li><li>如果客户端网络没问题，就抓包确认DNS是否解析出了IP地址，如果没有解析出来说明域名写错了</li><li>如果IP解析出来了，再抓包确认TCP是否完成了3次握手，需要在server端通过ps确认server进程是否启动，以及通过netstate命令确认是否监听了端口</li><li>如果TCP完成了3次握手查看返回的状态码<ul><li>404：检查输入的url是否正确</li><li>500：服务器有问题，需要去服务器排查日志</li><li>200：可以在浏览器按F12输出前端控制台，看看前端代码是不是有问题</li></ul></li><li>如果网络没问题，可以通过ping去确认网络延迟是否正常，如果耗时很长，可以排查服务器流量是不是很大，导致超过了带宽上限。如果网络正常可以排查接口是否正常，有可能是慢SQL导致的</li></ol><h1 id="服务器ping不通但是http可以请求成功，会出现吗？"><a href="#服务器ping不通但是http可以请求成功，会出现吗？" class="headerlink" title="服务器ping不通但是http可以请求成功，会出现吗？"></a>服务器ping不通但是http可以请求成功，会出现吗？</h1><p>会的。因为ping是ICMP协议，http是TCP协议，有可能服务器的防火墙禁止ICMP协议，但是TCP协议没有被禁止</p><h1 id="客户端TCP连接一个不存在的IP地址会发生什么"><a href="#客户端TCP连接一个不存在的IP地址会发生什么" class="headerlink" title="客户端TCP连接一个不存在的IP地址会发生什么"></a>客户端TCP连接一个不存在的IP地址会发生什么</h1><ul><li>如果访问的IP地址在局域网内，客户端的内核在发ARP请求的时候，广播会询问这个IP是否存在，由于不存在所以收不到ARP回应，这时候就会卡在ARP协议，SYN报文发不出去</li><li>如果访问的IP地址不在局域网内，客户端会先将SYN报文发送到路由器，然后路由器会继续转发，由于IP不存在，该SYN报文会消亡。接着客户端会发生超时重传，到达最大重传次数后客户端连接会释放</li></ul><h1 id="客户端TCP连接一个存在的IP地址但是端口不存在会发生什么"><a href="#客户端TCP连接一个存在的IP地址但是端口不存在会发生什么" class="headerlink" title="客户端TCP连接一个存在的IP地址但是端口不存在会发生什么"></a>客户端TCP连接一个存在的IP地址但是端口不存在会发生什么</h1><p>服务端在收到SYN报文后，会返回一个RST报文，客户端收到RST报文后会断开连接</p><h1 id="客户端UDP连接一个存在的IP地址但是端口不存在会发生什么"><a href="#客户端UDP连接一个存在的IP地址但是端口不存在会发生什么" class="headerlink" title="客户端UDP连接一个存在的IP地址但是端口不存在会发生什么"></a>客户端UDP连接一个存在的IP地址但是端口不存在会发生什么</h1><p>UDP没有RST报文，因此服务端会返回ICMP报文，报告端口不可达</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>键入网址场景问题</title>
       <link href="/posts/%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html"/>
       <url>/posts/%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html</url>
