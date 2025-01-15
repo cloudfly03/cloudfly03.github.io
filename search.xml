@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>IP地址</title>
+      <link href="/posts/IP%E5%9C%B0%E5%9D%80.html"/>
+      <url>/posts/IP%E5%9C%B0%E5%9D%80.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="IP地址概述"><a href="#IP地址概述" class="headerlink" title="IP地址概述"></a>IP地址概述</h1><h2 id="点分十进制记法"><a href="#点分十进制记法" class="headerlink" title="点分十进制记法"></a>点分十进制记法</h2><p>一个32位的二进制数，采用点分十进制记法表示</p><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img1.png" alt="img"></p><h2 id="分层结构"><a href="#分层结构" class="headerlink" title="分层结构"></a>分层结构</h2><p>IP地址采用分层结构，即IP地址由与互联网特定层结构对应的几部分构成</p><ul><li>IP地址包括两部分：网络部分和主机部分</li><li>网络部分指明了主机所连网络，同一网络中所有主机的IP地址一样</li><li>主机部分标识了特定网络中的特定主机</li><li>采用分层结构的IP地址后，路由器可以仅根据IP地址的网络部分来转发分组，而无须考虑主机部分</li></ul><h2 id="编址方案的演进"><a href="#编址方案的演进" class="headerlink" title="编址方案的演进"></a>编址方案的演进</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img2.png" alt="img"></p><h1 id="编址方案之有类别编址"><a href="#编址方案之有类别编址" class="headerlink" title="编址方案之有类别编址"></a>编址方案之有类别编址</h1><h2 id="五类PI地址如何划分"><a href="#五类PI地址如何划分" class="headerlink" title="五类PI地址如何划分"></a>五类PI地址如何划分</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img3.png" alt="img"></p><h2 id="A、B、C类IP地址的特殊地址"><a href="#A、B、C类IP地址的特殊地址" class="headerlink" title="A、B、C类IP地址的特殊地址"></a>A、B、C类IP地址的特殊地址</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img4.png" alt="img"></p><ol><li>RFC1812规定，单播IP地址采用无类别编址方案。A类、B类和C类地址的区分已成为历史。 但由于传统的有类别编址方案，从概念的演进上更清晰，因此讨论IP地址，仍然需要从分类的IP地址讲起 </li><li>最初互联网建议支持路由器转发定向广播，而且默认启用。但RFC2644变更了该策略，要求路由器默认禁止转发定向广播。</li></ol><h2 id="A、B、C类IP地址可指派的地址数量"><a href="#A、B、C类IP地址可指派的地址数量" class="headerlink" title="A、B、C类IP地址可指派的地址数量"></a>A、B、C类IP地址可指派的地址数量</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img5.png" alt="img"></p><p><strong>由于B类和C类是1开头，所以网络号不可能全0</strong></p><h2 id="路由器和主机的IP地址"><a href="#路由器和主机的IP地址" class="headerlink" title="路由器和主机的IP地址"></a>路由器和主机的IP地址</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img6.png" alt="img"></p><h1 id="编址方案之子网划分"><a href="#编址方案之子网划分" class="headerlink" title="编址方案之子网划分"></a>编址方案之子网划分</h1><h2 id="子网定义"><a href="#子网定义" class="headerlink" title="子网定义"></a>子网定义</h2><p>子网或子网络是网络内部的网络。子网使网络更高效。通过子网划分，网络流量传播距离更短，无需通过不必要的路由器即可到达目的地</p><h2 id="定长子网划分"><a href="#定长子网划分" class="headerlink" title="定长子网划分"></a>定长子网划分</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img7.png" alt="img"></p><p><strong>这样网络地址有更加细分的能力了</strong></p><h2 id="可变长子网划分"><a href="#可变长子网划分" class="headerlink" title="可变长子网划分"></a>可变长子网划分</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img8.png" alt="img"></p><h1 id="编址方案之有无类别编址"><a href="#编址方案之有无类别编址" class="headerlink" title="编址方案之有无类别编址"></a>编址方案之有无类别编址</h1><h2 id="网络前缀"><a href="#网络前缀" class="headerlink" title="网络前缀"></a>网络前缀</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img9.png" alt="img"></p><h2 id="路由聚合"><a href="#路由聚合" class="headerlink" title="路由聚合"></a>路由聚合</h2><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img10.png" alt="img"></p><h1 id="特殊用途的IP地址"><a href="#特殊用途的IP地址" class="headerlink" title="特殊用途的IP地址"></a>特殊用途的IP地址</h1><p><img src="/img/IP%E5%9C%B0%E5%9D%80/img11.png" alt="img"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>计算机网络概述</title>
       <link href="/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B0.html"/>
       <url>/posts/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E6%A6%82%E8%BF%B0.html</url>
@@ -560,9 +585,9 @@
             
             <tag> Java </tag>
             
-            <tag> 数据结构 </tag>
-            
             <tag> 多线程 </tag>
+            
+            <tag> 数据结构 </tag>
             
         </tags>
       
@@ -616,9 +641,9 @@
             
             <tag> Java </tag>
             
-            <tag> JVM </tag>
-            
             <tag> 数据结构 </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -672,9 +697,9 @@
             
             <tag> Java </tag>
             
-            <tag> 数据结构 </tag>
-            
             <tag> 多线程 </tag>
+            
+            <tag> 数据结构 </tag>
             
         </tags>
       
