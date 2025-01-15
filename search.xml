@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>统一资源定位符URL</title>
+      <link href="/posts/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6URL.html"/>
+      <url>/posts/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6URL.html</url>
+      
+        <content type="html"><![CDATA[<p>URI 本质上是一个字符串，这个字符串的作用是唯一地标记资源的位置或者名字</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.chrono.com:8080/11-1?uid=1234&amp;name=mario&amp;referer=xxx</span><br></pre></td></tr></table></figure><p>scheme + :&#x2F;&#x2F; + host:port + path + [?query] + [#fragment]</p><p>path: &#x2F; + [目录名] + &#x2F; + … + 文件名 ,path中第一个&#x2F;是web服务器配置文件中的根，不是操作系统的根</p><ul><li>第一个多出的部分是协议名之后、主机名之前的身份信息“user:passwd@”，表示登录主机时的用户名和密码，但现在已经不推荐使用这种形式了（RFC7230），因为它把敏感信息以明文形式暴露出来，存在严重的安全隐患</li><li>第二个多出的部分是查询参数后的片段标识符“#fragment”,它是 URI 所定位的资源内部的一个“锚点”或者说是“标签”，浏览器可以在获取资源后直接跳转到它指示的位置。但片段标识符仅能由浏览器这样的客户端使用，服务器是看不到的。也就是说，浏览器永远不会把带“#fragment”的 URI 发送给服务器，服务器也永远不会用这种方式去处理资源的片段</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>网络传输场景问题</title>
       <link href="/posts/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html"/>
       <url>/posts/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html</url>
