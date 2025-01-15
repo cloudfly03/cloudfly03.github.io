@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>HTML文档的概述</title>
+      <link href="/posts/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0.html"/>
+      <url>/posts/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0.html</url>
+      
+        <content type="html"><![CDATA[<p>超文本标记语言HTML是制作万维网页面的标准语言，目前版本HTML5.0</p><p>HTML使用标记标签来描述网页文档，HTML标签是由尖括号包围的关键词，通常是成对出现的，例如<body>和</body>，其中第一个是开始标签，第二个是结束标签</p><p>HTML标签的组成如下：</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">tag-name</span> [[<span class="attr">attribute-name</span>[= <span class="string">arrribute-value]]...]</span>&gt;</span>(文本内容)<span class="tag">&lt;/<span class="name">tag-name</span>&gt;</span></span><br></pre></td></tr></table></figure><p>从开始标签道结束标签的所有代码称为<strong>HTML元素</strong></p><p>完整的HTML文档如下：</p><p><img src="/img/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0/img1.png" alt="alt text"></p><p>为了控制文档的呈现方式，通常会使用<strong>层叠样式表(CSS)</strong></p><p>CSS (Cascading Style Sheets，层叠样式表），是一种用来为结构化文档（如 HTML 文档或 XML 应用）添加样式（字体、间距和颜色等）的计算机语言，CSS 文件扩展名为 .css</p><p>HTML文档分为静态文档、动态文档、活动文档三种：</p><ul><li>静态HTML文档：不会根据浏览器发来的数据而改变</li><li>动态HTML文档：在浏览器访问服务器的时候才创建，当浏览器的请求到达的时候，服务器将URL映射到一个应用程序，由应用程序根据请求中的数据创建一个HTML文档</li><li>活动HTML文档：把创建HTML的任务交给浏览器执行。服务器返回给浏览器的文档中包含脚本程序，浏览器执行脚本后，得到活动HTML文档</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>统一资源定位符URL</title>
       <link href="/posts/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6URL.html"/>
       <url>/posts/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6URL.html</url>
