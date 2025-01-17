@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>最小覆盖子串——滑动窗口</title>
+      <link href="/posts/%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2%E2%80%94%E2%80%94%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3.html"/>
+      <url>/posts/%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2%E2%80%94%E2%80%94%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3.html</url>
+      
+        <content type="html"><![CDATA[<p>滑动窗口区间[j, i]</p><ol><li>初始i &#x3D; j &#x3D; 0, 直接添加第一个</li><li>i永远一步一步来，j根据条件改变，尽量让窗口变小，但是不能不满足条件</li><li>结束的时候是i越界</li></ol><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">minWindow</span><span class="params">(string s, string t)</span> </span>&#123;</span><br><span class="line">        string ans = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        unordered_map&lt;<span class="type">char</span>, <span class="type">int</span>&gt; mp;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> ch : t) mp[ch]++;</span><br><span class="line">        unordered_map&lt;<span class="type">char</span>, <span class="type">int</span>&gt; cnt;</span><br><span class="line">        <span class="type">int</span> tt = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            cnt[s[i]]++;</span><br><span class="line">            <span class="keyword">if</span> (cnt[s[i]] &lt;= mp[s[i]]) tt++;</span><br><span class="line">            <span class="keyword">while</span> (cnt[s[j]] &gt; mp[s[j]]) &#123;</span><br><span class="line">                cnt[s[j]]--;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (tt == t.<span class="built_in">size</span>()) &#123;</span><br><span class="line">                <span class="keyword">if</span> (!ans.<span class="built_in">size</span>() || ans.<span class="built_in">size</span>() &gt; i - j + <span class="number">1</span>) &#123;</span><br><span class="line">                    ans = s.<span class="built_in">substr</span>(j, i - j + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 算法 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>传输层协议</title>
       <link href="/posts/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE.html"/>
       <url>/posts/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE.html</url>
