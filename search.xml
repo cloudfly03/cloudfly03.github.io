@@ -926,12 +926,12 @@
           
           <category> Redis </category>
           
-          <category> 数据库 </category>
-          
       </categories>
       
       
         <tags>
+            
+            <tag> 数据库 </tag>
             
             <tag> Redis </tag>
             
@@ -953,14 +953,12 @@
           
           <category> Redis </category>
           
-          <category> 数据库 </category>
-          
       </categories>
       
       
         <tags>
             
-            <tag> Redis </tag>
+            <tag> Redis - 数据库 </tag>
             
         </tags>
       
@@ -993,12 +991,12 @@
           
           <category> Redis </category>
           
-          <category> 数据库 </category>
-          
       </categories>
       
       
         <tags>
+            
+            <tag> 数据库 </tag>
             
             <tag> Redis </tag>
             
