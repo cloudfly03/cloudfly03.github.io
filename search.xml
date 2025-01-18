@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>SpringBoot核心注解以及自动装配</title>
+      <link href="/posts/SpringBoot%E6%A0%B8%E5%BF%83%E6%B3%A8%E8%A7%A3%E4%BB%A5%E5%8F%8A%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D.html"/>
+      <url>/posts/SpringBoot%E6%A0%B8%E5%BF%83%E6%B3%A8%E8%A7%A3%E4%BB%A5%E5%8F%8A%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="核心注解"><a href="#核心注解" class="headerlink" title="核心注解"></a>核心注解</h1><ul><li>@SpringBootApplication: 标识一个类作为SpringBoot的启动类，是@SpringBootConfiguration、@EnableAutoConfiguration、@ComponentScan的组合</li><li>@SpringBootConfiguration：配置类，用于定义一个Bean，是一个特殊的@Configuration注解，用于加载配置</li><li>@EnableAutoConfiguration：用于启动自动配置的功能，可以自动引入相关的配置，减少开发成本</li><li>@ComponentScan：定义Spring扫描包的路径，用于发现应用程序中的bean、组件、配置类和服务等，可以自动扫描并注册包路径下的带有@Component、@Service等注解的类</li></ul><h1 id="自动装配是什么"><a href="#自动装配是什么" class="headerlink" title="自动装配是什么"></a>自动装配是什么</h1><p>自动装配可以根据项目中添加的依赖和其他因素，自动创建和配置Spring应用所需要的Bean，开发者不需要书写大量的XML配置或者Java配置类来设置Spring容器</p><h1 id="自动化配置原理"><a href="#自动化配置原理" class="headerlink" title="自动化配置原理"></a>自动化配置原理</h1><ol><li>自动化配置首先冲组件说起，@SpringBootApplication是@SpringBootConfiguration、@EnableAutoConfiguration、@ComponentScan的组合</li><li>其中@EnableAutoConfiguration通过@Import注解将AutoConfigurationImportSelector.class这个类引入进来</li><li>AutoConfigurationImportSelector.class会加载jar包的META-INF下面的spring-factories配置文件，其实用到了SPI机制</li><li>spring-factories配置文件是一个key-value的形式，key是EnableAutoConfiguration的全路径名，value是各个需要配置的类，然后SpringBoot默认在这个配置类里面定义了100多个常用的配置类，然后再根据Condition按需加载我们的配置类，比如在配置文件中增加了对应的类才会生效</li></ol><h1 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h1><p>当接口存在于调用方这边，就是SPI。由调用方设计接口，然后由不同的厂商去根据这个规则接口进行实现，从而提供服务</p><p>API接口实现在厂商，调用方去获得服务</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> SpringBoot </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>volatile原理</title>
       <link href="/posts/volatile%E5%8E%9F%E7%90%86.html"/>
       <url>/posts/volatile%E5%8E%9F%E7%90%86.html</url>
@@ -246,9 +275,9 @@
             
             <tag> Java </tag>
             
-            <tag> SSM </tag>
-            
             <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
             
         </tags>
       
