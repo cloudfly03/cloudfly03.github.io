@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>MySQL日志</title>
+      <link href="/posts/MySQL%E6%97%A5%E5%BF%97.html"/>
+      <url>/posts/MySQL%E6%97%A5%E5%BF%97.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="MySQL三大日志是什么"><a href="#MySQL三大日志是什么" class="headerlink" title="MySQL三大日志是什么"></a>MySQL三大日志是什么</h1><ul><li>undo log是Innodb存储引擎生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC。在事务没提交之前，在事务没提交之前，Innodb会将更新前的记录记录在undo log中，需要回滚的时候根据undo log做原先相反操作</li><li>redo log也是Innodb存储引擎的日志，属于物理日志，记录了某个数据页做了什么修改，实现了事务的持久性，主要用于断电等故障恢复。比如某个事务提交了，脏页数据还没刷盘，但是断电了。下次重启的时候可以通过redo log恢复数据</li><li>binlog是Server层生成的日志，主要用于数据备份和主从复制，在完成一条更新操作后，Server层会生成一条binlog，等之后事务提交时，会将该事务执行过程产生的所有binlog统一写入binlog文件中。binlog文件记录了所有数据库表结构和表数据修改的日志，不会记录查询类的操作</li></ul><h1 id="binlog日志有哪些格式"><a href="#binlog日志有哪些格式" class="headerlink" title="binlog日志有哪些格式"></a>binlog日志有哪些格式</h1><ul><li>STATEMENT（默认格式）：每一条修改的SQL都会被记录在binlog中（逻辑日志），主从复制中slave端再根据SQL语句重现。但STATEMENT有动态函数的问题，比如你用uuid或者now这些函数，你在主库上执行的结果并不是你在从库上执行的结果，因此会导致数据不一致</li><li>ROW：记录行数据最终被修改成什么样（不是逻辑日志），不会出现STATEMENT的动态函数问题。但是也有缺点是每行数据的变化记录都会被修改，比如批量执行update语句，更新多少行就产生多少行记录，会导致binlog文件过大，而在STATEMENT下只会记录update语句而已</li><li>MIXED：包含了STATEMENT和ROW模式，它会根据不同的情况使用不同的模式</li></ul><h1 id="redo-log和binlog的区别和应用场景"><a href="#redo-log和binlog的区别和应用场景" class="headerlink" title="redo log和binlog的区别和应用场景"></a>redo log和binlog的区别和应用场景</h1><ol><li><p>适用对象不同：</p><ul><li>binlog是MySQL Server层的日志，适用于所有引擎</li><li>redo log是Innodb存储引擎的日志</li></ul></li><li><p>文件格式不同：</p><ol><li><p>binlog有三种格式：</p><ul><li>STATEMENT（默认格式）：每一条修改的SQL都会被记录在binlog中（逻辑日志），主从复制中slave端再根据SQL语句重现。但STATEMENT有动态函数的问题，比如你用uuid或者now这些函数，你在主库上执行的结果并不是你在从库上执行的结果，因此会导致数据不一致</li><li>ROW：记录行数据最终被修改成什么样（不是逻辑日志），不会出现STATEMENT的动态函数问题。但是也有缺点是每行数据的变化记录都会被修改，比如批量执行update语句，更新多少行就产生多少行记录，会导致binlog文件过大，而在STATEMENT下只会记录update语句而已</li><li>MIXED：包含了STATEMENT和ROW模式，它会根据不同的情况使用不同的模式</li></ul></li><li><p>redo log:</p><ul><li>物理日志，记录的是某个数据页做了什么修改，比如对XX表空间中的YY数据页做了ZZ偏移量的AA更新</li></ul></li></ol></li><li><p>写入方式不同：</p><ul><li>binlog是追加写，写满一个文件，就创建一个新的文件继续写，不会覆盖以前的日志，保存的是全量的日志</li><li>redo log是循环写，日志空间大小是固定的，全部写满就重头开始，保存未被刷入磁盘的脏页数据</li></ul></li><li><p>用途不同：</p></li></ol><ul><li>binlog用于备份恢复、主从复制</li><li>redo log用于掉电等故障恢复</li></ul><h1 id="为什么崩溃恢复不用binlog而用redo-log"><a href="#为什么崩溃恢复不用binlog而用redo-log" class="headerlink" title="为什么崩溃恢复不用binlog而用redo log"></a>为什么崩溃恢复不用binlog而用redo log</h1><p>binlog是server层的日志，不会记录innodb存储引擎中有哪些数据没被刷盘，redo log是innodb存储引擎的日志，会记录哪些脏页没被刷盘，崩溃恢复的时候，恢复的粒度更细，可以精确到恢复的页。而binlog保存的是全量日志，因此效率比redo log恢复效率低</p><h1 id="redo-log是怎么实现持久化"><a href="#redo-log是怎么实现持久化" class="headerlink" title="redo log是怎么实现持久化"></a>redo log是怎么实现持久化</h1><p>事务执行过程中更新的数据，不是在事务提交的时候，刷新到磁盘，而是修改buffer pool中的数据页为脏页，然后后台再找时机刷盘</p><p>如果事务提交了，脏页还没有刷盘，就会造成事务修改的数据丢失</p><p>因此引入了redo log，主要记录了Innodb对某个页做的修改操作，当事务提交时，redo log会先刷入磁盘，因为redo log保存了数据页的修改操作，即使脏页数据没有刷盘，下次MySQL启动时，可以通过重放redo log保持数据的持久化</p><h1 id="redo-log有什么功能"><a href="#redo-log有什么功能" class="headerlink" title="redo log有什么功能"></a>redo log有什么功能</h1><ul><li>实现事务的持久性，让MySQL有crash-safe的能力，能够保证MySQL在任何时候突然崩溃，重启之后之前提交的记录不会丢失</li><li>将写操作从随机写变成顺序写，提升MySQL写入磁盘的性能。先写redo log是一个顺序写的过程，同时真正的数据写磁盘由MySQL在最合适的时机写入，肯定比每次随机写都要快</li></ul><h1 id="为什么需要两阶段提交"><a href="#为什么需要两阶段提交" class="headerlink" title="为什么需要两阶段提交"></a>为什么需要两阶段提交</h1><ul><li>两阶段提交是为了保证redo log和binlog逻辑一致，从而保证主从复制的时候不会出现数据不一致的情况</li><li>事务提交后，redo log和binlog都要持久化到磁盘，但是这是两个独立的逻辑，可能出现半成功的状态。比如在主从复制的场景下，如果将redo log刷入到磁盘，MySQL突然宕机了，而binlog还没有来得及写入到磁盘，这时候主库是最新的数据，从库是旧数据，就造成了主从不一致</li></ul><h1 id="两阶段提交的过程"><a href="#两阶段提交的过程" class="headerlink" title="两阶段提交的过程"></a>两阶段提交的过程</h1><p>两阶段提交将事务分成了两个阶段，准备阶段和提交阶段：</p><ul><li>prepare阶段：将XID（内部XA事务的ID）写入到redo log中，同时将redo log刷入到磁盘。然后将redo log状态设置为prepare</li><li>commit阶段：将XID写入到binlog中，同时将binlog写入磁盘。然后将redo log设置为commit状态，两阶段提交完成</li></ul><p>两阶段提交，是以binlog写入磁盘为成功标志：</p><ul><li>如果在写入redo log之前崩溃，此时redo log和bin log是没有数据的，那么数据是满足一致性</li><li>如果在写入redo log prepare阶段后立马崩溃，之后在崩溃恢复的时候，由于redo log没有被标记为commit，于是拿着redo log中的XID去binlog中查找，一定找不到。于是就执行回滚操作</li><li>如果写入binlog到磁盘后立马崩溃，即使redo log没有设置commit状态，但是由于redo log中的XID在binlog中找得到，说明都完成了刷盘，直接提交事务即可</li></ul><h1 id="Redo-log刷盘策略是什么"><a href="#Redo-log刷盘策略是什么" class="headerlink" title="Redo log刷盘策略是什么"></a>Redo log刷盘策略是什么</h1><p>主要有三种：</p><ul><li>当刷盘策略参数配置为0的时候，每次提交事务，将redo log留在redo log buffer中，该模式下事务不会主动触发写入到磁盘的操作，后续由innodb后台线程把缓存在redo log buffer中的redo log写入到操作系统的page cache缓存并持久化到磁盘</li><li>当刷盘策略参数配置为1的时候，每次事务提交，都将缓存在redo log buffer中的刷入到磁盘</li><li>当刷盘策略参数配置为2的时候，每次事务提交的时候，都只是将redo log buffer中的redo log写入到操作系统的page cache缓存，但并不会执行刷盘，后续有innodb的后台线程执行刷盘</li></ul><p>三种策略，参数为1的安全性最高，但也是写入性能最差的。参数为0的安全性最差，写入性能最好</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> MySQL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+            <tag> 数据库 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySQL锁</title>
       <link href="/posts/MySQL%E9%94%81.html"/>
       <url>/posts/MySQL%E9%94%81.html</url>
@@ -49,9 +76,9 @@
             
             <tag> Java </tag>
             
-            <tag> SpringBoot </tag>
-            
             <tag> SSM </tag>
+            
+            <tag> SpringBoot </tag>
             
         </tags>
       
@@ -302,9 +329,9 @@
             
             <tag> Java </tag>
             
-            <tag> SpringBoot </tag>
-            
             <tag> SSM </tag>
+            
+            <tag> SpringBoot </tag>
             
         </tags>
       
