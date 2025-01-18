@@ -76,9 +76,9 @@
             
             <tag> Java </tag>
             
-            <tag> SSM </tag>
-            
             <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
             
         </tags>
       
@@ -329,9 +329,9 @@
             
             <tag> Java </tag>
             
-            <tag> SSM </tag>
-            
             <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
             
         </tags>
       
@@ -926,6 +926,8 @@
           
           <category> Redis </category>
           
+          <category> 数据库 </category>
+          
       </categories>
       
       
@@ -950,6 +952,8 @@
       <categories>
           
           <category> Redis </category>
+          
+          <category> 数据库 </category>
           
       </categories>
       
@@ -989,6 +993,8 @@
           
           <category> Redis </category>
           
+          <category> 数据库 </category>
+          
       </categories>
       
       
@@ -1019,6 +1025,8 @@
       
         <tags>
             
+            <tag> 数据库 </tag>
+            
             <tag> Redis </tag>
             
         </tags>
@@ -1043,6 +1051,8 @@
       
       
         <tags>
+            
+            <tag> 数据库 </tag>
             
             <tag> Redis </tag>
             
@@ -1099,6 +1109,8 @@
         <tags>
             
             <tag> 数据结构 </tag>
+            
+            <tag> 数据库 </tag>
             
             <tag> Redis </tag>
             
