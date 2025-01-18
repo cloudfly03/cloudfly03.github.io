@@ -42,20 +42,20 @@
           
           <category> Java </category>
           
-          <category> 工程应用 </category>
-          
-          <category> 数据库 </category>
-          
-          <category> MySQL </category>
-          
-          <category> 多线程 </category>
-          
       </categories>
       
       
         <tags>
             
             <tag> Java </tag>
+            
+            <tag> 多线程 </tag>
+            
+            <tag> MySQL </tag>
+            
+            <tag> 数据库 </tag>
+            
+            <tag> 工程应用 </tag>
             
         </tags>
       
@@ -102,16 +102,16 @@
           
           <category> Java </category>
           
-          <category> 工程应用 </category>
-          
-          <category> 数据库 </category>
-          
       </categories>
       
       
         <tags>
             
             <tag> Java </tag>
+            
+            <tag> 数据库 </tag>
+            
+            <tag> 工程应用 </tag>
             
         </tags>
       
