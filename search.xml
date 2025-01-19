@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>跳表节点层数的确定方法</title>
+      <link href="/posts/%E8%B7%B3%E8%A1%A8%E8%8A%82%E7%82%B9%E5%B1%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A%E6%96%B9%E6%B3%95.html"/>
+      <url>/posts/%E8%B7%B3%E8%A1%A8%E8%8A%82%E7%82%B9%E5%B1%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A%E6%96%B9%E6%B3%95.html</url>
+      
+        <content type="html"><![CDATA[<ul><li>初始化节点层数为1，这是跳表中所有节点的初始层数</li><li>对每个节点，通过随机数生成器生成一个介于0和1之间的随机数p</li><li>将p与固定的概率因子P进行比较，如果p小于P，则将节点的层数加1</li><li>重复步骤2和步骤3，直到p大于或等于P为止</li></ul><p>产生越高的节点层数，概率越低。定量的分析如下：</p><p>假设概率因子是p，节点层数至少为 1。</p><p>而大于 1 的节点层数，满足一个概率分布：</p><ul><li>节点层数恰好等于 1 的概率为 1-p</li><li>节点层数大于等于 2 的概率为 p，而节点层数恰好等于 2 的概率为 p(1-p)</li><li>节点层数大于等于 3 的概率为 p^2，而节点层数恰好等于 3 的概率为 p^2*(1-p)</li><li>节点层数大于等于 4 的概率为 p^3，而节点层数恰好等于 4 的概率为 p^3*(1-p)</li><li>……</li></ul><p>一个节点的平均层数（也即包含的平均指针数目）（期望）：</p><p><img src="/img/%E8%B7%B3%E8%A1%A8%E8%8A%82%E7%82%B9%E5%B1%82%E6%95%B0%E7%9A%84%E7%A1%AE%E5%AE%9A%E6%96%B9%E6%B3%95/img1.png" alt="img"></p><p>现在很容易计算出：</p><ul><li>当 p&#x3D;1&#x2F;2 时，每个节点所包含的平均指针数目为 2</li><li>当 p&#x3D;1&#x2F;4 时，每个节点所包含的平均指针数目为 1.33</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据结构 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>IOC的三级缓存以及循环依赖问题</title>
       <link href="/posts/IOC%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E4%BB%A5%E5%8F%8A%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98.html"/>
       <url>/posts/IOC%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E4%BB%A5%E5%8F%8A%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98.html</url>
