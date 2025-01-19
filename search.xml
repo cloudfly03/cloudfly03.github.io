@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>IOC的三级缓存以及循环依赖问题</title>
+      <link href="/posts/IOC%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E4%BB%A5%E5%8F%8A%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98.html"/>
+      <url>/posts/IOC%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E4%BB%A5%E5%8F%8A%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h1><ul><li>一级缓存&lt;Map, String&gt;singletonObjects：储存最终的完整bean的容器</li><li>二级缓存&lt;Map, String&gt;earlySingletonObjects：储存实例化但未初始化的半成品bean</li><li>三级缓存&lt;Map, ObjectFactory&lt;?&gt;&gt;singletonFactories：存放用于生成代理对象的临时代理工厂（ObjectFactory），当出现循环依赖的时候，如果有bean生成需要生成代理，则会从此获取代理对象，然后放入二级缓存中并在三级缓存中移除</li></ul><h1 id="循环依赖"><a href="#循环依赖" class="headerlink" title="循环依赖"></a>循环依赖</h1><p>A和B循环依赖</p><p>初始化对象过程：<br>A先去一级缓存中找，如果没有找到去二级缓存，否则去三级缓存生成一个工厂对象。接着去初始化B，最终也会在三级缓存生成一个对象B，然后再装填A。出现了循环依赖，再生成A的时候发现三级缓存中存在，于是会生成一个半成品对象A放入二级缓存中并在三级缓存中移除（如果需要生成代理就会获取代理对象）<br>接着B已经完成创建完毕，所以将B放入一级缓存同时将二级缓存和三级缓存中的B移除。然后A对象装填B后也创建完成，将A放入一级缓存同时将二级缓存和三级缓存中的A移除</p><h1 id="为什么需要三级缓存"><a href="#为什么需要三级缓存" class="headerlink" title="为什么需要三级缓存"></a>为什么需要三级缓存</h1><p>由于Spring的代理发生在Bean初始化后，当存在循环依赖的时候，由于进行依赖注入的Bean尚未初始化，因此被依赖注入的Bean实际上获得的是未代理的原始Bean，因此AOP会失效</p><p>为了解决这个问题，必须让未初始化的Bean在进行依赖注入的时候也能被代理，需尽可能早的指定其代理</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> SpringBoot </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> 工程应用 </tag>
+            
+            <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Autowired注解注入的对象是单例吗</title>
       <link href="/posts/Autowired%E6%B3%A8%E8%A7%A3%E6%B3%A8%E5%85%A5%E7%9A%84%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%8D%95%E4%BE%8B%E5%90%97.html"/>
       <url>/posts/Autowired%E6%B3%A8%E8%A7%A3%E6%B3%A8%E5%85%A5%E7%9A%84%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%8D%95%E4%BE%8B%E5%90%97.html</url>
