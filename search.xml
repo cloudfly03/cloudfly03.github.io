@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>JVM堆的大小参数应该怎么设置</title>
+      <link href="/posts/JVM%E5%A0%86%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%8F%82%E6%95%B0%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E8%AE%BE%E7%BD%AE.html"/>
+      <url>/posts/JVM%E5%A0%86%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%8F%82%E6%95%B0%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E8%AE%BE%E7%BD%AE.html</url>
+      
+        <content type="html"><![CDATA[<p>JVM堆大小参数的设置需要根据应用程序的需求、可用内存以及性能目标来确定。</p><p>可以通过-Xms（初始堆大小）和-Xmx（最大堆大小）参数进行设置。例如，-Xms512m -Xmx2g表示初始堆大小为512MB，最大堆大小为2GB</p><p>还有其他一些与堆相关的参数，如-XX:NewRatio用于设置年轻代和老年代的比例，默认值是2，表示年轻代占堆的1&#x2F;3。比如-XX:NewRatio&#x3D;2</p><p>-XX:SurvivorRatio用于设置Eden区和一个Survivor区的比例，默认值是8，表示Eden区占年轻代的8&#x2F;10。比如-XX:Survivor&#x3D;8</p><p>此外，还有-XX:+UseG1GC等参数用于选择不同的垃圾收集器，不同的垃圾收集器对堆大小的设置有不同的要求。比如-XX:+UseSerialGC、-XX:+UseG1GC</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> JVM </tag>
+            
+            <tag> 工程应用 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>为什么堆的空间不连续</title>
       <link href="/posts/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A0%86%E7%9A%84%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%BF%9E%E7%BB%AD.html"/>
       <url>/posts/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A0%86%E7%9A%84%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%BF%9E%E7%BB%AD.html</url>
@@ -213,11 +242,11 @@
             
             <tag> 多线程 </tag>
             
+            <tag> 工程应用 </tag>
+            
             <tag> MySQL </tag>
             
             <tag> 数据库 </tag>
-            
-            <tag> 工程应用 </tag>
             
         </tags>
       
@@ -271,9 +300,9 @@
             
             <tag> Java </tag>
             
-            <tag> 数据库 </tag>
-            
             <tag> 工程应用 </tag>
+            
+            <tag> 数据库 </tag>
             
         </tags>
       
