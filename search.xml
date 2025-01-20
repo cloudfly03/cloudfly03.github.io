@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Bean的生命周期以及IoC的实现原理</title>
+      <link href="/posts/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8AIoC%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html"/>
+      <url>/posts/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8AIoC%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="bean的生命周期"><a class="markdownIt-Anchor" href="#bean的生命周期"></a> Bean的生命周期</h1><h2 id="概要流程"><a class="markdownIt-Anchor" href="#概要流程"></a> 概要流程</h2><p>单例对象：singleton</p><ul><li>生命周期与容器相同</li></ul><p>多例对象：prototype</p><ul><li>出生：对象时spring框架为我们创建</li><li>活着：使用过程</li><li>死亡：被gc回收</li></ul><p>Bean 的生命周期概括起来就是 4 个阶段：</p><ol><li>实例化（Instantiation）：new一个对象</li><li>属性赋值（Populate）：设置对象属性和依赖，也就是IoC注入：按照Spring上下文对实例化的Bean配置</li><li>初始化（Initialization）：有 Aware 接口的依赖注入、BeanPostProcessor 在初始化前后的处理以及 InitializingBean 和 init-method 的初始化操作</li><li>销毁（Destruction）：有注册相关销毁回调接口，最后通过DisposableBean 和 destory-method 进行销毁</li></ol><p><img src="/img/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8AIoC%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/img1.png" alt="img" /></p><h2 id="扩展点的作用"><a class="markdownIt-Anchor" href="#扩展点的作用"></a> 扩展点的作用</h2><h3 id="aware"><a class="markdownIt-Anchor" href="#aware"></a> Aware</h3><p>Aware接口：若 Spring 检测到 bean 实现了 Aware 接口，则会为其注入相应的依赖。所以通过让bean 实现 Aware 接口，则能在 bean 中获得相应的 Spring 容器资源</p><p>Spring 中提供的 Aware 接口有：</p><ul><li>BeanNameAware：注入当前 bean 对应 beanName</li><li>BeanClassLoaderAware：注入加载当前 bean 的 ClassLoader</li><li>BeanFactoryAware：注入 当前BeanFactory容器 的引用</li></ul><h3 id="beanpostprocessor"><a class="markdownIt-Anchor" href="#beanpostprocessor"></a> BeanPostProcessor</h3><ul><li>对于标记接口的实现类，进行自定义处理。例如ApplicationContextAwareProcessor，为其注入相应依赖；再举个例子，自定义对实现解密接口的类，将对其属性进行解密处理</li><li>为当前对象提供代理实现。例如 Spring AOP 功能，生成对象的代理类，然后返回</li></ul><h3 id="initializingbean-和-init-method"><a class="markdownIt-Anchor" href="#initializingbean-和-init-method"></a> InitializingBean 和 init-method</h3><p>InitializingBean接口实现了afterPropertiesSet()方法，afterPropertiesSet()方法里可以书写初始化逻辑</p><p>可以在配置文件中指定 init-method 方法，指定初始化方法</p><p><code>DisposableBean 和 destory-method 与上述类似，就不描述了</code></p><h1 id="ioc的实现原理"><a class="markdownIt-Anchor" href="#ioc的实现原理"></a> IoC的实现原理</h1><ul><li>扫描和解析配置文件或注解信息，讲其转换为内部的对象定义和依赖关系</li><li>根据对象的定义和依赖关系，使用反射机制动态创建和初始化对象，并将对象注入到需要用他们的地方</li><li>具体来说，对应着Bean的前3个大阶段</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Java信号量——Semaphore</title>
       <link href="/posts/Java%E4%BF%A1%E5%8F%B7%E9%87%8F%E2%80%94%E2%80%94Semaphore.html"/>
       <url>/posts/Java%E4%BF%A1%E5%8F%B7%E9%87%8F%E2%80%94%E2%80%94Semaphore.html</url>
