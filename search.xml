@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Spring事务</title>
+      <link href="/posts/Spring%E4%BA%8B%E5%8A%A1.html"/>
+      <url>/posts/Spring%E4%BA%8B%E5%8A%A1.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="Spring事务传播级别"><a href="#Spring事务传播级别" class="headerlink" title="Spring事务传播级别"></a>Spring事务传播级别</h1><p>事务的传播机制定义了一个方法被另一个事务方法调用的时候，这个事务的方法行为该如何，定义了事务的边界和事务上下文在方法调用链中传播</p><p><img src="/img/Spring%E4%BA%8B%E5%8A%A1/img1.png" alt="img"></p><p><img src="/img/Spring%E4%BA%8B%E5%8A%A1/img2.png" alt="img"></p><h1 id="Spring事务隔离级别"><a href="#Spring事务隔离级别" class="headerlink" title="Spring事务隔离级别"></a>Spring事务隔离级别</h1><p>ISOLATION_DEFAULT: 使用后端默认的事务隔离级别，MySQL是可重复读，Oracle是读已提交</p><ul><li>ISOLATION_READ_UNCOMMIT: 读未提交</li><li>ISOLATION_READ_COMMIT: 读已提交</li><li>ISOLATION_REPEATABLE_READ: 可重复读</li><li>ISOLATION_SERIALIZABLE: 串行化</li></ul><h1 id="声明式事务失效的场景"><a href="#声明式事务失效的场景" class="headerlink" title="声明式事务失效的场景"></a>声明式事务失效的场景</h1><ul><li>MySQL存储引擎是MyISAM，不支持事务</li><li>Spring的声明式事务是基于代理模式的。由于java继承时, 不能重写 private , final , static 修饰的方法，所以private 方法, final 方法 和 static 方法都没有事务支持</li><li>如果在开启事务的方法，事务try-catch捕获异常但没有抛出异常，事务不会起效</li><li>在不同类的方法调用，如果A方法开启了事务，B方法没有开启事务，B方法调用A<ul><li>如果B方法发生异常，但不是调用的A产生的，事务失效</li><li>如果B方法发生异常，但是调用的A产生的，事务有效</li><li>在B方法上加上@Trasactional，一定会生效</li></ul></li><li>同类方法调用，会失效。这是因为内部方法调用不会通过 Spring 生成的代理类进行调用，而是直接在当前对象中执行，因此 Spring 无法介入处理事务</li><li>如果使用了Spring+MVC，context：component-scan 重复扫描问题可能会引起事务失效。<ul><li>如果spring和mvc的配置文件中都扫描了service层，那么事务就会失效</li><li>原因：因为spring ioc中子容器可以加载父容器，父容器不能加载子容器。这里springmvc相当于子容器。按照spring配置文件的加载顺序来讲，先加载springmvc配置文件，再加载spring配置文件，我们的事务一般都在spring配置文件中进行配置，如果此时在加载springMVC配置文件的时候，把service也给注册了，但是此时事务还没加载，也就导致后面的事务无法成功注入到service中。所以把对service的扫描放在spring配置文件</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> SpringBoot </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> SpringBoot </tag>
+            
+            <tag> SSM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SpringBoot启动流程</title>
       <link href="/posts/SpringBoot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B.html"/>
       <url>/posts/SpringBoot%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B.html</url>
