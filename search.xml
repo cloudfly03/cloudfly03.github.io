@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Redis集群</title>
+      <link href="/posts/Redis%E9%9B%86%E7%BE%A4.html"/>
+      <url>/posts/Redis%E9%9B%86%E7%BE%A4.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="Redis集群架构有哪些"><a href="#Redis集群架构有哪些" class="headerlink" title="Redis集群架构有哪些"></a>Redis集群架构有哪些</h1><ul><li>主从架构：选择一台作为主服务器，将数据同步多台到从服务器上，构建一主多从的的模式，主从之间读写分离。主服务器可读可写，发生写操作会同步给从服务器，而从服务器一般是只读，且主从之间同步是异步的，所以无法实现强一致性保证</li><li>哨兵集群：当Redis的主服务器出现故障的时候，需要手动进行恢复，为了解决这个问题，Redis增加了哨兵模式，哨兵监控主从服务器，如果主服务器宕机了，会选择一个从服务器作为主服务器，并通知给其他从服务器和客户端</li><li>切片集群：当数据量大到一定程序的时候，需要使用Redis切片集群方案，将数据分布在不同服务器上，以此来降低系统对单节点的依赖</li></ul><h1 id="切片集群"><a href="#切片集群" class="headerlink" title="切片集群"></a>切片集群</h1><p>过程：</p><ul><li>根据键值对的key，按照CRC16算法计算出一个16bit</li><li>再用16bit值对16384取模得到一个模数，每个模数代表一个相应编号的哈希槽</li></ul><p>哈希槽分配：</p><ul><li>平均分配：使用cluster create命令创建Redis集群的时候，Redis会自动把所有哈希槽平均分布到集群节点上，比如有9个节点，就是16834&#x2F;9</li><li>手动分配：使用cluster meet命令手动建立节点之间的连接，组成集群，再使用cluster addslots命令，指定每个节点上的哈希槽个数</li></ul><h1 id="Redis主从复制过程"><a href="#Redis主从复制过程" class="headerlink" title="Redis主从复制过程"></a>Redis主从复制过程</h1><h2 id="全量同步"><a href="#全量同步" class="headerlink" title="全量同步"></a>全量同步</h2><p>slave获取master所有的数据：</p><ol><li>从服务器发送sync命令到主服务器，链接主服务</li><li>主服务器收到sync命令，进行存盘的操作，并继续收集后续的写命令，存储缓冲区</li><li>存盘结束后，将对应数据的文件写到slave中，完成一次全量同步</li><li>主服务器数据发送完毕后，将进行增量的缓冲区数据同步</li><li>slave加载数据文件和缓冲区文件，开始接受命令操作，提供操作</li></ol><h2 id="增量同步"><a href="#增量同步" class="headerlink" title="增量同步"></a>增量同步</h2><ul><li>从节点完成全量同步后，就可以开启增量同步。当master节点有写操作的时候，会自动同步到slave节点上。master节点每执行一个任务，都会写入到缓冲区中，随后将缓存区中的命令发给从节点执行</li></ul><h1 id="哨兵机制的工作原理"><a href="#哨兵机制的工作原理" class="headerlink" title="哨兵机制的工作原理"></a>哨兵机制的工作原理</h1><ol><li>判断节点是否存活：哨兵会周期性地给主从库发送PING命令来判断节点是否下线。如果主库没有在规定时间返回响应，则将该节点标记为主观下线，然后该哨兵节点会向其他哨兵节点发出投票命令，当投票命令到达一定阈值后该节点会标记为客观下线</li><li>投票：哨兵集群中会重新选择一个从leader来负责主从切换，选举是一个投票过程：判断主节点为客观下线的是候选者，候选者向其他节点发送命令表示要成为leader，其他哨兵会进行投票，每个哨兵只有一票，但是只有哨兵节点会自己投给自己。候选者拿到半数以上的赞成票并且达到了阈值会成为leader</li><li>选择出新的主节点：进行三轮考察，哪些节点胜出就进行下一轮，直到选出主节点<ol><li>根据从节点的优先级来排序，优先级的值越小排名越靠前</li><li>如果优先级相同，则查看复制的下标，哪个接受的复制数据多就选哪个</li><li>如果优先级和下标都相同，选择id最小的那个</li></ol></li><li>哨兵leader让已下线主节点属下的所有从节点指向新主节点</li><li>通知客户端的主节点已更换</li><li>将旧主节点变成从节点</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Redis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据库 </tag>
+            
+            <tag> Redis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SQL语法</title>
       <link href="/posts/SQL%E8%AF%AD%E6%B3%95.html"/>
       <url>/posts/SQL%E8%AF%AD%E6%B3%95.html</url>
