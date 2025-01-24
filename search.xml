@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>CopyOnWriteArrayList</title>
+      <link href="/posts/CopyOnWriteArrayList.html"/>
+      <url>/posts/CopyOnWriteArrayList.html</url>
+      
+        <content type="html"><![CDATA[<p>CopyOnWriteArrayList是Java并发包中提供的一个并发容器，它是个线程安全且读操作无锁的ArrayList，写操作则通过创建底层数组的新副本来实现，是一种读写分离的并发策略，我们也可以称这种容器为”写时复制器”，Java并发包中类似的容器还有CopyOnWriteSet</p><h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><ol><li>初始化时候，CopyOnWriteArrayList内部维护了一个可变数组，用于存储元素</li><li>修改的时候，首先将当前容器复制一份，然后在新副本上执行写操作，结束之后再将原容器的引用指向新容器</li><li>读操作直接在原数组上进行，因为读操作不会改变数据，所以读操作不会加锁</li></ol><p><img src="/img/CopyOnWriteArrayList/img1.png" alt="img"></p><h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><ul><li>我们可以对CopyOnWriteArrayList并发的读，而不需要加锁，采用了读写分离的思想，读和写不同的容器</li></ul><h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><ul><li>内存占用问题：因为CopyOnWriteArrayList的写时复制机制，在写的时候，内存中会出现两个对象的内存，旧的对象和新写入的对象，可能会造成频繁的young gc和full gc，影响性能</li><li>数据一致性问题：因为CopyOnWriteArrayList写和读分别作用在新老不同容器上，在写操作执行过程中，读不会阻塞但读取到的却是老容器的数据，只能保证数据的最终一致性，不能保证数据的实时一致性。所以你希望写入的数据马上被得到，就不能用CopyOnWriteArrayList</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> 多线程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>堆排序</title>
       <link href="/posts/%E5%A0%86%E6%8E%92%E5%BA%8F.html"/>
       <url>/posts/%E5%A0%86%E6%8E%92%E5%BA%8F.html</url>
