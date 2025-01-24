@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>HashMap的环形链表问题</title>
+      <link href="/posts/HashMap%E7%9A%84%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E9%97%AE%E9%A2%98.html"/>
+      <url>/posts/HashMap%E7%9A%84%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E9%97%AE%E9%A2%98.html</url>
+      
+        <content type="html"><![CDATA[<ul><li>在JDK1.7的时候，插入链表采用的是头插法，会先将一个需要迁移节点的next指向新位置，然后再将新位置设置成迁移节点。因此在多线程扩容的情况下，一个线程完成了两个节点的迁移，但是被调度到另一个还未完成的线程，就会出现循环链表的情况</li><li>在JDK1.8，采用了尾插法，只需要遍历一个个节点，挂在tail节点的后面即可，即使迁移过程有并发情况，指针也最多被复制两次</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> 多线程 </tag>
+            
+            <tag> 数据结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>CopyOnWriteArrayList</title>
       <link href="/posts/CopyOnWriteArrayList.html"/>
       <url>/posts/CopyOnWriteArrayList.html</url>
@@ -1675,7 +1704,7 @@
       <link href="/posts/HashTable%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB.html"/>
       <url>/posts/HashTable%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
       
-        <content type="html"><![CDATA[<p>1、HashMap是线程不安全的，HashTable是线程安全的</p><ul><li><p>HashMap：Fail-fast 机制。表示快速失败，在集合遍历过程中，一旦发现容器中的数据被修改了，会立刻抛出ConcurrentModificationException异常，从而导致遍历失败，像这种情况：定义一个Map集合，使用Iterator迭代器进行数据遍历，在遍历过程中，对集合数据做变更时，就会发生Fail-fast。java.util包下的集合类都是快速失败机制的, 常见的的使用Fail-fast方式遍历的容器有HashMap和ArrayList等。</p></li><li><p>HashTable：公开的方法比如get都使用了synchronized描述符。而遍历视图比如keySet都使用了Collections.synchronizedXXX进行了同步包装。并且是锁住全局的</p></li><li><p>Fail-fast底层实现：迭代器在遍历集合的过程，会维护一个modCount变量。如果在遍历过程modCount发生变化，在迭代器使用hasNext&#x2F;next遍历下一个元素的时候，都会检测modCount是否为expectedModCount的值，如果不是抛出异常。</p></li></ul><p>2、 由于线程安全，HashTable效率比不上HashMap</p><p>3、HashMap允许键为NULL，值为NULL。HashTable都不允许</p><ul><li>HashMap是支持null键和null值的，而HashTable在遇到null时，会抛出NullPointerException异常。这并不是因为HashTable有什么特殊的实现层面的原因导致不能支持null键和null值，这仅仅是因为HashMap在实现时对null做了特殊处理，将null的hashCode值定为了0，从而将其存放在哈希表的第0个bucket中。</li></ul><p>4、HashMap默认初始化数组大小是16，HashTable是11。HashMap扩容是扩大两倍，HashTable是两倍+1</p><p>5、HashMap不能直接使用hashCode计算下标，而是使用hashCode重新计算Hash值，再计算下标。HashTable使用的是hashCode计算下标（取mod）</p>]]></content>
+        <content type="html"><![CDATA[<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>1、HashMap是线程不安全的，HashTable是线程安全的</p><ul><li><p>HashMap：Fail-fast 机制。表示快速失败，在集合遍历过程中，一旦发现容器中的数据被修改了，会立刻抛出ConcurrentModificationException异常，从而导致遍历失败，像这种情况：定义一个Map集合，使用Iterator迭代器进行数据遍历，在遍历过程中，对集合数据做变更时，就会发生Fail-fast。java.util包下的集合类都是快速失败机制的, 常见的的使用Fail-fast方式遍历的容器有HashMap和ArrayList等。</p></li><li><p>HashTable：公开的方法比如get都使用了synchronized描述符。而遍历视图比如keySet都使用了Collections.synchronizedXXX进行了同步包装。并且是锁住全局的</p></li><li><p>Fail-fast底层实现：迭代器在遍历集合的过程，会维护一个modCount变量。如果在遍历过程modCount发生变化，在迭代器使用hasNext&#x2F;next遍历下一个元素的时候，都会检测modCount是否为expectedModCount的值，如果不是抛出异常。</p></li></ul><p>2、 由于线程安全，HashTable效率比不上HashMap</p><p>3、HashMap允许键为NULL，值为NULL。HashTable都不允许</p><ul><li>HashMap是支持null键和null值的，而HashTable在遇到null时，会抛出NullPointerException异常。这并不是因为HashTable有什么特殊的实现层面的原因导致不能支持null键和null值，这仅仅是因为HashMap在实现时对null做了特殊处理，将null的hashCode值定为了0，从而将其存放在哈希表的第0个bucket中。</li></ul><p>4、HashMap默认初始化数组大小是16，HashTable是11。HashMap扩容是扩大两倍，HashTable是两倍+1</p><p>5、HashMap不能直接使用hashCode计算下标，而是使用hashCode重新计算Hash值，再计算下标。HashTable使用的是hashCode计算下标（取mod）</p>]]></content>
       
       
       <categories>
