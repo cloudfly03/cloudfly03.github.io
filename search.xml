@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>Redis切片集群哈希槽为什么是16384个</title>
+      <link href="/posts/Redis%E5%88%87%E7%89%87%E9%9B%86%E7%BE%A4%E5%93%88%E5%B8%8C%E6%A7%BD%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF16384%E4%B8%AA.html"/>
+      <url>/posts/Redis%E5%88%87%E7%89%87%E9%9B%86%E7%BE%A4%E5%93%88%E5%B8%8C%E6%A7%BD%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF16384%E4%B8%AA.html</url>
+      
+        <content type="html"><![CDATA[<p>CRC16算法产生的hash值有16bit，该算法可以产生2^16-&#x3D;65536个值。换句话说，值是分布在0~65535之间。那作者在做mod运算的时候，为什么不mod65536，而选择mod16384？</p><ol><li>如果槽位为65536，发送心跳信息的消息头达8k，发送的心跳包过于庞大。在消息头中，最占空间的是myslots[CLUSTER_SLOTS&#x2F;8]。 当槽位为65536时，这块的大小是:65536÷8÷1024&#x3D;8kb。因为每秒钟，redis节点需要发送一定数量的ping消息作为心跳包，如果槽位为65536，这个ping消息的消息头太大了，浪费带宽</li><li>redis的集群主节点数量基本不可能超过1000个。 集群节点越多，心跳包的消息体内携带的数据越多。如果节点过1000个，也会导致网络拥堵。因此redis作者，不建议redis cluster节点数量超过1000个。 那么，对于节点数在1000以内的redis cluster集群，16384个槽位够用了。没有必要拓展到65536个</li><li>槽位越小，节点少的情况下，压缩比高。Redis主节点的配置信息中，它所负责的哈希槽是通过一张bitmap的形式来保存的，在传输过程中，会对bitmap进行压缩，但是如果bitmap的填充率slots &#x2F; N很高的话(N表示节点数)，bitmap的压缩率就很低</li><li>综上所述，Redis作者决定取16384个槽，不多不少</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 数据库 </tag>
+            
+            <tag> Redis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HashMap的环形链表问题</title>
       <link href="/posts/HashMap%E7%9A%84%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E9%97%AE%E9%A2%98.html"/>
       <url>/posts/HashMap%E7%9A%84%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E9%97%AE%E9%A2%98.html</url>
@@ -76,9 +97,9 @@
       
         <tags>
             
-            <tag> 数据结构 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 数据结构 </tag>
             
         </tags>
       
@@ -379,11 +400,11 @@
             
             <tag> Java </tag>
             
+            <tag> 工程应用 </tag>
+            
             <tag> SpringBoot </tag>
             
             <tag> SSM </tag>
-            
-            <tag> 工程应用 </tag>
             
         </tags>
       
@@ -410,11 +431,11 @@
             
             <tag> Java </tag>
             
+            <tag> 工程应用 </tag>
+            
             <tag> SpringBoot </tag>
             
             <tag> SSM </tag>
-            
-            <tag> 工程应用 </tag>
             
         </tags>
       
