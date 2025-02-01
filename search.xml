@@ -18,6 +18,84 @@
       </tags>
   </entry>
   <entry>
+    <title>CopyOnWriteArrayList</title>
+    <url>/posts/CopyOnWriteArrayList.html</url>
+    <content><![CDATA[<p>CopyOnWriteArrayList是Java并发包中提供的一个并发容器，它是个线程安全且读操作无锁的ArrayList，写操作则通过创建底层数组的新副本来实现，是一种读写分离的并发策略，我们也可以称这种容器为”写时复制器”，Java并发包中类似的容器还有CopyOnWriteSet</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><ol>
+<li>初始化时候，CopyOnWriteArrayList内部维护了一个可变数组，用于存储元素</li>
+<li>修改的时候，首先将当前容器复制一份，然后在新副本上执行写操作，结束之后再将原容器的引用指向新容器</li>
+<li>读操作直接在原数组上进行，因为读操作不会改变数据，所以读操作不会加锁</li>
+</ol>
+<p><img src="/img/CopyOnWriteArrayList/img1.png" alt="img"></p>
+<h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><ul>
+<li>我们可以对CopyOnWriteArrayList并发的读，而不需要加锁，采用了读写分离的思想，读和写不同的容器</li>
+</ul>
+<h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><ul>
+<li>内存占用问题：因为CopyOnWriteArrayList的写时复制机制，在写的时候，内存中会出现两个对象的内存，旧的对象和新写入的对象，可能会造成频繁的young gc和full gc，影响性能</li>
+<li>数据一致性问题：因为CopyOnWriteArrayList写和读分别作用在新老不同容器上，在写操作执行过程中，读不会阻塞但读取到的却是老容器的数据，只能保证数据的最终一致性，不能保证数据的实时一致性。所以你希望写入的数据马上被得到，就不能用CopyOnWriteArrayList</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DHCP简要概述</title>
+    <url>/posts/DHCP%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0.html</url>
+    <content><![CDATA[<h1 id="DHCP基本概念"><a href="#DHCP基本概念" class="headerlink" title="DHCP基本概念"></a>DHCP基本概念</h1><p>DHCP：动态主机配置协议，自动配置网络参数</p>
+<ul>
+<li>配置信息一般包括IP地址、子网掩码、默认路由器的IP地址和本地域名服务器的IP地址</li>
+<li>DHCP服务器分配给DHCP客户的IP地址等网络参数是临时的，只能在一段有限的时间内使用，这段时间称为租用期</li>
+<li>DHCP客户使用UDP的68号端口，DHCP服务器使用UDP的67号端口</li>
+<li>DHCP客户端启动的时候，需要利用广播报文寻找DHCP服务器，该广播报文属于本地网络广播，不能被路由转发</li>
+<li>因此，要求每一个网络上都有一台DHCP服务器</li>
+</ul>
+<h1 id="DHCP中继代理"><a href="#DHCP中继代理" class="headerlink" title="DHCP中继代理"></a>DHCP中继代理</h1><p>为了避免DHCP服务器过多，DHCP利用DHCP中继代理解决该问题</p>
+<ol>
+<li>DHCP中继代理配置了DHCP服务器的IP地址</li>
+<li>DHCP中继代理收到DHCP客户以广播形式发送的发现报文后，就以单播形式向DHCP服务器转发此报文，并等待其应答</li>
+<li>收到DHCP服务器的应答报文后，DHCP中继代理再把此应答报文发回给DHCP客户端</li>
+</ol>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>HTML文档的概述</title>
+    <url>/posts/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0.html</url>
+    <content><![CDATA[<p>超文本标记语言HTML是制作万维网页面的标准语言，目前版本HTML5.0</p>
+<p>HTML使用标记标签来描述网页文档，HTML标签是由尖括号包围的关键词，通常是成对出现的，例如<body>和</body>，其中第一个是开始标签，第二个是结束标签</p>
+<p>HTML标签的组成如下：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">tag-name</span> [[<span class="attr">attribute-name</span>[= <span class="string">arrribute-value]]...]</span>&gt;</span>(文本内容)<span class="tag">&lt;/<span class="name">tag-name</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>从开始标签道结束标签的所有代码称为<strong>HTML元素</strong></p>
+<p>完整的HTML文档如下：</p>
+<p><img src="/img/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0/img1.png" alt="alt text"></p>
+<p>为了控制文档的呈现方式，通常会使用<strong>层叠样式表(CSS)</strong></p>
+<p>CSS (Cascading Style Sheets，层叠样式表），是一种用来为结构化文档（如 HTML 文档或 XML 应用）添加样式（字体、间距和颜色等）的计算机语言，CSS 文件扩展名为 .css</p>
+<p>HTML文档分为静态文档、动态文档、活动文档三种：</p>
+<ul>
+<li>静态HTML文档：不会根据浏览器发来的数据而改变</li>
+<li>动态HTML文档：在浏览器访问服务器的时候才创建，当浏览器的请求到达的时候，服务器将URL映射到一个应用程序，由应用程序根据请求中的数据创建一个HTML文档</li>
+<li>活动HTML文档：把创建HTML的任务交给浏览器执行。服务器返回给浏览器的文档中包含脚本程序，浏览器执行脚本后，得到活动HTML文档</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Bean的生命周期以及IoC的实现原理</title>
     <url>/posts/Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8AIoC%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html</url>
     <content><![CDATA[<h1 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a>Bean的生命周期</h1><h2 id="概要流程"><a href="#概要流程" class="headerlink" title="概要流程"></a>概要流程</h2><p>单例对象：singleton</p>
@@ -68,21 +146,11 @@
       </tags>
   </entry>
   <entry>
-    <title>CopyOnWriteArrayList</title>
-    <url>/posts/CopyOnWriteArrayList.html</url>
-    <content><![CDATA[<p>CopyOnWriteArrayList是Java并发包中提供的一个并发容器，它是个线程安全且读操作无锁的ArrayList，写操作则通过创建底层数组的新副本来实现，是一种读写分离的并发策略，我们也可以称这种容器为”写时复制器”，Java并发包中类似的容器还有CopyOnWriteSet</p>
-<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><ol>
-<li>初始化时候，CopyOnWriteArrayList内部维护了一个可变数组，用于存储元素</li>
-<li>修改的时候，首先将当前容器复制一份，然后在新副本上执行写操作，结束之后再将原容器的引用指向新容器</li>
-<li>读操作直接在原数组上进行，因为读操作不会改变数据，所以读操作不会加锁</li>
-</ol>
-<p><img src="/img/CopyOnWriteArrayList/img1.png" alt="img"></p>
-<h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><ul>
-<li>我们可以对CopyOnWriteArrayList并发的读，而不需要加锁，采用了读写分离的思想，读和写不同的容器</li>
-</ul>
-<h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><ul>
-<li>内存占用问题：因为CopyOnWriteArrayList的写时复制机制，在写的时候，内存中会出现两个对象的内存，旧的对象和新写入的对象，可能会造成频繁的young gc和full gc，影响性能</li>
-<li>数据一致性问题：因为CopyOnWriteArrayList写和读分别作用在新老不同容器上，在写操作执行过程中，读不会阻塞但读取到的却是老容器的数据，只能保证数据的最终一致性，不能保证数据的实时一致性。所以你希望写入的数据马上被得到，就不能用CopyOnWriteArrayList</li>
+    <title>HashMap的环形链表问题</title>
+    <url>/posts/HashMap%E7%9A%84%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E9%97%AE%E9%A2%98.html</url>
+    <content><![CDATA[<ul>
+<li>在JDK1.7的时候，插入链表采用的是头插法，会先将一个需要迁移节点的next指向新位置，然后再将新位置设置成迁移节点。因此在多线程扩容的情况下，一个线程完成了两个节点的迁移，但是被调度到另一个还未完成的线程，就会出现循环链表的情况</li>
+<li>在JDK1.8，采用了尾插法，只需要遍历一个个节点，挂在tail节点的后面即可，即使迁移过程有并发情况，指针也最多被复制两次</li>
 </ul>
 ]]></content>
       <categories>
@@ -91,33 +159,36 @@
       <tags>
         <tag>Java</tag>
         <tag>多线程</tag>
+        <tag>数据结构</tag>
       </tags>
   </entry>
   <entry>
-    <title>HTML文档的概述</title>
-    <url>/posts/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0.html</url>
-    <content><![CDATA[<p>超文本标记语言HTML是制作万维网页面的标准语言，目前版本HTML5.0</p>
-<p>HTML使用标记标签来描述网页文档，HTML标签是由尖括号包围的关键词，通常是成对出现的，例如<body>和</body>，其中第一个是开始标签，第二个是结束标签</p>
-<p>HTML标签的组成如下：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">tag-name</span> [[<span class="attr">attribute-name</span>[= <span class="string">arrribute-value]]...]</span>&gt;</span>(文本内容)<span class="tag">&lt;/<span class="name">tag-name</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>从开始标签道结束标签的所有代码称为<strong>HTML元素</strong></p>
-<p>完整的HTML文档如下：</p>
-<p><img src="/img/HTML%E6%96%87%E6%A1%A3%E7%9A%84%E6%A6%82%E8%BF%B0/img1.png" alt="alt text"></p>
-<p>为了控制文档的呈现方式，通常会使用<strong>层叠样式表(CSS)</strong></p>
-<p>CSS (Cascading Style Sheets，层叠样式表），是一种用来为结构化文档（如 HTML 文档或 XML 应用）添加样式（字体、间距和颜色等）的计算机语言，CSS 文件扩展名为 .css</p>
-<p>HTML文档分为静态文档、动态文档、活动文档三种：</p>
+    <title>HashTable和HashMap的区别</title>
+    <url>/posts/HashTable%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
+    <content><![CDATA[<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>1、HashMap是线程不安全的，HashTable是线程安全的</p>
 <ul>
-<li>静态HTML文档：不会根据浏览器发来的数据而改变</li>
-<li>动态HTML文档：在浏览器访问服务器的时候才创建，当浏览器的请求到达的时候，服务器将URL映射到一个应用程序，由应用程序根据请求中的数据创建一个HTML文档</li>
-<li>活动HTML文档：把创建HTML的任务交给浏览器执行。服务器返回给浏览器的文档中包含脚本程序，浏览器执行脚本后，得到活动HTML文档</li>
+<li><p>HashMap：Fail-fast 机制。表示快速失败，在集合遍历过程中，一旦发现容器中的数据被修改了，会立刻抛出ConcurrentModificationException异常，从而导致遍历失败，像这种情况：定义一个Map集合，使用Iterator迭代器进行数据遍历，在遍历过程中，对集合数据做变更时，就会发生Fail-fast。java.util包下的集合类都是快速失败机制的, 常见的的使用Fail-fast方式遍历的容器有HashMap和ArrayList等。</p>
+</li>
+<li><p>HashTable：公开的方法比如get都使用了synchronized描述符。而遍历视图比如keySet都使用了Collections.synchronizedXXX进行了同步包装。并且是锁住全局的</p>
+</li>
+<li><p>Fail-fast底层实现：迭代器在遍历集合的过程，会维护一个modCount变量。如果在遍历过程modCount发生变化，在迭代器使用hasNext&#x2F;next遍历下一个元素的时候，都会检测modCount是否为expectedModCount的值，如果不是抛出异常。</p>
+</li>
 </ul>
+<p>2、 由于线程安全，HashTable效率比不上HashMap</p>
+<p>3、HashMap允许键为NULL，值为NULL。HashTable都不允许</p>
+<ul>
+<li>HashMap是支持null键和null值的，而HashTable在遇到null时，会抛出NullPointerException异常。这并不是因为HashTable有什么特殊的实现层面的原因导致不能支持null键和null值，这仅仅是因为HashMap在实现时对null做了特殊处理，将null的hashCode值定为了0，从而将其存放在哈希表的第0个bucket中。</li>
+</ul>
+<p>4、HashMap默认初始化数组大小是16，HashTable是11。HashMap扩容是扩大两倍，HashTable是两倍+1</p>
+<p>5、HashMap不能直接使用hashCode计算下标，而是使用hashCode重新计算Hash值，再计算下标。HashTable使用的是hashCode计算下标（取mod）</p>
 ]]></content>
       <categories>
-        <category>计算机网络</category>
+        <category>Java</category>
       </categories>
       <tags>
-        <tag>计算机网络</tag>
+        <tag>Java</tag>
+        <tag>多线程</tag>
+        <tag>数据结构</tag>
       </tags>
   </entry>
   <entry>
@@ -210,48 +281,6 @@
       </tags>
   </entry>
   <entry>
-    <title>DHCP简要概述</title>
-    <url>/posts/DHCP%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0.html</url>
-    <content><![CDATA[<h1 id="DHCP基本概念"><a href="#DHCP基本概念" class="headerlink" title="DHCP基本概念"></a>DHCP基本概念</h1><p>DHCP：动态主机配置协议，自动配置网络参数</p>
-<ul>
-<li>配置信息一般包括IP地址、子网掩码、默认路由器的IP地址和本地域名服务器的IP地址</li>
-<li>DHCP服务器分配给DHCP客户的IP地址等网络参数是临时的，只能在一段有限的时间内使用，这段时间称为租用期</li>
-<li>DHCP客户使用UDP的68号端口，DHCP服务器使用UDP的67号端口</li>
-<li>DHCP客户端启动的时候，需要利用广播报文寻找DHCP服务器，该广播报文属于本地网络广播，不能被路由转发</li>
-<li>因此，要求每一个网络上都有一台DHCP服务器</li>
-</ul>
-<h1 id="DHCP中继代理"><a href="#DHCP中继代理" class="headerlink" title="DHCP中继代理"></a>DHCP中继代理</h1><p>为了避免DHCP服务器过多，DHCP利用DHCP中继代理解决该问题</p>
-<ol>
-<li>DHCP中继代理配置了DHCP服务器的IP地址</li>
-<li>DHCP中继代理收到DHCP客户以广播形式发送的发现报文后，就以单播形式向DHCP服务器转发此报文，并等待其应答</li>
-<li>收到DHCP服务器的应答报文后，DHCP中继代理再把此应答报文发回给DHCP客户端</li>
-</ol>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>HashMap的环形链表问题</title>
-    <url>/posts/HashMap%E7%9A%84%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E9%97%AE%E9%A2%98.html</url>
-    <content><![CDATA[<ul>
-<li>在JDK1.7的时候，插入链表采用的是头插法，会先将一个需要迁移节点的next指向新位置，然后再将新位置设置成迁移节点。因此在多线程扩容的情况下，一个线程完成了两个节点的迁移，但是被调度到另一个还未完成的线程，就会出现循环链表的情况</li>
-<li>在JDK1.8，采用了尾插法，只需要遍历一个个节点，挂在tail节点的后面即可，即使迁移过程有并发情况，指针也最多被复制两次</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>多线程</tag>
-        <tag>数据结构</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IOC的三级缓存以及循环依赖问题</title>
     <url>/posts/IOC%E7%9A%84%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E4%BB%A5%E5%8F%8A%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98.html</url>
     <content><![CDATA[<h1 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h1><ul>
@@ -309,35 +338,6 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>HashTable和HashMap的区别</title>
-    <url>/posts/HashTable%E5%92%8CHashMap%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
-    <content><![CDATA[<h1 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h1><p>1、HashMap是线程不安全的，HashTable是线程安全的</p>
-<ul>
-<li><p>HashMap：Fail-fast 机制。表示快速失败，在集合遍历过程中，一旦发现容器中的数据被修改了，会立刻抛出ConcurrentModificationException异常，从而导致遍历失败，像这种情况：定义一个Map集合，使用Iterator迭代器进行数据遍历，在遍历过程中，对集合数据做变更时，就会发生Fail-fast。java.util包下的集合类都是快速失败机制的, 常见的的使用Fail-fast方式遍历的容器有HashMap和ArrayList等。</p>
-</li>
-<li><p>HashTable：公开的方法比如get都使用了synchronized描述符。而遍历视图比如keySet都使用了Collections.synchronizedXXX进行了同步包装。并且是锁住全局的</p>
-</li>
-<li><p>Fail-fast底层实现：迭代器在遍历集合的过程，会维护一个modCount变量。如果在遍历过程modCount发生变化，在迭代器使用hasNext&#x2F;next遍历下一个元素的时候，都会检测modCount是否为expectedModCount的值，如果不是抛出异常。</p>
-</li>
-</ul>
-<p>2、 由于线程安全，HashTable效率比不上HashMap</p>
-<p>3、HashMap允许键为NULL，值为NULL。HashTable都不允许</p>
-<ul>
-<li>HashMap是支持null键和null值的，而HashTable在遇到null时，会抛出NullPointerException异常。这并不是因为HashTable有什么特殊的实现层面的原因导致不能支持null键和null值，这仅仅是因为HashMap在实现时对null做了特殊处理，将null的hashCode值定为了0，从而将其存放在哈希表的第0个bucket中。</li>
-</ul>
-<p>4、HashMap默认初始化数组大小是16，HashTable是11。HashMap扩容是扩大两倍，HashTable是两倍+1</p>
-<p>5、HashMap不能直接使用hashCode计算下标，而是使用hashCode重新计算Hash值，再计算下标。HashTable使用的是hashCode计算下标（取mod）</p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>多线程</tag>
-        <tag>数据结构</tag>
       </tags>
   </entry>
   <entry>
@@ -416,6 +416,51 @@
         <tag>Java</tag>
         <tag>工程应用</tag>
         <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java信号量——Semaphore</title>
+    <url>/posts/Java%E4%BF%A1%E5%8F%B7%E9%87%8F%E2%80%94%E2%80%94Semaphore.html</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>Semaphore是一个计数信号量，它可以用来控制对某一资源的访问数量。在Java中，Semaphore位于java.util.concurrent包中</p>
+<h1 id="Semaphore的用途"><a href="#Semaphore的用途" class="headerlink" title="Semaphore的用途"></a>Semaphore的用途</h1><p>流量控制：Semaphore可以用来控制同时访问特定资源的线程数量，例如数据库连接、文件句柄等<br>分配资源：Semaphore可以用来分配有限数量的资源，例如线程池、线程队列等</p>
+<h1 id="Semaphore的使用技巧"><a href="#Semaphore的使用技巧" class="headerlink" title="Semaphore的使用技巧"></a>Semaphore的使用技巧</h1><ol>
+<li>创建Semaphore</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Semaphore</span> <span class="variable">semaphore</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">5</span>);  </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>获取信号量</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">semaphore.acquire();  </span><br></pre></td></tr></table></figure>
+
+<p>请求一个信号量，这时候的信号量个数-1（是尝试获取，如果是&gt;0就减去, 否则阻塞等待信号量&gt;0）</p>
+<ol start="3">
+<li>释放信号量</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">semaphore.release();  </span><br></pre></td></tr></table></figure>
+
+<p>信号量+1</p>
+<ol start="4">
+<li>使用tryAcquire方法</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">acquired</span> <span class="operator">=</span> semaphore.tryAcquire();  </span><br></pre></td></tr></table></figure>
+
+<p>上述代码尝试获取信号量，如果成功则返回true，否则返回false</p>
+<ol start="5">
+<li>使用tryAcquire(long timeout, TimeUnit unit)方法</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">acquired</span> <span class="operator">=</span> semaphore.tryAcquire(<span class="number">1000</span>, TimeUnit.MILLISECONDS);  </span><br></pre></td></tr></table></figure>
+
+<p>上述代码尝试获取信号量，如果成功则返回true，否则在指定的时间内返回false</p>
+<h1 id="力扣1116-打印零与奇偶数"><a href="#力扣1116-打印零与奇偶数" class="headerlink" title="力扣1116 打印零与奇偶数"></a>力扣1116 打印零与奇偶数</h1><p><a href="https://leetcode.cn/problems/print-zero-even-odd/description/">https://leetcode.cn/problems/print-zero-even-odd/description/</a></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ZeroEvenOdd</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ZeroEvenOdd</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// printNumber.accept(x) outputs &quot;x&quot;, where x is an integer.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">s0</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zero</span><span class="params">(IntConsumer printNumber)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            s0.acquire();</span><br><span class="line">            printNumber.accept(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">1</span>) s1.release();</span><br><span class="line">            <span class="keyword">else</span> s2.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">odd</span><span class="params">(IntConsumer printNumber)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i += <span class="number">2</span>) &#123;</span><br><span class="line">            s1.acquire();</span><br><span class="line">            printNumber.accept(i);</span><br><span class="line">            s0.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">even</span><span class="params">(IntConsumer printNumber)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= n; i += <span class="number">2</span>) &#123;</span><br><span class="line">            s2.acquire();</span><br><span class="line">            printNumber.accept(i);</span><br><span class="line">            s0.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>多线程</tag>
       </tags>
   </entry>
   <entry>
@@ -655,79 +700,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java信号量——Semaphore</title>
-    <url>/posts/Java%E4%BF%A1%E5%8F%B7%E9%87%8F%E2%80%94%E2%80%94Semaphore.html</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>Semaphore是一个计数信号量，它可以用来控制对某一资源的访问数量。在Java中，Semaphore位于java.util.concurrent包中</p>
-<h1 id="Semaphore的用途"><a href="#Semaphore的用途" class="headerlink" title="Semaphore的用途"></a>Semaphore的用途</h1><p>流量控制：Semaphore可以用来控制同时访问特定资源的线程数量，例如数据库连接、文件句柄等<br>分配资源：Semaphore可以用来分配有限数量的资源，例如线程池、线程队列等</p>
-<h1 id="Semaphore的使用技巧"><a href="#Semaphore的使用技巧" class="headerlink" title="Semaphore的使用技巧"></a>Semaphore的使用技巧</h1><ol>
-<li>创建Semaphore</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Semaphore</span> <span class="variable">semaphore</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">5</span>);  </span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>获取信号量</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">semaphore.acquire();  </span><br></pre></td></tr></table></figure>
-
-<p>请求一个信号量，这时候的信号量个数-1（是尝试获取，如果是&gt;0就减去, 否则阻塞等待信号量&gt;0）</p>
-<ol start="3">
-<li>释放信号量</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">semaphore.release();  </span><br></pre></td></tr></table></figure>
-
-<p>信号量+1</p>
-<ol start="4">
-<li>使用tryAcquire方法</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">acquired</span> <span class="operator">=</span> semaphore.tryAcquire();  </span><br></pre></td></tr></table></figure>
-
-<p>上述代码尝试获取信号量，如果成功则返回true，否则返回false</p>
-<ol start="5">
-<li>使用tryAcquire(long timeout, TimeUnit unit)方法</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">acquired</span> <span class="operator">=</span> semaphore.tryAcquire(<span class="number">1000</span>, TimeUnit.MILLISECONDS);  </span><br></pre></td></tr></table></figure>
-
-<p>上述代码尝试获取信号量，如果成功则返回true，否则在指定的时间内返回false</p>
-<h1 id="力扣1116-打印零与奇偶数"><a href="#力扣1116-打印零与奇偶数" class="headerlink" title="力扣1116 打印零与奇偶数"></a>力扣1116 打印零与奇偶数</h1><p><a href="https://leetcode.cn/problems/print-zero-even-odd/description/">https://leetcode.cn/problems/print-zero-even-odd/description/</a></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ZeroEvenOdd</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> n;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ZeroEvenOdd</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.n = n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// printNumber.accept(x) outputs &quot;x&quot;, where x is an integer.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">s0</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">s1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Semaphore</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Semaphore</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">zero</span><span class="params">(IntConsumer printNumber)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            s0.acquire();</span><br><span class="line">            printNumber.accept(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">1</span>) s1.release();</span><br><span class="line">            <span class="keyword">else</span> s2.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">odd</span><span class="params">(IntConsumer printNumber)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= n; i += <span class="number">2</span>) &#123;</span><br><span class="line">            s1.acquire();</span><br><span class="line">            printNumber.accept(i);</span><br><span class="line">            s0.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">even</span><span class="params">(IntConsumer printNumber)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">2</span>; i &lt;= n; i += <span class="number">2</span>) &#123;</span><br><span class="line">            s2.acquire();</span><br><span class="line">            printNumber.accept(i);</span><br><span class="line">            s0.release();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>多线程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java线程安全问题</title>
-    <url>/posts/Java%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98.html</url>
-    <content><![CDATA[<h1 id="Java线程安全性问题"><a href="#Java线程安全性问题" class="headerlink" title="Java线程安全性问题"></a>Java线程安全性问题</h1><ul>
-<li>原子性：一个或多个线程操作 CPU 执行的过程中被中断，互斥性称为操作的原子性</li>
-<li>可见性：一个线程对共享变量的修改，其他线程不能立刻看到。要保证一个线程对主内存的修改可以及时的被其他线程观察到</li>
-<li>有序性：程序执行的顺序没有按照代码的先后顺序执行</li>
-</ul>
-<h1 id="原子性安全"><a href="#原子性安全" class="headerlink" title="原子性安全"></a>原子性安全</h1><p>JDK 里面提供了很多 atomic 类，比如 AtomicInteger、AtomicLong、AtomicBoolean 等等，这些类本身可以通过 CAS 来保证操作的原子性。另外 Java 也提供了各种锁机制，来保证锁内的代码块在同一时刻只能有一个线程执行，比如使用 synchronized 加锁，保证一个线程在对资源进行读、写时，其他线程不可对此资源进行操作，从而保证了线程的安全性</p>
-<h1 id="可见性安全"><a href="#可见性安全" class="headerlink" title="可见性安全"></a>可见性安全</h1><p>同样可以通过 synchronized 关键字加锁来解决，与此同时，java 还提供了 volatile 关键字，要优于 synchronized 的性能，同样可以保证修改对其他线程的可见性。volatile 一般用于对变量的写操作不依赖于当前值的场景中，比如状态标记量等</p>
-<h1 id="有序性问题"><a href="#有序性问题" class="headerlink" title="有序性问题"></a>有序性问题</h1><p>主要来自指令重排序带来的有序性问题。可以通过 synchronized 关键字定义同步代码块或者同步方法保障有序性，另外也可以通过 Lock 接口来保障有序性</p>
-<h1 id="有序性-happens-before原则"><a href="#有序性-happens-before原则" class="headerlink" title="有序性-happens-before原则"></a>有序性-happens-before原则</h1><ol>
-<li>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于写在后面的操作(虽然虚拟机可能进行了重排序，但是程序执行的顺序看起来是按照在代码书写的样式执行的。只会对数据不存在依赖性的指令进行重排序)；这条规则只能保障单线程中保持正 确性，而无法在多线程中保持正确性</li>
-<li>锁定规则：一个unlock操作先行发生于后面对同一个资源lock的操作(对一段代码或一个变量，只有锁定了资源的锁先执行了unlock操作，下一个线程才有可能执行lock操作。这里需要注意，当一个锁再一次进入同一个锁的时，这时候是否先执行unlock还是怎样？？不会，这是可重入锁，不会进行释放，而是计数量会-1)</li>
-<li>volatile变量规则：对一个变量的写操作先行发生于后面这个变量的读操作</li>
-<li>传递规则：如果操作A先发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C</li>
-<li>线程启动规则：Thread对象的start()方法先行发生于此线程的每一个动作</li>
-<li>线程终结规则: 线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回手段检测到线程已经终止执行</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>多线程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Kafka应用场景</title>
     <url>/posts/Kafka%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF.html</url>
     <content><![CDATA[<h1 id="消息队列常见应用常见有哪些"><a href="#消息队列常见应用常见有哪些" class="headerlink" title="消息队列常见应用常见有哪些"></a>消息队列常见应用常见有哪些</h1><ul>
@@ -761,123 +733,31 @@
       </tags>
   </entry>
   <entry>
-    <title>Kafka服务端</title>
-    <url>/posts/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF.html</url>
-    <content><![CDATA[<h1 id="Kafka的大致框架是什么样"><a href="#Kafka的大致框架是什么样" class="headerlink" title="Kafka的大致框架是什么样"></a>Kafka的大致框架是什么样</h1><ul>
-<li>Kafka分为三层：生产者（Producer）、中转者（Server）、消费者（Consumer）</li>
-<li>生产者负责发送消息，服务端负责存储消息，消费者负责拉取消息</li>
-<li>其中服务端是由多个Broker节点组成，我们常说的主题Topic在Broker节点上。当然，Topic是一个逻辑概念，实际物理存储是主题分片，也就是Partition</li>
+    <title>Java线程安全问题</title>
+    <url>/posts/Java%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98.html</url>
+    <content><![CDATA[<h1 id="Java线程安全性问题"><a href="#Java线程安全性问题" class="headerlink" title="Java线程安全性问题"></a>Java线程安全性问题</h1><ul>
+<li>原子性：一个或多个线程操作 CPU 执行的过程中被中断，互斥性称为操作的原子性</li>
+<li>可见性：一个线程对共享变量的修改，其他线程不能立刻看到。要保证一个线程对主内存的修改可以及时的被其他线程观察到</li>
+<li>有序性：程序执行的顺序没有按照代码的先后顺序执行</li>
 </ul>
-<h1 id="如何获取topic主题的列表"><a href="#如何获取topic主题的列表" class="headerlink" title="如何获取topic主题的列表"></a>如何获取topic主题的列表</h1><ul>
-<li>Kafka提供了获取主题列表的接口，可以通过kafka-topic.sh这个工具获取，如果要在业务中获取，主流语言比如Java、Golang都支持，都可以直接调用KafkaAdminClient这个接口来获取</li>
-<li>kafka-topics.sh 脚本主要负责 topic 相关的操作。它的具体实现是通过 kafka-run-class 来调用 TopicCommand 类，并根据参数执行指定的功能</li>
-</ul>
-<p>通过kafka-topics.sh获取：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./kafka-topics.sh --list --bootstrap-server localhost:9092</span><br></pre></td></tr></table></figure>
-
-<p>通过KafkaAdminClient获取，Java和Golang都是通过AdminClient来获取的：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">NEW_TOPIC</span> <span class="operator">=</span> <span class="string">&quot;topic-test2&quot;</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">brokerUrl</span> <span class="operator">=</span> <span class="string">&quot;localhost:9092&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> AdminClient adminClient;</span><br><span class="line"></span><br><span class="line"><span class="meta">@BeforeClass</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">beforeClass</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    properties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);</span><br><span class="line">    adminClient = AdminClient.create(properties);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@AfterClass</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">afterClass</span><span class="params">()</span>&#123;</span><br><span class="line">    adminClient.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createTopics</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">NewTopic</span> <span class="variable">newTopic</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NewTopic</span>(NEW_TOPIC,<span class="number">4</span>, (<span class="type">short</span>) <span class="number">1</span>);</span><br><span class="line">    Collection&lt;NewTopic&gt; newTopicList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    newTopicList.add(newTopic);</span><br><span class="line">    adminClient.createTopics(newTopicList);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="有了topic，为什么还需要partition-为什么消息队列还需要分区"><a href="#有了topic，为什么还需要partition-为什么消息队列还需要分区" class="headerlink" title="有了topic，为什么还需要partition&#x2F;为什么消息队列还需要分区"></a>有了topic，为什么还需要partition&#x2F;为什么消息队列还需要分区</h1><ul>
-<li>如果不进行分区，我们消息写数据只能到一个节点上，这样的话可能会导致单点服务器负载过高，通过分区可以把数据均匀地分布在各个节点上。因此分区带来了负载均衡和横向扩展的能力</li>
-<li>发送消息的时候可以根据分区分配的原则落在不同的Kafka服务器上，提高了并发写消息的能力，消费消息的时候又和消费者绑定了关系，可以从不同节点的不同分区消费消息，提高了读消息的能力</li>
-<li>分区引入了副本，保证了kafka的高可用和高持久性</li>
-</ul>
-<h1 id="partition是逻辑概念还是物理概念"><a href="#partition是逻辑概念还是物理概念" class="headerlink" title="partition是逻辑概念还是物理概念"></a>partition是逻辑概念还是物理概念</h1><p>partition是物理概念，数据是写入partition文件中</p>
-<h1 id="介绍一下分区的分配策略"><a href="#介绍一下分区的分配策略" class="headerlink" title="介绍一下分区的分配策略"></a>介绍一下分区的分配策略</h1><p>消费端partition.assignment.strategy这个配置：</p>
-<ul>
-<li>Range Assignor：基于范围的分配策略，将分区按照范围分配给消费者</li>
-<li>RoundRobin Assignor：基于轮询的分配策略，分区均匀地分配给消费者</li>
-<li>Sticky Assignor：优先保持当前的分配状态，并尽量减少在再平衡过程中的分区移动</li>
-<li>CooperativeStickyAssignor：和Sticky Assignor策略基本是一样的，区别在于该协议将原来的一次大的全部分区重平衡，改成多次小规模分区重平衡。简单理解就是渐进式重平衡</li>
-</ul>
-<h1 id="创建topic时如何将分区（Partition）放置到不同的Broker中"><a href="#创建topic时如何将分区（Partition）放置到不同的Broker中" class="headerlink" title="创建topic时如何将分区（Partition）放置到不同的Broker中"></a>创建topic时如何将分区（Partition）放置到不同的Broker中</h1><ul>
-<li>partition是存放在Broker节点上，如果单个Broker肯定是放在一个Broker上</li>
-<li>如果是多个Broker，则partition是放在不同的Broker上。具体地，一个partition只对应一个Broker，一个Broker可以拥有多个partition</li>
-</ul>
-<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img1.png" alt="img"></p>
-<p>规则：</p>
-<ol>
-<li>先随机选取一个Broker，比如Broker11</li>
-<li>将主题对应的第一个分片，放入Broker11中，即TopicB的0号分片放入到Broker11中</li>
-<li>Broker依次往后放TopicB的后续分片，比如TopicB的1号分片放入到Broker12中，Topic在我们的例子中只有2个，如果有三个下一个则放入到Broker10中</li>
+<h1 id="原子性安全"><a href="#原子性安全" class="headerlink" title="原子性安全"></a>原子性安全</h1><p>JDK 里面提供了很多 atomic 类，比如 AtomicInteger、AtomicLong、AtomicBoolean 等等，这些类本身可以通过 CAS 来保证操作的原子性。另外 Java 也提供了各种锁机制，来保证锁内的代码块在同一时刻只能有一个线程执行，比如使用 synchronized 加锁，保证一个线程在对资源进行读、写时，其他线程不可对此资源进行操作，从而保证了线程的安全性</p>
+<h1 id="可见性安全"><a href="#可见性安全" class="headerlink" title="可见性安全"></a>可见性安全</h1><p>同样可以通过 synchronized 关键字加锁来解决，与此同时，java 还提供了 volatile 关键字，要优于 synchronized 的性能，同样可以保证修改对其他线程的可见性。volatile 一般用于对变量的写操作不依赖于当前值的场景中，比如状态标记量等</p>
+<h1 id="有序性问题"><a href="#有序性问题" class="headerlink" title="有序性问题"></a>有序性问题</h1><p>主要来自指令重排序带来的有序性问题。可以通过 synchronized 关键字定义同步代码块或者同步方法保障有序性，另外也可以通过 Lock 接口来保障有序性</p>
+<h1 id="有序性-happens-before原则"><a href="#有序性-happens-before原则" class="headerlink" title="有序性-happens-before原则"></a>有序性-happens-before原则</h1><ol>
+<li>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于写在后面的操作(虽然虚拟机可能进行了重排序，但是程序执行的顺序看起来是按照在代码书写的样式执行的。只会对数据不存在依赖性的指令进行重排序)；这条规则只能保障单线程中保持正 确性，而无法在多线程中保持正确性</li>
+<li>锁定规则：一个unlock操作先行发生于后面对同一个资源lock的操作(对一段代码或一个变量，只有锁定了资源的锁先执行了unlock操作，下一个线程才有可能执行lock操作。这里需要注意，当一个锁再一次进入同一个锁的时，这时候是否先执行unlock还是怎样？？不会，这是可重入锁，不会进行释放，而是计数量会-1)</li>
+<li>volatile变量规则：对一个变量的写操作先行发生于后面这个变量的读操作</li>
+<li>传递规则：如果操作A先发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C</li>
+<li>线程启动规则：Thread对象的start()方法先行发生于此线程的每一个动作</li>
+<li>线程终结规则: 线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回手段检测到线程已经终止执行</li>
 </ol>
-<h1 id="消息存入Partition的规则-Kafka分区分配的规则"><a href="#消息存入Partition的规则-Kafka分区分配的规则" class="headerlink" title="消息存入Partition的规则&#x2F;Kafka分区分配的规则"></a>消息存入Partition的规则&#x2F;Kafka分区分配的规则</h1><ul>
-<li>如果指定了partition则发送到特定的partition，但是一般情况下，业务不需要感知partition</li>
-<li>如果没有指定partition，但是指定了一个key，那么根据key的hash值对partition数目取模来决定是哪个partition</li>
-<li>如果没有指定partition，也没有指定key，那么就采取轮询调度算法，也就是把每一次来自用户的请求轮流分配给partition</li>
-</ul>
-<h1 id="Kafka服务端可以接收的消息最大默认是多少字节，如何修改"><a href="#Kafka服务端可以接收的消息最大默认是多少字节，如何修改" class="headerlink" title="Kafka服务端可以接收的消息最大默认是多少字节，如何修改"></a>Kafka服务端可以接收的消息最大默认是多少字节，如何修改</h1><p>Kafka可以接收的最大消息默认是1MB，如果想调整它的大小，可以在Broker修改配置参数：message.max.bytes的值</p>
-<h1 id="客户端如何连接集群"><a href="#客户端如何连接集群" class="headerlink" title="客户端如何连接集群"></a>客户端如何连接集群</h1><p>每个Broker都有其他Broker的信息，这是一个大前提</p>
-<ol>
-<li>访问任意一台Broker，申请获得路由信息</li>
-<li>得到所有的Broker的信息列表，返回路由信息</li>
-<li>根据连接规则连接到具体的Broker，即算出来具体发送到哪一个partition，然后访问到对应的Broker</li>
-</ol>
-<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img2.png" alt="img"></p>
-<h1 id="kafka的topic中的partition数据是如何存储到磁盘中的"><a href="#kafka的topic中的partition数据是如何存储到磁盘中的" class="headerlink" title="kafka的topic中的partition数据是如何存储到磁盘中的"></a>kafka的topic中的partition数据是如何存储到磁盘中的</h1><h2 id="kafka多层划分"><a href="#kafka多层划分" class="headerlink" title="kafka多层划分"></a>kafka多层划分</h2><ol>
-<li>首先是topic划分，不同的topic可以看成不同的小数组，这些小数组可以分别存放在不同的Broker上</li>
-<li>其次，每个topic还做了切分，分成了多个topic，也就是一个主题可以分成多个主题分片</li>
-<li>最后，每个partition还做了进一步拆分，也就是一个partition对应了多个不同的文件，这些文件是分离的，是：<ul>
-<li>.log文件，消息本身，记录了数据</li>
-<li>.timeindex文件，时间索引，可以通过时间对.log文件做索引查询</li>
-<li>.index文件，偏移索引，可以通过位置对.log文章做索引查询</li>
-<li>查找的时候先去.index或者.timeindex文件中查找，再去.log文件中查找。因此这两个文件需要加载进入内核内存，所以不能太多</li>
-</ul>
-</li>
-</ol>
-<h2 id="partition文件细节"><a href="#partition文件细节" class="headerlink" title="partition文件细节"></a>partition文件细节</h2><p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img4.png" alt="img"></p>
-<p>index 和 log 文件以当前 segment 的第一条消息的 offset 命名</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">00000000000000000000.index</span><br><span class="line">00000000000000000000.log</span><br><span class="line">00000000000000000000.timeindex</span><br><span class="line"></span><br><span class="line">00000000000000170410.index</span><br><span class="line">00000000000000170410.log</span><br><span class="line">00000000000000170410.timeindex</span><br><span class="line"></span><br><span class="line">00000000000000239430.index</span><br><span class="line">00000000000000239430.log</span><br><span class="line">00000000000000239430.timeindex</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>一个Topic分为多个Partition，一个Partition分为多个Segment</li>
-<li>每个Segment对应三个文件：偏移量索引文件、时间戳索引文件、消息存储文件</li>
-<li>Kafka中的索引文件以稀疏索引(sparse index)的方式构造消息的索引，它并不保证每个消息在索引文件中都有对应的索引项，也就是说Offset是不连续的，是一个区间范围</li>
-</ul>
-<p>以偏移量索引文件来做具体分析。偏移量索引项的格式如下图所示</p>
-<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img5.png" alt="img"></p>
-<p>每个索引项占用 8 个字节，分为两个部分：</p>
-<ol>
-<li>relativeOffset: 相对偏移量，表示消息相对于 baseOffset 的偏移量，占用 4 个字节，<strong>当前索引文件的文件名即为 baseOffset的值</strong></li>
-<li>position: 物理地址，也就是消息在日志分段文件中对应的物理位置，占用 4 个字节</li>
-</ol>
-<ul>
-<li>为什么要使用相对偏移量relativeOffset，而不使用绝对偏移量offset呢？</li>
-</ul>
-<p>消息的偏移量(offset)占用8个字节，也可以称为绝对偏移量。索引项中没有直接使用绝对偏移量而改为只占用 4 个字节的相对偏移量(relativeOffset &#x3D; offset - baseOffset)，这样可以减小索引文件占用的空间</p>
-<ul>
-<li>为什么不采用连续的Offset，而要采用区间范围的形式？</li>
-</ul>
-<p>为了降低内存空间的占用，连续的Offset会占用更多的内存空间</p>
-<h2 id="通过查找理解索引"><a href="#通过查找理解索引" class="headerlink" title="通过查找理解索引"></a>通过查找理解索引</h2><p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img6.png" alt="img"></p>
-<ol>
-<li><p>如果我们要查找偏移量为23的消息，首先通过二分法在偏移量索引文件中找到不大于23的最大索引项，即[22, 656]，然后从日志分段文件中的物理位置 656 开始<strong>顺序查找</strong>偏移量为 23 的消息</p>
-</li>
-<li><p>如果要查找偏移量为 268 的消息，那么应该怎么办呢?</p>
-</li>
-</ol>
-<p>首先肯定是定位到baseOffset为251的日志分段，然后计算相对偏移量relativeOffset &#x3D; 268 - 251 &#x3D; 17，之后再在对应的索引文件中找到不大于 17 的索引项，最后根据索引项中的 position 定位到具体的日志分段文件位置开始查找目标消息</p>
-<ol start="3">
-<li>那么又是如何查找 baseOffset 为 251 的日志分段的呢?</li>
-</ol>
-<p>这里并不是顺序查找，而是用了跳跃表ConcurrentSkipListMap的结构</p>
-<p>Kafka 的每个日志对象中使用了 ConcurrentSkipListMap 来保存各个日志分段，每个日志分段的 baseOffset 作为 key，这样可以根据指定偏移量来快速定位到消息所在的日志分段</p>
-<p>在Kafka中要定位一条消息，那么首先根据 offset 从 ConcurrentSkipListMap 中来查找到到对应（baseOffset）日志分段的索引文件，然后读取偏移量索引索引文件，之后使用二分法在偏移量索引文件中找到不大于 offset - baseOffset的最大索引项，接着再读取日志分段文件并且从日志分段文件中顺序查找relativeOffset对应的消息</p>
-<ol start="4">
-<li>总结</li>
-</ol>
-<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img7.png" alt="img"></p>
-<h1 id="Kafka如何清理数据-Kafka数据堆积过多怎么办"><a href="#Kafka如何清理数据-Kafka数据堆积过多怎么办" class="headerlink" title="Kafka如何清理数据&#x2F;Kafka数据堆积过多怎么办"></a>Kafka如何清理数据&#x2F;Kafka数据堆积过多怎么办</h1><ul>
-<li>可以用基于时间的保留策略，这种策略允许用户指定消息的保留时间（如7天）。超过时间将自动删除</li>
-<li>也可以用基于大小的保留策略，Kafka允许用户指定日志的最大容量，一旦日志的大小超过了配置的值，Kafka将开始删除最早的消息</li>
-</ul>
 ]]></content>
       <categories>
-        <category>Kafka</category>
+        <category>Java</category>
       </categories>
       <tags>
-        <tag>Kafka</tag>
+        <tag>Java</tag>
+        <tag>多线程</tag>
       </tags>
   </entry>
   <entry>
@@ -1418,6 +1298,315 @@
       </tags>
   </entry>
   <entry>
+    <title>Kafka消费者</title>
+    <url>/posts/Kafka%E6%B6%88%E8%B4%B9%E8%80%85.html</url>
+    <content><![CDATA[<h1 id="Kafka消费者是拉模式还是推模式-Kafka消息的消费模式"><a href="#Kafka消费者是拉模式还是推模式-Kafka消息的消费模式" class="headerlink" title="Kafka消费者是拉模式还是推模式&#x2F;Kafka消息的消费模式"></a>Kafka消费者是拉模式还是推模式&#x2F;Kafka消息的消费模式</h1><p>Kafka采用拉模式拉取消息，采用拉模式可以使每个消费者以自身的消费能力去消费。缺点是如果Broker没有提供可供消费的消息，将导致Consumer不断在循环中轮询，直到新消息到达。<br>为了避免这点，kafka消费者可以在消费数据时传递timeout参数，在这个时间范围内轮询，直到有数据到达或者超时再返回</p>
+<h1 id="消费者故障，出现活锁问题如何解决"><a href="#消费者故障，出现活锁问题如何解决" class="headerlink" title="消费者故障，出现活锁问题如何解决"></a>消费者故障，出现活锁问题如何解决</h1><p>首先要理解什么是活锁：<br>消费者持续的维持心跳，但因为异常进行消息处理，或者消息处理时间长卡住了，这种情况下，这个消费者就会一直持有分区，该分区的消息就无法得到处理</p>
+<p>要解决这个问题，需要有活锁检测机制</p>
+<p>可以使用最大拉取间隔参数来解决，即max.poll.interval.ms，如果消费者轮询间隔大于了这个值，消费者就会离开分区，这样其他消费者就可以接管对应分区</p>
+<h1 id="有消费者为什么还需要消费者组"><a href="#有消费者为什么还需要消费者组" class="headerlink" title="有消费者为什么还需要消费者组"></a>有消费者为什么还需要消费者组</h1><ol>
+<li>对主题分片的分配问题，让每个分片都有消费者处理，不至于所有消费者处理同一个分片</li>
+<li>面对主题分片的变化，消费者组可以自动调整，也就是再平衡</li>
+<li>对于业务开发，有了消费者组就可以只关心主题维度，而不用关心分片维度，很大程度降低了理解和应用难度</li>
+</ol>
+<h1 id="再平衡机制"><a href="#再平衡机制" class="headerlink" title="再平衡机制"></a>再平衡机制</h1><h2 id="再平衡机制简介"><a href="#再平衡机制简介" class="headerlink" title="再平衡机制简介"></a>再平衡机制简介</h2><p>消费者组再平衡机制是一个关键机制，用于管理和分配主题分区给消费者组的各个消费者。再平衡机制可以保证数据负载在各个消费者之间均匀分布，并在消费者加入或者离开时自动调整分区的分配。<br>有一些分区策略：范围分配、轮询分配、粘性分配、合作粘性分配。其中合作粘性分配和粘性分配一样都是尽可能减少变动，不同点是合作粘性分配下，未受变动的消费者可以继续消费主题</p>
+<h2 id="什么情况下会再平衡"><a href="#什么情况下会再平衡" class="headerlink" title="什么情况下会再平衡"></a>什么情况下会再平衡</h2><ol>
+<li>新消费者加入</li>
+<li>消费者离开</li>
+<li>主题分区变化</li>
+</ol>
+<h2 id="再平衡的过程"><a href="#再平衡的过程" class="headerlink" title="再平衡的过程"></a>再平衡的过程</h2><ol>
+<li>暂停消费：在再平衡过程中，消费者会暂时对消费的消费，防止在重新分配区间发生数据丢失或者重复</li>
+<li>触发再平衡：由消费者组协调器（通常是Kafka集群中的一个Broker）触发再平衡</li>
+<li>分配分区：消费者配合协调器根据当前消费者组的成员重新分配主题的分区</li>
+<li>消费者完成分工：重新分配完成后，所有消费者会从协调器拿到新的分配情况</li>
+<li>恢复消费：消费者收到新的分配后，恢复消费，开始处理被分配到的新的分区</li>
+</ol>
+<p>这里有一个问题，我们可以看到第一步暂停会导致服务中断和延迟，好在Kafka提高了不止一种策略来解决这个问题</p>
+<p>其实就是之前提到的消费者组消费分区策略</p>
+<p>消费端partition.assignment.strategy这个配置：</p>
+<ul>
+<li>Range Assignor：基于范围的分配策略，将分区按照范围分配给消费者</li>
+<li>RoundRobin Assignor：基于轮询的分配策略，分区均匀地分配给消费者</li>
+<li>Sticky Assignor：优先保持当前的分配状态，并尽量减少在再平衡过程中的分区移动</li>
+<li>CooperativeStickyAssignor：和Sticky Assignor策略基本是一样的，区别在于该协议将原来的一次大的全部分区重平衡，改成多次小规模分区重平衡。简单理解就是渐进式重平衡</li>
+</ul>
+<p>从再平衡的角度，其实可以分为两大块，Eager Rebalance和Incremental Rebalance</p>
+<h2 id="Eager-Rebalance-急切再平衡"><a href="#Eager-Rebalance-急切再平衡" class="headerlink" title="Eager Rebalance(急切再平衡)"></a>Eager Rebalance(急切再平衡)</h2><p>Range Assignor、RoundRobin Assignor、Sticky Assignor都属于Eager Rebalance。<br>可以理解为急切的再平衡，因此一旦开启所有消费者都会暂停从Kafka消费并放弃其分区的分配资格</p>
+<p>在这个时间段，类似于“stop the world”过程</p>
+<p>缺点：</p>
+<ol>
+<li>消费被迫中断，再平衡期间消费者不工作</li>
+<li>当再平衡结束后，原先的这些消费者后面会重新加入消费者组获得新的分区分配，但不一定是原有的分区分配，也就是分配格局变了</li>
+</ol>
+<h2 id="Incremental-Rebalance-增量再平衡"><a href="#Incremental-Rebalance-增量再平衡" class="headerlink" title="Incremental Rebalance(增量再平衡)"></a>Incremental Rebalance(增量再平衡)</h2><p>CooperativeStickyAssignor是2.3版本引入的一个新的优化方案。在此模式下，只有部分分区会从某个消费者移动到另外一个消费者，其他不受再平衡机制影响的Kafka消费者会继续处理数据而不中断</p>
+<p>当然，一次执行下来的结果可能是不均匀的，因此需要多次再平衡，直到到达稳定的分配，因此也叫增量再平衡</p>
+<p>相比Eager Rebalance，消费者不会全部暂停，但是完成再平衡的时间要长一些</p>
+<h2 id="Group-Coordinator"><a href="#Group-Coordinator" class="headerlink" title="Group Coordinator"></a>Group Coordinator</h2><p>Group Coordinator是Kafka负责管理消费者组的一个协调器，协调器运行在Broker服务器上</p>
+<p>每个消费者组都有一个Group Coordinator，负责消费者组内的消费者管理和偏移量管理</p>
+<h3 id="消费者管理"><a href="#消费者管理" class="headerlink" title="消费者管理"></a>消费者管理</h3><p>每一个Broker节点在启动的时候，都会创建和开启Coordinator组件。换句话说，Coordinator是存在于每个Broker上的组件，那这些Group Coordinator是如何分工？</p>
+<p>每一个Consumer Group都有一个groupid，根据groupid的Hash来确定哪个Broker作为它的Coordinator</p>
+<p>具体机制：</p>
+<ol>
+<li>当消费者启动时，它会向Kafka集群发送请求寻找对应的Group Coordinator</li>
+<li>找到后向其发送加入消费者组请求，以加入消费者组</li>
+<li>Group Coordinator收到请求后，会选择一个消费者作为Leader，这个Leader消费者会根据从Group Coordinator拿到的所有消费者信息进行分配（比如偏移量offset，这样分区重分配后，各个消费者读取自己对应分区的offset，在新的分区上继续前任的工作），并向Group Coordinator发送SyncGroup请求，以完成分区分配</li>
+<li>Group Coordinator还负责接受消费者的心跳信息，以检测消费者的存活状态。如果一个消费者在一段时间内没有发送心跳，Coordinator会认为其已经死亡，并触发再平衡。这个时间是可以配置的，建议时间在10s内</li>
+</ol>
+<h3 id="偏移量管理"><a href="#偏移量管理" class="headerlink" title="偏移量管理"></a>偏移量管理</h3><p>Group Coordinator还负责管理消费者组的偏移量提交到存储，消费者可以定期提交自己消费到的偏移量，Coordinator会将偏移量存储到自己的内部主题中（_consumer_offsets)中</p>
+<p>通过这个记录，等消费者重启之后就知道消费到哪里了，从断点开始继续消费，就不会出现重复消费的情况</p>
+<h2 id="再平衡的影响"><a href="#再平衡的影响" class="headerlink" title="再平衡的影响"></a>再平衡的影响</h2><ol>
+<li>重复消费。如果某个消费者离开消费者组的时候，还没有提交offset，当再平衡结束后就要重复消费</li>
+<li>性能变差。再平衡需要暂停去完成</li>
+</ol>
+<h1 id="Kafka消费者提交之后就会清理掉数据吗"><a href="#Kafka消费者提交之后就会清理掉数据吗" class="headerlink" title="Kafka消费者提交之后就会清理掉数据吗"></a>Kafka消费者提交之后就会清理掉数据吗</h1><p>典型的钓鱼问题</p>
+<p>如果消息被消费者消费并提交了对应偏移，这条消息不会删除，可以通过更改该消费者的偏移再次消费，也可以被其他消费者消费</p>
+]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>Kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka服务端</title>
+    <url>/posts/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF.html</url>
+    <content><![CDATA[<h1 id="Kafka的大致框架是什么样"><a href="#Kafka的大致框架是什么样" class="headerlink" title="Kafka的大致框架是什么样"></a>Kafka的大致框架是什么样</h1><ul>
+<li>Kafka分为三层：生产者（Producer）、中转者（Server）、消费者（Consumer）</li>
+<li>生产者负责发送消息，服务端负责存储消息，消费者负责拉取消息</li>
+<li>其中服务端是由多个Broker节点组成，我们常说的主题Topic在Broker节点上。当然，Topic是一个逻辑概念，实际物理存储是主题分片，也就是Partition</li>
+</ul>
+<h1 id="如何获取topic主题的列表"><a href="#如何获取topic主题的列表" class="headerlink" title="如何获取topic主题的列表"></a>如何获取topic主题的列表</h1><ul>
+<li>Kafka提供了获取主题列表的接口，可以通过kafka-topic.sh这个工具获取，如果要在业务中获取，主流语言比如Java、Golang都支持，都可以直接调用KafkaAdminClient这个接口来获取</li>
+<li>kafka-topics.sh 脚本主要负责 topic 相关的操作。它的具体实现是通过 kafka-run-class 来调用 TopicCommand 类，并根据参数执行指定的功能</li>
+</ul>
+<p>通过kafka-topics.sh获取：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./kafka-topics.sh --list --bootstrap-server localhost:9092</span><br></pre></td></tr></table></figure>
+
+<p>通过KafkaAdminClient获取，Java和Golang都是通过AdminClient来获取的：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">NEW_TOPIC</span> <span class="operator">=</span> <span class="string">&quot;topic-test2&quot;</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">brokerUrl</span> <span class="operator">=</span> <span class="string">&quot;localhost:9092&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> AdminClient adminClient;</span><br><span class="line"></span><br><span class="line"><span class="meta">@BeforeClass</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">beforeClass</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    properties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);</span><br><span class="line">    adminClient = AdminClient.create(properties);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@AfterClass</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">afterClass</span><span class="params">()</span>&#123;</span><br><span class="line">    adminClient.close();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createTopics</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">NewTopic</span> <span class="variable">newTopic</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NewTopic</span>(NEW_TOPIC,<span class="number">4</span>, (<span class="type">short</span>) <span class="number">1</span>);</span><br><span class="line">    Collection&lt;NewTopic&gt; newTopicList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    newTopicList.add(newTopic);</span><br><span class="line">    adminClient.createTopics(newTopicList);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="有了topic，为什么还需要partition-为什么消息队列还需要分区"><a href="#有了topic，为什么还需要partition-为什么消息队列还需要分区" class="headerlink" title="有了topic，为什么还需要partition&#x2F;为什么消息队列还需要分区"></a>有了topic，为什么还需要partition&#x2F;为什么消息队列还需要分区</h1><ul>
+<li>如果不进行分区，我们消息写数据只能到一个节点上，这样的话可能会导致单点服务器负载过高，通过分区可以把数据均匀地分布在各个节点上。因此分区带来了负载均衡和横向扩展的能力</li>
+<li>发送消息的时候可以根据分区分配的原则落在不同的Kafka服务器上，提高了并发写消息的能力，消费消息的时候又和消费者绑定了关系，可以从不同节点的不同分区消费消息，提高了读消息的能力</li>
+<li>分区引入了副本，保证了kafka的高可用和高持久性</li>
+</ul>
+<h1 id="partition是逻辑概念还是物理概念"><a href="#partition是逻辑概念还是物理概念" class="headerlink" title="partition是逻辑概念还是物理概念"></a>partition是逻辑概念还是物理概念</h1><p>partition是物理概念，数据是写入partition文件中</p>
+<h1 id="介绍一下分区的分配策略"><a href="#介绍一下分区的分配策略" class="headerlink" title="介绍一下分区的分配策略"></a>介绍一下分区的分配策略</h1><p>消费端partition.assignment.strategy这个配置：</p>
+<ul>
+<li>Range Assignor：基于范围的分配策略，将分区按照范围分配给消费者</li>
+<li>RoundRobin Assignor：基于轮询的分配策略，分区均匀地分配给消费者</li>
+<li>Sticky Assignor：优先保持当前的分配状态，并尽量减少在再平衡过程中的分区移动</li>
+<li>CooperativeStickyAssignor：和Sticky Assignor策略基本是一样的，区别在于该协议将原来的一次大的全部分区重平衡，改成多次小规模分区重平衡。简单理解就是渐进式重平衡</li>
+</ul>
+<h1 id="创建topic时如何将分区（Partition）放置到不同的Broker中"><a href="#创建topic时如何将分区（Partition）放置到不同的Broker中" class="headerlink" title="创建topic时如何将分区（Partition）放置到不同的Broker中"></a>创建topic时如何将分区（Partition）放置到不同的Broker中</h1><ul>
+<li>partition是存放在Broker节点上，如果单个Broker肯定是放在一个Broker上</li>
+<li>如果是多个Broker，则partition是放在不同的Broker上。具体地，一个partition只对应一个Broker，一个Broker可以拥有多个partition</li>
+</ul>
+<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img1.png" alt="img"></p>
+<p>规则：</p>
+<ol>
+<li>先随机选取一个Broker，比如Broker11</li>
+<li>将主题对应的第一个分片，放入Broker11中，即TopicB的0号分片放入到Broker11中</li>
+<li>Broker依次往后放TopicB的后续分片，比如TopicB的1号分片放入到Broker12中，Topic在我们的例子中只有2个，如果有三个下一个则放入到Broker10中</li>
+</ol>
+<h1 id="消息存入Partition的规则-Kafka分区分配的规则"><a href="#消息存入Partition的规则-Kafka分区分配的规则" class="headerlink" title="消息存入Partition的规则&#x2F;Kafka分区分配的规则"></a>消息存入Partition的规则&#x2F;Kafka分区分配的规则</h1><ul>
+<li>如果指定了partition则发送到特定的partition，但是一般情况下，业务不需要感知partition</li>
+<li>如果没有指定partition，但是指定了一个key，那么根据key的hash值对partition数目取模来决定是哪个partition</li>
+<li>如果没有指定partition，也没有指定key，那么就采取轮询调度算法，也就是把每一次来自用户的请求轮流分配给partition</li>
+</ul>
+<h1 id="Kafka服务端可以接收的消息最大默认是多少字节，如何修改"><a href="#Kafka服务端可以接收的消息最大默认是多少字节，如何修改" class="headerlink" title="Kafka服务端可以接收的消息最大默认是多少字节，如何修改"></a>Kafka服务端可以接收的消息最大默认是多少字节，如何修改</h1><p>Kafka可以接收的最大消息默认是1MB，如果想调整它的大小，可以在Broker修改配置参数：message.max.bytes的值</p>
+<h1 id="客户端如何连接集群"><a href="#客户端如何连接集群" class="headerlink" title="客户端如何连接集群"></a>客户端如何连接集群</h1><p>每个Broker都有其他Broker的信息，这是一个大前提</p>
+<ol>
+<li>访问任意一台Broker，申请获得路由信息</li>
+<li>得到所有的Broker的信息列表，返回路由信息</li>
+<li>根据连接规则连接到具体的Broker，即算出来具体发送到哪一个partition，然后访问到对应的Broker</li>
+</ol>
+<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img2.png" alt="img"></p>
+<h1 id="kafka的topic中的partition数据是如何存储到磁盘中的"><a href="#kafka的topic中的partition数据是如何存储到磁盘中的" class="headerlink" title="kafka的topic中的partition数据是如何存储到磁盘中的"></a>kafka的topic中的partition数据是如何存储到磁盘中的</h1><h2 id="kafka多层划分"><a href="#kafka多层划分" class="headerlink" title="kafka多层划分"></a>kafka多层划分</h2><ol>
+<li>首先是topic划分，不同的topic可以看成不同的小数组，这些小数组可以分别存放在不同的Broker上</li>
+<li>其次，每个topic还做了切分，分成了多个topic，也就是一个主题可以分成多个主题分片</li>
+<li>最后，每个partition还做了进一步拆分，也就是一个partition对应了多个不同的文件，这些文件是分离的，是：<ul>
+<li>.log文件，消息本身，记录了数据</li>
+<li>.timeindex文件，时间索引，可以通过时间对.log文件做索引查询</li>
+<li>.index文件，偏移索引，可以通过位置对.log文章做索引查询</li>
+<li>查找的时候先去.index或者.timeindex文件中查找，再去.log文件中查找。因此这两个文件需要加载进入内核内存，所以不能太多</li>
+</ul>
+</li>
+</ol>
+<h2 id="partition文件细节"><a href="#partition文件细节" class="headerlink" title="partition文件细节"></a>partition文件细节</h2><p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img4.png" alt="img"></p>
+<p>index 和 log 文件以当前 segment 的第一条消息的 offset 命名</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">00000000000000000000.index</span><br><span class="line">00000000000000000000.log</span><br><span class="line">00000000000000000000.timeindex</span><br><span class="line"></span><br><span class="line">00000000000000170410.index</span><br><span class="line">00000000000000170410.log</span><br><span class="line">00000000000000170410.timeindex</span><br><span class="line"></span><br><span class="line">00000000000000239430.index</span><br><span class="line">00000000000000239430.log</span><br><span class="line">00000000000000239430.timeindex</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一个Topic分为多个Partition，一个Partition分为多个Segment</li>
+<li>每个Segment对应三个文件：偏移量索引文件、时间戳索引文件、消息存储文件</li>
+<li>Kafka中的索引文件以稀疏索引(sparse index)的方式构造消息的索引，它并不保证每个消息在索引文件中都有对应的索引项，也就是说Offset是不连续的，是一个区间范围</li>
+</ul>
+<p>以偏移量索引文件来做具体分析。偏移量索引项的格式如下图所示</p>
+<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img5.png" alt="img"></p>
+<p>每个索引项占用 8 个字节，分为两个部分：</p>
+<ol>
+<li>relativeOffset: 相对偏移量，表示消息相对于 baseOffset 的偏移量，占用 4 个字节，<strong>当前索引文件的文件名即为 baseOffset的值</strong></li>
+<li>position: 物理地址，也就是消息在日志分段文件中对应的物理位置，占用 4 个字节</li>
+</ol>
+<ul>
+<li>为什么要使用相对偏移量relativeOffset，而不使用绝对偏移量offset呢？</li>
+</ul>
+<p>消息的偏移量(offset)占用8个字节，也可以称为绝对偏移量。索引项中没有直接使用绝对偏移量而改为只占用 4 个字节的相对偏移量(relativeOffset &#x3D; offset - baseOffset)，这样可以减小索引文件占用的空间</p>
+<ul>
+<li>为什么不采用连续的Offset，而要采用区间范围的形式？</li>
+</ul>
+<p>为了降低内存空间的占用，连续的Offset会占用更多的内存空间</p>
+<h2 id="通过查找理解索引"><a href="#通过查找理解索引" class="headerlink" title="通过查找理解索引"></a>通过查找理解索引</h2><p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img6.png" alt="img"></p>
+<ol>
+<li><p>如果我们要查找偏移量为23的消息，首先通过二分法在偏移量索引文件中找到不大于23的最大索引项，即[22, 656]，然后从日志分段文件中的物理位置 656 开始<strong>顺序查找</strong>偏移量为 23 的消息</p>
+</li>
+<li><p>如果要查找偏移量为 268 的消息，那么应该怎么办呢?</p>
+</li>
+</ol>
+<p>首先肯定是定位到baseOffset为251的日志分段，然后计算相对偏移量relativeOffset &#x3D; 268 - 251 &#x3D; 17，之后再在对应的索引文件中找到不大于 17 的索引项，最后根据索引项中的 position 定位到具体的日志分段文件位置开始查找目标消息</p>
+<ol start="3">
+<li>那么又是如何查找 baseOffset 为 251 的日志分段的呢?</li>
+</ol>
+<p>这里并不是顺序查找，而是用了跳跃表ConcurrentSkipListMap的结构</p>
+<p>Kafka 的每个日志对象中使用了 ConcurrentSkipListMap 来保存各个日志分段，每个日志分段的 baseOffset 作为 key，这样可以根据指定偏移量来快速定位到消息所在的日志分段</p>
+<p>在Kafka中要定位一条消息，那么首先根据 offset 从 ConcurrentSkipListMap 中来查找到到对应（baseOffset）日志分段的索引文件，然后读取偏移量索引索引文件，之后使用二分法在偏移量索引文件中找到不大于 offset - baseOffset的最大索引项，接着再读取日志分段文件并且从日志分段文件中顺序查找relativeOffset对应的消息</p>
+<ol start="4">
+<li>总结</li>
+</ol>
+<p><img src="/img/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF/img7.png" alt="img"></p>
+<h1 id="Kafka如何清理数据-Kafka数据堆积过多怎么办"><a href="#Kafka如何清理数据-Kafka数据堆积过多怎么办" class="headerlink" title="Kafka如何清理数据&#x2F;Kafka数据堆积过多怎么办"></a>Kafka如何清理数据&#x2F;Kafka数据堆积过多怎么办</h1><ul>
+<li>可以用基于时间的保留策略，这种策略允许用户指定消息的保留时间（如7天）。超过时间将自动删除</li>
+<li>也可以用基于大小的保留策略，Kafka允许用户指定日志的最大容量，一旦日志的大小超过了配置的值，Kafka将开始删除最早的消息</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>Kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka生产者</title>
+    <url>/posts/Kafka%E7%94%9F%E4%BA%A7%E8%80%85.html</url>
+    <content><![CDATA[<h1 id="介绍一下生产消息的流程"><a href="#介绍一下生产消息的流程" class="headerlink" title="介绍一下生产消息的流程"></a>介绍一下生产消息的流程</h1><ol>
+<li>构建消息，将需要发送的内容打包成一个消息结构</li>
+<li>序列化消息为二进制结构，以在网络中传播</li>
+<li>进行分区选择，计算需要发送到哪个partition，发送消息到该partition对应的Broker</li>
+</ol>
+<h1 id="Kafka的ACK的三种机制"><a href="#Kafka的ACK的三种机制" class="headerlink" title="Kafka的ACK的三种机制"></a>Kafka的ACK的三种机制</h1><ul>
+<li>ack &#x3D; 0：生成者在发送消息后不会等待来自服务器的确认，所以生产者是不知道消息是否成功，也就无法去重试。最不可靠但是性能最好</li>
+<li>ack &#x3D; 1：生产者在发送消息后会等待主节点的确认，但不会等待所有副本的确认。相对可靠，性能比较高</li>
+<li>ack &#x3D; all：只有在主节点和所有副本都确认后，生产者才会确认。保证了消息的可靠性，但是性能最差</li>
+</ul>
+<h1 id="生产过程何时会发生QueueFullException以及如何处理"><a href="#生产过程何时会发生QueueFullException以及如何处理" class="headerlink" title="生产过程何时会发生QueueFullException以及如何处理"></a>生产过程何时会发生QueueFullException以及如何处理</h1><p>生产者发送消息的速度过快，导致Kafka生产者这一侧缓冲区满了，就会抛出异常</p>
+<p>解决：</p>
+<ul>
+<li>等待重试：发生QueueFullException异常的时候，可以等待一段时间后再次尝试重新发送消息。在等待的过程中可以调整生产者的发送速度或者增加Kafka消息队列大小等方式来避免发生QueueFullException</li>
+<li>增加Kafka的缓冲区大小：修改Kafka的配置文件来增大生产者这一侧的缓冲区</li>
+<li>限流控制：限制生产者发送消息的速度</li>
+</ul>
+<h1 id="Kafka生产者何时发送出消息"><a href="#Kafka生产者何时发送出消息" class="headerlink" title="Kafka生产者何时发送出消息"></a>Kafka生产者何时发送出消息</h1><ul>
+<li>生产者客户端累计的数据大小达到Batch，默认是16KB（框架支持）</li>
+<li>生产者客户端缓冲区累计的空闲等待时间间隔，默认是0ms，也就是收到数据就发送</li>
+</ul>
+<h1 id="生产者发送消息的模式有几种（Java）"><a href="#生产者发送消息的模式有几种（Java）" class="headerlink" title="生产者发送消息的模式有几种（Java）"></a>生产者发送消息的模式有几种（Java）</h1><p>Java的SDK支持三种</p>
+<ol>
+<li>同步发送，性能最差，可靠性最强</li>
+<li>发送即忘：这种模式不需要等待Kafka服务器的响应，可靠性低，但是性能最好</li>
+<li>异步发送不阻塞调用线程：允许调用者注册回调函数处理发送结果或异常，适用于对可靠性有要求也保持高性能的场景</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>Kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LRU缓存</title>
+    <url>/posts/LRU%E7%BC%93%E5%AD%98.html</url>
+    <content><![CDATA[<p>请你设计并实现一个满足 LRU (最近最少使用) 缓存 约束的数据结构</p>
+<p>实现 LRUCache 类：</p>
+<ul>
+<li>LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存</li>
+<li>int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 -1 </li>
+<li>void put(int key, int value) 如果关键字 key 已经存在，则变更其数据值 value ；如果不存在，则向缓存中插入该组 key-value 。如果插入操作导致关键字数量超过 capacity ，则应该 逐出 最久未使用的关键字</li>
+<li>函数 get 和 put 必须以 O(1) 的平均时间复杂度运行</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LRUCache</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; mp;</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; cnt;</span><br><span class="line">    queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line">    <span class="type">int</span> sz;</span><br><span class="line">    <span class="type">int</span> capacity;</span><br><span class="line">    <span class="built_in">LRUCache</span>(<span class="type">int</span> capacity) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;capacity = capacity;</span><br><span class="line">        sz = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get</span><span class="params">(<span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (cnt[key]) &#123;</span><br><span class="line">            q.<span class="built_in">push</span>(key);</span><br><span class="line">            cnt[key]++;</span><br><span class="line">            <span class="keyword">return</span> mp[key];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">put</span><span class="params">(<span class="type">int</span> key, <span class="type">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sz &lt; capacity) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cnt[key]) &#123;</span><br><span class="line">                cnt[key]++;</span><br><span class="line">                mp[key] = value;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                cnt[key]++;</span><br><span class="line">                mp[key] = value;</span><br><span class="line">                sz++;</span><br><span class="line">            &#125;</span><br><span class="line">            q.<span class="built_in">push</span>(key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!cnt[key]) &#123;</span><br><span class="line">                <span class="keyword">while</span> (q.<span class="built_in">size</span>()) &#123;</span><br><span class="line">                    <span class="type">int</span> k = q.<span class="built_in">front</span>();</span><br><span class="line">                    q.<span class="built_in">pop</span>();</span><br><span class="line">                    cnt[k]--;</span><br><span class="line">                    <span class="keyword">if</span> (!cnt[k]) &#123;</span><br><span class="line">                        mp.<span class="built_in">erase</span>(k);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            mp[key] = value;</span><br><span class="line">            cnt[key]++;</span><br><span class="line">            q.<span class="built_in">push</span>(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL存储引擎</title>
+    <url>/posts/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E.html</url>
+    <content><![CDATA[<h1 id="说一说执行一条查询SQL查询语句的过程"><a href="#说一说执行一条查询SQL查询语句的过程" class="headerlink" title="说一说执行一条查询SQL查询语句的过程"></a>说一说执行一条查询SQL查询语句的过程</h1><p><img src="/img/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/img1.png" alt="img"></p>
+<ul>
+<li>会经过连接器、查询缓存、解析器、优化器、执行器、存储引擎这些模块</li>
+<li>连接器负责建立连接、校验用户身份、接受客户端的SQL语句</li>
+<li>在查询缓存中，如果命中缓存，直接返回</li>
+<li>分析器对SQL语句进行语法分析、词法分析</li>
+<li>优化器会基于查询成本的考虑，对每个索引进行成本分析，从中选择查询成本最小的执行计划。同时缓存记录给查询缓存</li>
+<li>执行器会根据执行计划来执行查询语句，从存储引擎中读取记录，返回给客户端</li>
+</ul>
+<h1 id="MySQL存储引擎有哪些"><a href="#MySQL存储引擎有哪些" class="headerlink" title="MySQL存储引擎有哪些"></a>MySQL存储引擎有哪些</h1><p>有InnoDB、MyISAM、Memory</p>
+<p>InnoDB是MySQL默认的存储引擎，支持事务、行级锁，具有事务提交、回滚和崩溃恢复功能</p>
+<h1 id="MyISAM和InnoDB有什么区别"><a href="#MyISAM和InnoDB有什么区别" class="headerlink" title="MyISAM和InnoDB有什么区别"></a>MyISAM和InnoDB有什么区别</h1><p>从数据存储、B+树结构、锁粒度、事务这四个角度来分析</p>
+<ul>
+<li>数据存储：InnoDB存储数据采取的是索引组织表，在索引组织表中，索引即数据，数据即索引，因此表数据和索引数据在同一个文件中。MyISAN存储数据采用的是堆表，数据和索引分开存储，因此表数据和索引数据分别放在不同的两个文件中</li>
+<li>索引组织表有两个优势：1. 在索引组织表中，索引和数据在同一个B+树，相比非聚簇索引每次查询都需要回表，因此聚簇索引中获取数据比非聚簇索引快。2. 在索引组织表中，如果记录的非索引记录发生了变化，则其他索引无须进行维护。而当堆表中的位置发生了变化，那么所有的索引地址都需要更新</li>
+<li>B+树结构：InnoDB引擎B+树叶子节点存储索引+数据，MyISAM引擎叶子节点存储索引+数据地址</li>
+<li>锁粒度：InnoDB引擎支持行级锁，MyISAM不支持行级锁，支持表锁。因为MyISAM引擎不支持聚簇索引，所以无法实现行锁，出现多条线程同时读写数据时，只能锁住整张表。而InnoDB由于支持聚簇索引，每个索引最终都会指向聚簇索引中的索引键，因此出现并发事务时，InnoDB只需要锁住聚簇索引的数据即可，而不需要锁住整张表，因此并发性能更高</li>
+<li>事务：InnoDB支持事务，MyISAM不支持事务。使用InnoDB存储引擎的表，可以借助undo-log日志实现事务机制，支持多条SQL组成一个事务，可以保证发生异常的情况下，组成这个事务的SQL到底回滚还是提交。而MyISAM并未设计类似的技术，在启动时不会在内存中构建undo_log_buffer缓冲区，磁盘中也没有相应的日志文件，因此MyISAM并不支持事务机制</li>
+</ul>
+<h1 id="MySQL为什么选择InnoDB作为默认引擎"><a href="#MySQL为什么选择InnoDB作为默认引擎" class="headerlink" title="MySQL为什么选择InnoDB作为默认引擎"></a>MySQL为什么选择InnoDB作为默认引擎</h1><p>最主要原因是InnoDB支持事务，其他引擎不支持</p>
+<ul>
+<li>事务支持：InnoDB支持事务，保证了ACID（原子性、一致性、隔离性、持久性），MyISAM是不支持事务的</li>
+<li>并发性能：InnoDB因为支持聚簇索引，可以使用行级锁，在并发条件下只需要对行数据加锁，不需要对整张表加锁。而MyISAM只能对整张表加锁，并发效率低</li>
+<li>崩溃恢复：InnoDB通过redolog日志实现了崩溃恢复，保证了数据了持久性和一致性。MyISAM不支持崩溃恢复</li>
+</ul>
+<h1 id="用count-哪个存储引擎会更快"><a href="#用count-哪个存储引擎会更快" class="headerlink" title="用count(*)哪个存储引擎会更快"></a>用count(*)哪个存储引擎会更快</h1><p>在MyISAM中，每张数据表都有一个meta信息维护了row_count的值，由表级锁一致性，直接读取row_count的值就是count函数的执行结构。</p>
+<p>因此如果查询语句中没有where查询条件，MyISAM更快。如果有where查询条件性能都差不多，都需要一行一行遍历地统计</p>
+<h1 id="NULL值是如何存储的？"><a href="#NULL值是如何存储的？" class="headerlink" title="NULL值是如何存储的？"></a>NULL值是如何存储的？</h1><p><img src="/img/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/img2.png" alt="img"></p>
+<p>MySQL行格式会用NULL值列表来标记值为NULL的列，每个列对应一个二进制位，如果列的值为NULL，就会标记二进制位为1，否则是0。所以NULL值并不会存储在数据格式中的真实数据部分</p>
+<h1 id="char和varchar有什么区别？哪个性能更好"><a href="#char和varchar有什么区别？哪个性能更好" class="headerlink" title="char和varchar有什么区别？哪个性能更好"></a>char和varchar有什么区别？哪个性能更好</h1><p>区别:</p>
+<ul>
+<li>char是固定长度的字符串类型，它是数据库中占用固定的存储空间，无论存储的大小是多少，都会占用定义时的固定长度。如果存储的字符串长度小于定义的字符串长度，则会用空格填充。比如定义一个char（10）的字符串，但是只用了5字节，会自动填充5字节</li>
+<li>varchar是变长长度的字符串类型，实际存储时占用实际字符串长度的大小。但是还需要额外1-2字节存储可变长字符串长度的空间</li>
+</ul>
+<p>性能：</p>
+<ul>
+<li>站在CPU角度来看，理论上CHAR比VARCHAR快，因为VACHAR有一个长度标识参与运算</li>
+<li>但是在实际中，Innodb buffer pool 小于表大小时，磁盘读写成为了性能的关键因素。而VARCHAR更短，性能反而比CHAR高。但是当Innodb buffer pool足够大时，CHAR和VARCHAR性能差异不大</li>
+</ul>
+<h1 id="一个字段是VARCHAR-10-，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？"><a href="#一个字段是VARCHAR-10-，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？" class="headerlink" title="一个字段是VARCHAR(10)，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？"></a>一个字段是VARCHAR(10)，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？</h1><p>varchar是可变长字符串长度，保存到文件中，只会存储实际使用的字符串大小。但是内存是按varchar最大值来固定分配大小。</p>
+<p>因此在内存中会占用10字节。在文件中占用6字节，并且都会用1-2字节存储可变长字符串长度的空间</p>
+<h1 id="varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？"><a href="#varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？" class="headerlink" title="varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？"></a>varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？</h1><p><img src="/img/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/img3.png" alt="img"></p>
+<h1 id="如果硬件内存特别大，MySQL缓存是否可以替代Redis"><a href="#如果硬件内存特别大，MySQL缓存是否可以替代Redis" class="headerlink" title="如果硬件内存特别大，MySQL缓存是否可以替代Redis"></a>如果硬件内存特别大，MySQL缓存是否可以替代Redis</h1><p>不能</p>
+<ul>
+<li>bufferpool结构，日志技术，事务并发，存储模型等等模块，都是面向磁盘页而设计的，因此其首要目标不是减少内存代价，而是I&#x2F;O代价。</li>
+<li>其次，Mysql查询走的是B+树索引，时间复杂度是O（logN），Redis有Hash数据对象的时候，查询复杂度是O（1）</li>
+<li>最后，MySQL在更新数据的时候，为了保证事务的隔离性，需要加锁，而Redis更新操作不需要加锁。还有MySQL为了保证数据的持久性，还需要刷盘redolog和binlog日志，Redis可以选择不持久化。因此即使buffer pool无限大，MySQL缓存的性能还是没有Redis好</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java常用设计模式</title>
     <url>/posts/Java%E5%B8%B8%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.html</url>
     <content><![CDATA[<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>单例模式就是: 在程序运行期间, 某些类有且最多只有一个实例对象</p>
@@ -1681,135 +1870,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Kafka消费者</title>
-    <url>/posts/Kafka%E6%B6%88%E8%B4%B9%E8%80%85.html</url>
-    <content><![CDATA[<h1 id="Kafka消费者是拉模式还是推模式-Kafka消息的消费模式"><a href="#Kafka消费者是拉模式还是推模式-Kafka消息的消费模式" class="headerlink" title="Kafka消费者是拉模式还是推模式&#x2F;Kafka消息的消费模式"></a>Kafka消费者是拉模式还是推模式&#x2F;Kafka消息的消费模式</h1><p>Kafka采用拉模式拉取消息，采用拉模式可以使每个消费者以自身的消费能力去消费。缺点是如果Broker没有提供可供消费的消息，将导致Consumer不断在循环中轮询，直到新消息到达。<br>为了避免这点，kafka消费者可以在消费数据时传递timeout参数，在这个时间范围内轮询，直到有数据到达或者超时再返回</p>
-<h1 id="消费者故障，出现活锁问题如何解决"><a href="#消费者故障，出现活锁问题如何解决" class="headerlink" title="消费者故障，出现活锁问题如何解决"></a>消费者故障，出现活锁问题如何解决</h1><p>首先要理解什么是活锁：<br>消费者持续的维持心跳，但因为异常进行消息处理，或者消息处理时间长卡住了，这种情况下，这个消费者就会一直持有分区，该分区的消息就无法得到处理</p>
-<p>要解决这个问题，需要有活锁检测机制</p>
-<p>可以使用最大拉取间隔参数来解决，即max.poll.interval.ms，如果消费者轮询间隔大于了这个值，消费者就会离开分区，这样其他消费者就可以接管对应分区</p>
-<h1 id="有消费者为什么还需要消费者组"><a href="#有消费者为什么还需要消费者组" class="headerlink" title="有消费者为什么还需要消费者组"></a>有消费者为什么还需要消费者组</h1><ol>
-<li>对主题分片的分配问题，让每个分片都有消费者处理，不至于所有消费者处理同一个分片</li>
-<li>面对主题分片的变化，消费者组可以自动调整，也就是再平衡</li>
-<li>对于业务开发，有了消费者组就可以只关心主题维度，而不用关心分片维度，很大程度降低了理解和应用难度</li>
-</ol>
-<h1 id="再平衡机制"><a href="#再平衡机制" class="headerlink" title="再平衡机制"></a>再平衡机制</h1><h2 id="再平衡机制简介"><a href="#再平衡机制简介" class="headerlink" title="再平衡机制简介"></a>再平衡机制简介</h2><p>消费者组再平衡机制是一个关键机制，用于管理和分配主题分区给消费者组的各个消费者。再平衡机制可以保证数据负载在各个消费者之间均匀分布，并在消费者加入或者离开时自动调整分区的分配。<br>有一些分区策略：范围分配、轮询分配、粘性分配、合作粘性分配。其中合作粘性分配和粘性分配一样都是尽可能减少变动，不同点是合作粘性分配下，未受变动的消费者可以继续消费主题</p>
-<h2 id="什么情况下会再平衡"><a href="#什么情况下会再平衡" class="headerlink" title="什么情况下会再平衡"></a>什么情况下会再平衡</h2><ol>
-<li>新消费者加入</li>
-<li>消费者离开</li>
-<li>主题分区变化</li>
-</ol>
-<h2 id="再平衡的过程"><a href="#再平衡的过程" class="headerlink" title="再平衡的过程"></a>再平衡的过程</h2><ol>
-<li>暂停消费：在再平衡过程中，消费者会暂时对消费的消费，防止在重新分配区间发生数据丢失或者重复</li>
-<li>触发再平衡：由消费者组协调器（通常是Kafka集群中的一个Broker）触发再平衡</li>
-<li>分配分区：消费者配合协调器根据当前消费者组的成员重新分配主题的分区</li>
-<li>消费者完成分工：重新分配完成后，所有消费者会从协调器拿到新的分配情况</li>
-<li>恢复消费：消费者收到新的分配后，恢复消费，开始处理被分配到的新的分区</li>
-</ol>
-<p>这里有一个问题，我们可以看到第一步暂停会导致服务中断和延迟，好在Kafka提高了不止一种策略来解决这个问题</p>
-<p>其实就是之前提到的消费者组消费分区策略</p>
-<p>消费端partition.assignment.strategy这个配置：</p>
-<ul>
-<li>Range Assignor：基于范围的分配策略，将分区按照范围分配给消费者</li>
-<li>RoundRobin Assignor：基于轮询的分配策略，分区均匀地分配给消费者</li>
-<li>Sticky Assignor：优先保持当前的分配状态，并尽量减少在再平衡过程中的分区移动</li>
-<li>CooperativeStickyAssignor：和Sticky Assignor策略基本是一样的，区别在于该协议将原来的一次大的全部分区重平衡，改成多次小规模分区重平衡。简单理解就是渐进式重平衡</li>
-</ul>
-<p>从再平衡的角度，其实可以分为两大块，Eager Rebalance和Incremental Rebalance</p>
-<h2 id="Eager-Rebalance-急切再平衡"><a href="#Eager-Rebalance-急切再平衡" class="headerlink" title="Eager Rebalance(急切再平衡)"></a>Eager Rebalance(急切再平衡)</h2><p>Range Assignor、RoundRobin Assignor、Sticky Assignor都属于Eager Rebalance。<br>可以理解为急切的再平衡，因此一旦开启所有消费者都会暂停从Kafka消费并放弃其分区的分配资格</p>
-<p>在这个时间段，类似于“stop the world”过程</p>
-<p>缺点：</p>
-<ol>
-<li>消费被迫中断，再平衡期间消费者不工作</li>
-<li>当再平衡结束后，原先的这些消费者后面会重新加入消费者组获得新的分区分配，但不一定是原有的分区分配，也就是分配格局变了</li>
-</ol>
-<h2 id="Incremental-Rebalance-增量再平衡"><a href="#Incremental-Rebalance-增量再平衡" class="headerlink" title="Incremental Rebalance(增量再平衡)"></a>Incremental Rebalance(增量再平衡)</h2><p>CooperativeStickyAssignor是2.3版本引入的一个新的优化方案。在此模式下，只有部分分区会从某个消费者移动到另外一个消费者，其他不受再平衡机制影响的Kafka消费者会继续处理数据而不中断</p>
-<p>当然，一次执行下来的结果可能是不均匀的，因此需要多次再平衡，直到到达稳定的分配，因此也叫增量再平衡</p>
-<p>相比Eager Rebalance，消费者不会全部暂停，但是完成再平衡的时间要长一些</p>
-<h2 id="Group-Coordinator"><a href="#Group-Coordinator" class="headerlink" title="Group Coordinator"></a>Group Coordinator</h2><p>Group Coordinator是Kafka负责管理消费者组的一个协调器，协调器运行在Broker服务器上</p>
-<p>每个消费者组都有一个Group Coordinator，负责消费者组内的消费者管理和偏移量管理</p>
-<h3 id="消费者管理"><a href="#消费者管理" class="headerlink" title="消费者管理"></a>消费者管理</h3><p>每一个Broker节点在启动的时候，都会创建和开启Coordinator组件。换句话说，Coordinator是存在于每个Broker上的组件，那这些Group Coordinator是如何分工？</p>
-<p>每一个Consumer Group都有一个groupid，根据groupid的Hash来确定哪个Broker作为它的Coordinator</p>
-<p>具体机制：</p>
-<ol>
-<li>当消费者启动时，它会向Kafka集群发送请求寻找对应的Group Coordinator</li>
-<li>找到后向其发送加入消费者组请求，以加入消费者组</li>
-<li>Group Coordinator收到请求后，会选择一个消费者作为Leader，这个Leader消费者会根据从Group Coordinator拿到的所有消费者信息进行分配，并向Group Coordinator发送SyncGroup请求，以完成分区分配</li>
-<li>Group Coordinator还负责接受消费者的心跳信息，以检测消费者的存活状态。如果一个消费者在一段时间内没有发送心跳，Coordinator会认为其已经死亡，并触发再平衡。这个时间是可以配置的，建议时间在10s内</li>
-</ol>
-<h3 id="偏移量管理"><a href="#偏移量管理" class="headerlink" title="偏移量管理"></a>偏移量管理</h3><p>Group Coordinator还负责管理消费者组的偏移量提交到存储，消费者可以定期提交自己消费到的偏移量，Coordinator会将偏移量存储到自己的内部主题中（_consumer_offsets)中</p>
-<p>通过这个记录，等消费者重启之后就知道消费到哪里了，从断点开始继续消费，就不会出现重复消费的情况</p>
-<h2 id="再平衡的影响"><a href="#再平衡的影响" class="headerlink" title="再平衡的影响"></a>再平衡的影响</h2><ol>
-<li>重复消费。如果某个消费者离开消费者组的时候，还没有提交offset，当再平衡结束后就要重复消费</li>
-<li>性能变差。再平衡需要暂停去完成</li>
-</ol>
-<h1 id="Kafka消费者提交之后就会清理掉数据吗"><a href="#Kafka消费者提交之后就会清理掉数据吗" class="headerlink" title="Kafka消费者提交之后就会清理掉数据吗"></a>Kafka消费者提交之后就会清理掉数据吗</h1><p>典型的钓鱼问题</p>
-<p>如果消息被消费者消费并提交了对应偏移，这条消息不会删除，可以通过更改该消费者的偏移再次消费，也可以被其他消费者消费</p>
-]]></content>
-      <categories>
-        <category>Kafka</category>
-      </categories>
-      <tags>
-        <tag>Kafka</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LRU缓存</title>
-    <url>/posts/LRU%E7%BC%93%E5%AD%98.html</url>
-    <content><![CDATA[<p>请你设计并实现一个满足 LRU (最近最少使用) 缓存 约束的数据结构</p>
-<p>实现 LRUCache 类：</p>
-<ul>
-<li>LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存</li>
-<li>int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 -1 </li>
-<li>void put(int key, int value) 如果关键字 key 已经存在，则变更其数据值 value ；如果不存在，则向缓存中插入该组 key-value 。如果插入操作导致关键字数量超过 capacity ，则应该 逐出 最久未使用的关键字</li>
-<li>函数 get 和 put 必须以 O(1) 的平均时间复杂度运行</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LRUCache</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; mp;</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; cnt;</span><br><span class="line">    queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line">    <span class="type">int</span> sz;</span><br><span class="line">    <span class="type">int</span> capacity;</span><br><span class="line">    <span class="built_in">LRUCache</span>(<span class="type">int</span> capacity) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;capacity = capacity;</span><br><span class="line">        sz = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get</span><span class="params">(<span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (cnt[key]) &#123;</span><br><span class="line">            q.<span class="built_in">push</span>(key);</span><br><span class="line">            cnt[key]++;</span><br><span class="line">            <span class="keyword">return</span> mp[key];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">put</span><span class="params">(<span class="type">int</span> key, <span class="type">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sz &lt; capacity) &#123;</span><br><span class="line">            <span class="keyword">if</span> (cnt[key]) &#123;</span><br><span class="line">                cnt[key]++;</span><br><span class="line">                mp[key] = value;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                cnt[key]++;</span><br><span class="line">                mp[key] = value;</span><br><span class="line">                sz++;</span><br><span class="line">            &#125;</span><br><span class="line">            q.<span class="built_in">push</span>(key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!cnt[key]) &#123;</span><br><span class="line">                <span class="keyword">while</span> (q.<span class="built_in">size</span>()) &#123;</span><br><span class="line">                    <span class="type">int</span> k = q.<span class="built_in">front</span>();</span><br><span class="line">                    q.<span class="built_in">pop</span>();</span><br><span class="line">                    cnt[k]--;</span><br><span class="line">                    <span class="keyword">if</span> (!cnt[k]) &#123;</span><br><span class="line">                        mp.<span class="built_in">erase</span>(k);</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            mp[key] = value;</span><br><span class="line">            cnt[key]++;</span><br><span class="line">            q.<span class="built_in">push</span>(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Kafka生产者</title>
-    <url>/posts/Kafka%E7%94%9F%E4%BA%A7%E8%80%85.html</url>
-    <content><![CDATA[<h1 id="介绍一下生产消息的流程"><a href="#介绍一下生产消息的流程" class="headerlink" title="介绍一下生产消息的流程"></a>介绍一下生产消息的流程</h1><ol>
-<li>构建消息，将需要发送的内容打包成一个消息结构</li>
-<li>序列化消息为二进制结构，以在网络中传播</li>
-<li>进行分区选择，计算需要发送到哪个partition，发送消息到该partition对应的Broker</li>
-</ol>
-<h1 id="Kafka的ACK的三种机制"><a href="#Kafka的ACK的三种机制" class="headerlink" title="Kafka的ACK的三种机制"></a>Kafka的ACK的三种机制</h1><ul>
-<li>ack &#x3D; 0：生成者在发送消息后不会等待来自服务器的确认，所以生产者是不知道消息是否成功，也就无法去重试。最不可靠但是性能最好</li>
-<li>ack &#x3D; 1：生产者在发送消息后会等待主节点的确认，但不会等待所有副本的确认。相对可靠，性能比较高</li>
-<li>ack &#x3D; all：只有在主节点和所有副本都确认后，生产者才会确认。保证了消息的可靠性，但是性能最差</li>
-</ul>
-<h1 id="生产过程何时会发生QueueFullException以及如何处理"><a href="#生产过程何时会发生QueueFullException以及如何处理" class="headerlink" title="生产过程何时会发生QueueFullException以及如何处理"></a>生产过程何时会发生QueueFullException以及如何处理</h1><p>生产者发送消息的速度过快，导致Kafka生产者这一侧缓冲区满了，就会抛出异常</p>
-<p>解决：</p>
-<ul>
-<li>等待重试：发生QueueFullException异常的时候，可以等待一段时间后再次尝试重新发送消息。在等待的过程中可以调整生产者的发送速度或者增加Kafka消息队列大小等方式来避免发生QueueFullException</li>
-<li>增加Kafka的缓冲区大小：修改Kafka的配置文件来增大生产者这一侧的缓冲区</li>
-<li>限流控制：限制生产者发送消息的速度</li>
-</ul>
-<h1 id="Kafka生产者何时发送出消息"><a href="#Kafka生产者何时发送出消息" class="headerlink" title="Kafka生产者何时发送出消息"></a>Kafka生产者何时发送出消息</h1><ul>
-<li>生产者客户端累计的数据大小达到Batch，默认是16KB（框架支持）</li>
-<li>生产者客户端缓冲区累计的空闲等待时间间隔，默认是0ms，也就是收到数据就发送</li>
-</ul>
-<h1 id="生产者发送消息的模式有几种（Java）"><a href="#生产者发送消息的模式有几种（Java）" class="headerlink" title="生产者发送消息的模式有几种（Java）"></a>生产者发送消息的模式有几种（Java）</h1><p>Java的SDK支持三种</p>
-<ol>
-<li>同步发送，性能最差，可靠性最强</li>
-<li>发送即忘：这种模式不需要等待Kafka服务器的响应，可靠性低，但是性能最好</li>
-<li>异步发送不阻塞调用线程：允许调用者注册回调函数处理发送结果或异常，适用于对可靠性有要求也保持高性能的场景</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Kafka</category>
-      </categories>
-      <tags>
-        <tag>Kafka</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL事务</title>
     <url>/posts/MySQL%E4%BA%8B%E5%8A%A1.html</url>
     <content><![CDATA[<h1 id="MySQL事务的特性"><a href="#MySQL事务的特性" class="headerlink" title="MySQL事务的特性"></a>MySQL事务的特性</h1><p>MySQL事务有四大特性 ACID: 原子性、一致性、隔离性、持久性</p>
@@ -1892,56 +1952,84 @@
       </tags>
   </entry>
   <entry>
-    <title>MySQL存储引擎</title>
-    <url>/posts/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E.html</url>
-    <content><![CDATA[<h1 id="说一说执行一条查询SQL查询语句的过程"><a href="#说一说执行一条查询SQL查询语句的过程" class="headerlink" title="说一说执行一条查询SQL查询语句的过程"></a>说一说执行一条查询SQL查询语句的过程</h1><p><img src="/img/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/img1.png" alt="img"></p>
-<ul>
-<li>会经过连接器、查询缓存、解析器、优化器、执行器、存储引擎这些模块</li>
-<li>连接器负责建立连接、校验用户身份、接受客户端的SQL语句</li>
-<li>在查询缓存中，如果命中缓存，直接返回</li>
-<li>分析器对SQL语句进行语法分析、词法分析</li>
-<li>优化器会基于查询成本的考虑，对每个索引进行成本分析，从中选择查询成本最小的执行计划。同时缓存记录给查询缓存</li>
-<li>执行器会根据执行计划来执行查询语句，从存储引擎中读取记录，返回给客户端</li>
+    <title>MySQL日志</title>
+    <url>/posts/MySQL%E6%97%A5%E5%BF%97.html</url>
+    <content><![CDATA[<h1 id="MySQL三大日志是什么"><a href="#MySQL三大日志是什么" class="headerlink" title="MySQL三大日志是什么"></a>MySQL三大日志是什么</h1><ul>
+<li>undo log是Innodb存储引擎生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC。在事务没提交之前，在事务没提交之前，Innodb会将更新前的记录记录在undo log中，需要回滚的时候根据undo log做原先相反操作</li>
+<li>redo log也是Innodb存储引擎的日志，属于物理日志，记录了某个数据页做了什么修改，实现了事务的持久性，主要用于断电等故障恢复。比如某个事务提交了，脏页数据还没刷盘，但是断电了。下次重启的时候可以通过redo log恢复数据</li>
+<li>binlog是Server层生成的日志，主要用于数据备份和主从复制，在完成一条更新操作后，Server层会生成一条binlog，等之后事务提交时，会将该事务执行过程产生的所有binlog统一写入binlog文件中。binlog文件记录了所有数据库表结构和表数据修改的日志，不会记录查询类的操作</li>
 </ul>
-<h1 id="MySQL存储引擎有哪些"><a href="#MySQL存储引擎有哪些" class="headerlink" title="MySQL存储引擎有哪些"></a>MySQL存储引擎有哪些</h1><p>有InnoDB、MyISAM、Memory</p>
-<p>InnoDB是MySQL默认的存储引擎，支持事务、行级锁，具有事务提交、回滚和崩溃恢复功能</p>
-<h1 id="MyISAM和InnoDB有什么区别"><a href="#MyISAM和InnoDB有什么区别" class="headerlink" title="MyISAM和InnoDB有什么区别"></a>MyISAM和InnoDB有什么区别</h1><p>从数据存储、B+树结构、锁粒度、事务这四个角度来分析</p>
-<ul>
-<li>数据存储：InnoDB存储数据采取的是索引组织表，在索引组织表中，索引即数据，数据即索引，因此表数据和索引数据在同一个文件中。MyISAN存储数据采用的是堆表，数据和索引分开存储，因此表数据和索引数据分别放在不同的两个文件中</li>
-<li>索引组织表有两个优势：1. 在索引组织表中，索引和数据在同一个B+树，相比非聚簇索引每次查询都需要回表，因此聚簇索引中获取数据比非聚簇索引快。2. 在索引组织表中，如果记录的非索引记录发生了变化，则其他索引无须进行维护。而当堆表中的位置发生了变化，那么所有的索引地址都需要更新</li>
-<li>B+树结构：InnoDB引擎B+树叶子节点存储索引+数据，MyISAM引擎叶子节点存储索引+数据地址</li>
-<li>锁粒度：InnoDB引擎支持行级锁，MyISAM不支持行级锁，支持表锁。因为MyISAM引擎不支持聚簇索引，所以无法实现行锁，出现多条线程同时读写数据时，只能锁住整张表。而InnoDB由于支持聚簇索引，每个索引最终都会指向聚簇索引中的索引键，因此出现并发事务时，InnoDB只需要锁住聚簇索引的数据即可，而不需要锁住整张表，因此并发性能更高</li>
-<li>事务：InnoDB支持事务，MyISAM不支持事务。使用InnoDB存储引擎的表，可以借助undo-log日志实现事务机制，支持多条SQL组成一个事务，可以保证发生异常的情况下，组成这个事务的SQL到底回滚还是提交。而MyISAM并未设计类似的技术，在启动时不会在内存中构建undo_log_buffer缓冲区，磁盘中也没有相应的日志文件，因此MyISAM并不支持事务机制</li>
+<h1 id="binlog日志有哪些格式"><a href="#binlog日志有哪些格式" class="headerlink" title="binlog日志有哪些格式"></a>binlog日志有哪些格式</h1><ul>
+<li>STATEMENT（默认格式）：每一条修改的SQL都会被记录在binlog中（逻辑日志），主从复制中slave端再根据SQL语句重现。但STATEMENT有动态函数的问题，比如你用uuid或者now这些函数，你在主库上执行的结果并不是你在从库上执行的结果，因此会导致数据不一致</li>
+<li>ROW：记录行数据最终被修改成什么样（不是逻辑日志），不会出现STATEMENT的动态函数问题。但是也有缺点是每行数据的变化记录都会被修改，比如批量执行update语句，更新多少行就产生多少行记录，会导致binlog文件过大，而在STATEMENT下只会记录update语句而已</li>
+<li>MIXED：包含了STATEMENT和ROW模式，它会根据不同的情况使用不同的模式</li>
 </ul>
-<h1 id="MySQL为什么选择InnoDB作为默认引擎"><a href="#MySQL为什么选择InnoDB作为默认引擎" class="headerlink" title="MySQL为什么选择InnoDB作为默认引擎"></a>MySQL为什么选择InnoDB作为默认引擎</h1><p>最主要原因是InnoDB支持事务，其他引擎不支持</p>
+<h1 id="redo-log和binlog的区别和应用场景"><a href="#redo-log和binlog的区别和应用场景" class="headerlink" title="redo log和binlog的区别和应用场景"></a>redo log和binlog的区别和应用场景</h1><ol>
+<li><p>适用对象不同：</p>
 <ul>
-<li>事务支持：InnoDB支持事务，保证了ACID（原子性、一致性、隔离性、持久性），MyISAM是不支持事务的</li>
-<li>并发性能：InnoDB因为支持聚簇索引，可以使用行级锁，在并发条件下只需要对行数据加锁，不需要对整张表加锁。而MyISAM只能对整张表加锁，并发效率低</li>
-<li>崩溃恢复：InnoDB通过redolog日志实现了崩溃恢复，保证了数据了持久性和一致性。MyISAM不支持崩溃恢复</li>
+<li>binlog是MySQL Server层的日志，适用于所有引擎</li>
+<li>redo log是Innodb存储引擎的日志</li>
 </ul>
-<h1 id="用count-哪个存储引擎会更快"><a href="#用count-哪个存储引擎会更快" class="headerlink" title="用count(*)哪个存储引擎会更快"></a>用count(*)哪个存储引擎会更快</h1><p>在MyISAM中，每张数据表都有一个meta信息维护了row_count的值，由表级锁一致性，直接读取row_count的值就是count函数的执行结构。</p>
-<p>因此如果查询语句中没有where查询条件，MyISAM更快。如果有where查询条件性能都差不多，都需要一行一行遍历地统计</p>
-<h1 id="NULL值是如何存储的？"><a href="#NULL值是如何存储的？" class="headerlink" title="NULL值是如何存储的？"></a>NULL值是如何存储的？</h1><p><img src="/img/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/img2.png" alt="img"></p>
-<p>MySQL行格式会用NULL值列表来标记值为NULL的列，每个列对应一个二进制位，如果列的值为NULL，就会标记二进制位为1，否则是0。所以NULL值并不会存储在数据格式中的真实数据部分</p>
-<h1 id="char和varchar有什么区别？哪个性能更好"><a href="#char和varchar有什么区别？哪个性能更好" class="headerlink" title="char和varchar有什么区别？哪个性能更好"></a>char和varchar有什么区别？哪个性能更好</h1><p>区别:</p>
+</li>
+<li><p>文件格式不同：</p>
+<ol>
+<li><p>binlog有三种格式：</p>
 <ul>
-<li>char是固定长度的字符串类型，它是数据库中占用固定的存储空间，无论存储的大小是多少，都会占用定义时的固定长度。如果存储的字符串长度小于定义的字符串长度，则会用空格填充。比如定义一个char（10）的字符串，但是只用了5字节，会自动填充5字节</li>
-<li>varchar是变长长度的字符串类型，实际存储时占用实际字符串长度的大小。但是还需要额外1-2字节存储可变长字符串长度的空间</li>
+<li>STATEMENT（默认格式）：每一条修改的SQL都会被记录在binlog中（逻辑日志），主从复制中slave端再根据SQL语句重现。但STATEMENT有动态函数的问题，比如你用uuid或者now这些函数，你在主库上执行的结果并不是你在从库上执行的结果，因此会导致数据不一致</li>
+<li>ROW：记录行数据最终被修改成什么样（不是逻辑日志），不会出现STATEMENT的动态函数问题。但是也有缺点是每行数据的变化记录都会被修改，比如批量执行update语句，更新多少行就产生多少行记录，会导致binlog文件过大，而在STATEMENT下只会记录update语句而已</li>
+<li>MIXED：包含了STATEMENT和ROW模式，它会根据不同的情况使用不同的模式</li>
 </ul>
-<p>性能：</p>
+</li>
+<li><p>redo log:</p>
 <ul>
-<li>站在CPU角度来看，理论上CHAR比VARCHAR快，因为VACHAR有一个长度标识参与运算</li>
-<li>但是在实际中，Innodb buffer pool 小于表大小时，磁盘读写成为了性能的关键因素。而VARCHAR更短，性能反而比CHAR高。但是当Innodb buffer pool足够大时，CHAR和VARCHAR性能差异不大</li>
+<li>物理日志，记录的是某个数据页做了什么修改，比如对XX表空间中的YY数据页做了ZZ偏移量的AA更新</li>
 </ul>
-<h1 id="一个字段是VARCHAR-10-，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？"><a href="#一个字段是VARCHAR-10-，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？" class="headerlink" title="一个字段是VARCHAR(10)，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？"></a>一个字段是VARCHAR(10)，但它实际上只有6个字节，那他在内存空间的大小是多少？在文件中的存储空间大小是多少？</h1><p>varchar是可变长字符串长度，保存到文件中，只会存储实际使用的字符串大小。但是内存是按varchar最大值来固定分配大小。</p>
-<p>因此在内存中会占用10字节。在文件中占用6字节，并且都会用1-2字节存储可变长字符串长度的空间</p>
-<h1 id="varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？"><a href="#varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？" class="headerlink" title="varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？"></a>varchar可变长字符串长度的空间大小是1字节还是2字节取决什么？</h1><p><img src="/img/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/img3.png" alt="img"></p>
-<h1 id="如果硬件内存特别大，MySQL缓存是否可以替代Redis"><a href="#如果硬件内存特别大，MySQL缓存是否可以替代Redis" class="headerlink" title="如果硬件内存特别大，MySQL缓存是否可以替代Redis"></a>如果硬件内存特别大，MySQL缓存是否可以替代Redis</h1><p>不能</p>
+</li>
+</ol>
+</li>
+<li><p>写入方式不同：</p>
 <ul>
-<li>bufferpool结构，日志技术，事务并发，存储模型等等模块，都是面向磁盘页而设计的，因此其首要目标不是减少内存代价，而是I&#x2F;O代价。</li>
-<li>其次，Mysql查询走的是B+树索引，时间复杂度是O（logN），Redis有Hash数据对象的时候，查询复杂度是O（1）</li>
-<li>最后，MySQL在更新数据的时候，为了保证事务的隔离性，需要加锁，而Redis更新操作不需要加锁。还有MySQL为了保证数据的持久性，还需要刷盘redolog和binlog日志，Redis可以选择不持久化。因此即使buffer pool无限大，MySQL缓存的性能还是没有Redis好</li>
+<li>binlog是追加写，写满一个文件，就创建一个新的文件继续写，不会覆盖以前的日志，保存的是全量的日志</li>
+<li>redo log是循环写，日志空间大小是固定的，全部写满就重头开始，保存未被刷入磁盘的脏页数据</li>
 </ul>
+</li>
+<li><p>用途不同：</p>
+</li>
+</ol>
+<ul>
+<li>binlog用于备份恢复、主从复制</li>
+<li>redo log用于掉电等故障恢复</li>
+</ul>
+<h1 id="为什么崩溃恢复不用binlog而用redo-log"><a href="#为什么崩溃恢复不用binlog而用redo-log" class="headerlink" title="为什么崩溃恢复不用binlog而用redo log"></a>为什么崩溃恢复不用binlog而用redo log</h1><p>binlog是server层的日志，不会记录innodb存储引擎中有哪些数据没被刷盘，redo log是innodb存储引擎的日志，会记录哪些脏页没被刷盘，崩溃恢复的时候，恢复的粒度更细，可以精确到恢复的页。而binlog保存的是全量日志，因此效率比redo log恢复效率低</p>
+<h1 id="redo-log是怎么实现持久化"><a href="#redo-log是怎么实现持久化" class="headerlink" title="redo log是怎么实现持久化"></a>redo log是怎么实现持久化</h1><p>事务执行过程中更新的数据，不是在事务提交的时候，刷新到磁盘，而是修改buffer pool中的数据页为脏页，然后后台再找时机刷盘</p>
+<p>如果事务提交了，脏页还没有刷盘，就会造成事务修改的数据丢失</p>
+<p>因此引入了redo log，主要记录了Innodb对某个页做的修改操作，当事务提交时，redo log会先刷入磁盘，因为redo log保存了数据页的修改操作，即使脏页数据没有刷盘，下次MySQL启动时，可以通过重放redo log保持数据的持久化</p>
+<h1 id="redo-log有什么功能"><a href="#redo-log有什么功能" class="headerlink" title="redo log有什么功能"></a>redo log有什么功能</h1><ul>
+<li>实现事务的持久性，让MySQL有crash-safe的能力，能够保证MySQL在任何时候突然崩溃，重启之后之前提交的记录不会丢失</li>
+<li>将写操作从随机写变成顺序写，提升MySQL写入磁盘的性能。先写redo log是一个顺序写的过程，同时真正的数据写磁盘由MySQL在最合适的时机写入，肯定比每次随机写都要快</li>
+</ul>
+<h1 id="为什么需要两阶段提交"><a href="#为什么需要两阶段提交" class="headerlink" title="为什么需要两阶段提交"></a>为什么需要两阶段提交</h1><ul>
+<li>两阶段提交是为了保证redo log和binlog逻辑一致，从而保证主从复制的时候不会出现数据不一致的情况</li>
+<li>事务提交后，redo log和binlog都要持久化到磁盘，但是这是两个独立的逻辑，可能出现半成功的状态。比如在主从复制的场景下，如果将redo log刷入到磁盘，MySQL突然宕机了，而binlog还没有来得及写入到磁盘，这时候主库是最新的数据，从库是旧数据，就造成了主从不一致</li>
+</ul>
+<h1 id="两阶段提交的过程"><a href="#两阶段提交的过程" class="headerlink" title="两阶段提交的过程"></a>两阶段提交的过程</h1><p>两阶段提交将事务分成了两个阶段，准备阶段和提交阶段：</p>
+<ul>
+<li>prepare阶段：将XID（内部XA事务的ID）写入到redo log中，同时将redo log刷入到磁盘。然后将redo log状态设置为prepare</li>
+<li>commit阶段：将XID写入到binlog中，同时将binlog写入磁盘。然后将redo log设置为commit状态，两阶段提交完成</li>
+</ul>
+<p>两阶段提交，是以binlog写入磁盘为成功标志：</p>
+<ul>
+<li>如果在写入redo log之前崩溃，此时redo log和bin log是没有数据的，那么数据是满足一致性</li>
+<li>如果在写入redo log prepare阶段后立马崩溃，之后在崩溃恢复的时候，由于redo log没有被标记为commit，于是拿着redo log中的XID去binlog中查找，一定找不到。于是就执行回滚操作</li>
+<li>如果写入binlog到磁盘后立马崩溃，即使redo log没有设置commit状态，但是由于redo log中的XID在binlog中找得到，说明都完成了刷盘，直接提交事务即可</li>
+</ul>
+<h1 id="Redo-log刷盘策略是什么"><a href="#Redo-log刷盘策略是什么" class="headerlink" title="Redo log刷盘策略是什么"></a>Redo log刷盘策略是什么</h1><p>主要有三种：</p>
+<ul>
+<li>当刷盘策略参数配置为0的时候，每次提交事务，将redo log留在redo log buffer中，该模式下事务不会主动触发写入到磁盘的操作，后续由innodb后台线程把缓存在redo log buffer中的redo log写入到操作系统的page cache缓存并持久化到磁盘</li>
+<li>当刷盘策略参数配置为1的时候，每次事务提交，都将缓存在redo log buffer中的刷入到磁盘</li>
+<li>当刷盘策略参数配置为2的时候，每次事务提交的时候，都只是将redo log buffer中的redo log写入到操作系统的page cache缓存，但并不会执行刷盘，后续有innodb的后台线程执行刷盘</li>
+</ul>
+<p>三种策略，参数为1的安全性最高，但也是写入性能最差的。参数为0的安全性最差，写入性能最好</p>
 ]]></content>
       <categories>
         <category>MySQL</category>
@@ -2076,94 +2164,6 @@
 <li>最后，id由于是主键，因此id和name都可以在二级索引中找到，会发生索引覆盖，不需要回表</li>
 </ul>
 <h1 id="where-id-not-in-（X-X-X）会走索引吗"><a href="#where-id-not-in-（X-X-X）会走索引吗" class="headerlink" title="where id not in （X, X, X）会走索引吗"></a>where id not in （X, X, X）会走索引吗</h1><p>要看查询成本，如果走某个索引花费的随机IO从聚簇索引查（顺序IO）的成本还要高，就不会走索引<br>比如，num字段（非唯一二级索引）只包含3个值，1，2，3。 然而1，2各有100W行，3只有几行，那么not in （1， 2）会走索引，not in （3）不会走索引<br>如果查询条件包括索引列和非索引列，查询过程是怎么样的<br>查询过程先根据二级索引拿到主键id，再回表过滤非索引列，查询过程会查两个B+树，涉及回表<br>比如select a from XX where a &#x3D; ? and d &#x3D; ? ，a是索引，d不是索引，会先按索引查询，再回表过滤d</p>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL日志</title>
-    <url>/posts/MySQL%E6%97%A5%E5%BF%97.html</url>
-    <content><![CDATA[<h1 id="MySQL三大日志是什么"><a href="#MySQL三大日志是什么" class="headerlink" title="MySQL三大日志是什么"></a>MySQL三大日志是什么</h1><ul>
-<li>undo log是Innodb存储引擎生成的日志，实现了事务的原子性，主要用于事务回滚和MVCC。在事务没提交之前，在事务没提交之前，Innodb会将更新前的记录记录在undo log中，需要回滚的时候根据undo log做原先相反操作</li>
-<li>redo log也是Innodb存储引擎的日志，属于物理日志，记录了某个数据页做了什么修改，实现了事务的持久性，主要用于断电等故障恢复。比如某个事务提交了，脏页数据还没刷盘，但是断电了。下次重启的时候可以通过redo log恢复数据</li>
-<li>binlog是Server层生成的日志，主要用于数据备份和主从复制，在完成一条更新操作后，Server层会生成一条binlog，等之后事务提交时，会将该事务执行过程产生的所有binlog统一写入binlog文件中。binlog文件记录了所有数据库表结构和表数据修改的日志，不会记录查询类的操作</li>
-</ul>
-<h1 id="binlog日志有哪些格式"><a href="#binlog日志有哪些格式" class="headerlink" title="binlog日志有哪些格式"></a>binlog日志有哪些格式</h1><ul>
-<li>STATEMENT（默认格式）：每一条修改的SQL都会被记录在binlog中（逻辑日志），主从复制中slave端再根据SQL语句重现。但STATEMENT有动态函数的问题，比如你用uuid或者now这些函数，你在主库上执行的结果并不是你在从库上执行的结果，因此会导致数据不一致</li>
-<li>ROW：记录行数据最终被修改成什么样（不是逻辑日志），不会出现STATEMENT的动态函数问题。但是也有缺点是每行数据的变化记录都会被修改，比如批量执行update语句，更新多少行就产生多少行记录，会导致binlog文件过大，而在STATEMENT下只会记录update语句而已</li>
-<li>MIXED：包含了STATEMENT和ROW模式，它会根据不同的情况使用不同的模式</li>
-</ul>
-<h1 id="redo-log和binlog的区别和应用场景"><a href="#redo-log和binlog的区别和应用场景" class="headerlink" title="redo log和binlog的区别和应用场景"></a>redo log和binlog的区别和应用场景</h1><ol>
-<li><p>适用对象不同：</p>
-<ul>
-<li>binlog是MySQL Server层的日志，适用于所有引擎</li>
-<li>redo log是Innodb存储引擎的日志</li>
-</ul>
-</li>
-<li><p>文件格式不同：</p>
-<ol>
-<li><p>binlog有三种格式：</p>
-<ul>
-<li>STATEMENT（默认格式）：每一条修改的SQL都会被记录在binlog中（逻辑日志），主从复制中slave端再根据SQL语句重现。但STATEMENT有动态函数的问题，比如你用uuid或者now这些函数，你在主库上执行的结果并不是你在从库上执行的结果，因此会导致数据不一致</li>
-<li>ROW：记录行数据最终被修改成什么样（不是逻辑日志），不会出现STATEMENT的动态函数问题。但是也有缺点是每行数据的变化记录都会被修改，比如批量执行update语句，更新多少行就产生多少行记录，会导致binlog文件过大，而在STATEMENT下只会记录update语句而已</li>
-<li>MIXED：包含了STATEMENT和ROW模式，它会根据不同的情况使用不同的模式</li>
-</ul>
-</li>
-<li><p>redo log:</p>
-<ul>
-<li>物理日志，记录的是某个数据页做了什么修改，比如对XX表空间中的YY数据页做了ZZ偏移量的AA更新</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><p>写入方式不同：</p>
-<ul>
-<li>binlog是追加写，写满一个文件，就创建一个新的文件继续写，不会覆盖以前的日志，保存的是全量的日志</li>
-<li>redo log是循环写，日志空间大小是固定的，全部写满就重头开始，保存未被刷入磁盘的脏页数据</li>
-</ul>
-</li>
-<li><p>用途不同：</p>
-</li>
-</ol>
-<ul>
-<li>binlog用于备份恢复、主从复制</li>
-<li>redo log用于掉电等故障恢复</li>
-</ul>
-<h1 id="为什么崩溃恢复不用binlog而用redo-log"><a href="#为什么崩溃恢复不用binlog而用redo-log" class="headerlink" title="为什么崩溃恢复不用binlog而用redo log"></a>为什么崩溃恢复不用binlog而用redo log</h1><p>binlog是server层的日志，不会记录innodb存储引擎中有哪些数据没被刷盘，redo log是innodb存储引擎的日志，会记录哪些脏页没被刷盘，崩溃恢复的时候，恢复的粒度更细，可以精确到恢复的页。而binlog保存的是全量日志，因此效率比redo log恢复效率低</p>
-<h1 id="redo-log是怎么实现持久化"><a href="#redo-log是怎么实现持久化" class="headerlink" title="redo log是怎么实现持久化"></a>redo log是怎么实现持久化</h1><p>事务执行过程中更新的数据，不是在事务提交的时候，刷新到磁盘，而是修改buffer pool中的数据页为脏页，然后后台再找时机刷盘</p>
-<p>如果事务提交了，脏页还没有刷盘，就会造成事务修改的数据丢失</p>
-<p>因此引入了redo log，主要记录了Innodb对某个页做的修改操作，当事务提交时，redo log会先刷入磁盘，因为redo log保存了数据页的修改操作，即使脏页数据没有刷盘，下次MySQL启动时，可以通过重放redo log保持数据的持久化</p>
-<h1 id="redo-log有什么功能"><a href="#redo-log有什么功能" class="headerlink" title="redo log有什么功能"></a>redo log有什么功能</h1><ul>
-<li>实现事务的持久性，让MySQL有crash-safe的能力，能够保证MySQL在任何时候突然崩溃，重启之后之前提交的记录不会丢失</li>
-<li>将写操作从随机写变成顺序写，提升MySQL写入磁盘的性能。先写redo log是一个顺序写的过程，同时真正的数据写磁盘由MySQL在最合适的时机写入，肯定比每次随机写都要快</li>
-</ul>
-<h1 id="为什么需要两阶段提交"><a href="#为什么需要两阶段提交" class="headerlink" title="为什么需要两阶段提交"></a>为什么需要两阶段提交</h1><ul>
-<li>两阶段提交是为了保证redo log和binlog逻辑一致，从而保证主从复制的时候不会出现数据不一致的情况</li>
-<li>事务提交后，redo log和binlog都要持久化到磁盘，但是这是两个独立的逻辑，可能出现半成功的状态。比如在主从复制的场景下，如果将redo log刷入到磁盘，MySQL突然宕机了，而binlog还没有来得及写入到磁盘，这时候主库是最新的数据，从库是旧数据，就造成了主从不一致</li>
-</ul>
-<h1 id="两阶段提交的过程"><a href="#两阶段提交的过程" class="headerlink" title="两阶段提交的过程"></a>两阶段提交的过程</h1><p>两阶段提交将事务分成了两个阶段，准备阶段和提交阶段：</p>
-<ul>
-<li>prepare阶段：将XID（内部XA事务的ID）写入到redo log中，同时将redo log刷入到磁盘。然后将redo log状态设置为prepare</li>
-<li>commit阶段：将XID写入到binlog中，同时将binlog写入磁盘。然后将redo log设置为commit状态，两阶段提交完成</li>
-</ul>
-<p>两阶段提交，是以binlog写入磁盘为成功标志：</p>
-<ul>
-<li>如果在写入redo log之前崩溃，此时redo log和bin log是没有数据的，那么数据是满足一致性</li>
-<li>如果在写入redo log prepare阶段后立马崩溃，之后在崩溃恢复的时候，由于redo log没有被标记为commit，于是拿着redo log中的XID去binlog中查找，一定找不到。于是就执行回滚操作</li>
-<li>如果写入binlog到磁盘后立马崩溃，即使redo log没有设置commit状态，但是由于redo log中的XID在binlog中找得到，说明都完成了刷盘，直接提交事务即可</li>
-</ul>
-<h1 id="Redo-log刷盘策略是什么"><a href="#Redo-log刷盘策略是什么" class="headerlink" title="Redo log刷盘策略是什么"></a>Redo log刷盘策略是什么</h1><p>主要有三种：</p>
-<ul>
-<li>当刷盘策略参数配置为0的时候，每次提交事务，将redo log留在redo log buffer中，该模式下事务不会主动触发写入到磁盘的操作，后续由innodb后台线程把缓存在redo log buffer中的redo log写入到操作系统的page cache缓存并持久化到磁盘</li>
-<li>当刷盘策略参数配置为1的时候，每次事务提交，都将缓存在redo log buffer中的刷入到磁盘</li>
-<li>当刷盘策略参数配置为2的时候，每次事务提交的时候，都只是将redo log buffer中的redo log写入到操作系统的page cache缓存，但并不会执行刷盘，后续有innodb的后台线程执行刷盘</li>
-</ul>
-<p>三种策略，参数为1的安全性最高，但也是写入性能最差的。参数为0的安全性最差，写入性能最好</p>
 ]]></content>
       <categories>
         <category>MySQL</category>
@@ -2396,6 +2396,25 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis切片集群哈希槽为什么是16384个</title>
+    <url>/posts/Redis%E5%88%87%E7%89%87%E9%9B%86%E7%BE%A4%E5%93%88%E5%B8%8C%E6%A7%BD%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF16384%E4%B8%AA.html</url>
+    <content><![CDATA[<p>CRC16算法产生的hash值有16bit，该算法可以产生2^16-&#x3D;65536个值。换句话说，值是分布在0~65535之间。那作者在做mod运算的时候，为什么不mod65536，而选择mod16384？</p>
+<ol>
+<li>如果槽位为65536，发送心跳信息的消息头达8k，发送的心跳包过于庞大。在消息头中，最占空间的是myslots[CLUSTER_SLOTS&#x2F;8]。 当槽位为65536时，这块的大小是:65536÷8÷1024&#x3D;8kb。因为每秒钟，redis节点需要发送一定数量的ping消息作为心跳包，如果槽位为65536，这个ping消息的消息头太大了，浪费带宽</li>
+<li>redis的集群主节点数量基本不可能超过1000个。 集群节点越多，心跳包的消息体内携带的数据越多。如果节点过1000个，也会导致网络拥堵。因此redis作者，不建议redis cluster节点数量超过1000个。 那么，对于节点数在1000以内的redis cluster集群，16384个槽位够用了。没有必要拓展到65536个</li>
+<li>槽位越小，节点少的情况下，压缩比高。Redis主节点的配置信息中，它所负责的哈希槽是通过一张bitmap的形式来保存的，在传输过程中，会对bitmap进行压缩，但是如果bitmap的填充率slots &#x2F; N很高的话(N表示节点数)，bitmap的压缩率就很低</li>
+<li>综上所述，Redis作者决定取16384个槽，不多不少</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis分布式锁</title>
     <url>/posts/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.html</url>
     <content><![CDATA[<h1 id="什么是分布式锁"><a href="#什么是分布式锁" class="headerlink" title="什么是分布式锁"></a>什么是分布式锁</h1><p>分布式锁是实现分布式系统之间共享资源的一种方式</p>
@@ -2468,101 +2487,6 @@
       </categories>
       <tags>
         <tag>Redis - 数据库</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis持久化</title>
-    <url>/posts/Redis%E6%8C%81%E4%B9%85%E5%8C%96.html</url>
-    <content><![CDATA[<h1 id="Redis的持久化方式有哪些"><a href="#Redis的持久化方式有哪些" class="headerlink" title="Redis的持久化方式有哪些"></a>Redis的持久化方式有哪些</h1><p>Redis持久化有两种方式：RDB（Redis DataBase）和AOF（Append Only File）</p>
-<p><img src="/img/Redis%E6%8C%81%E4%B9%85%E5%8C%96/img1.png" alt="alt text"></p>
-<ul>
-<li>RDB：RDB文件是一个经过压缩的二进制文件</li>
-<li>AOF：AOF则是以追加的方式记录Redis执行的每一条写命令</li>
-</ul>
-<h1 id="Redis重启时加载持久化文件"><a href="#Redis重启时加载持久化文件" class="headerlink" title="Redis重启时加载持久化文件"></a>Redis重启时加载持久化文件</h1><p><img src="/img/Redis%E6%8C%81%E4%B9%85%E5%8C%96/img2.png" alt="alt text"></p>
-<h1 id="RDB和AOF的区别"><a href="#RDB和AOF的区别" class="headerlink" title="RDB和AOF的区别"></a>RDB和AOF的区别</h1><ul>
-<li>文件类型：RDB生成的是二进制文件（快照），AOF生成的是文本文件（追加日志）</li>
-<li>安全性：缓存宕机时，RDB容易丢失较多的数据，AOF根据策略决定（默认的everysec可以保证最多有一秒的损失）</li>
-<li>文件恢复速度：由于RDB是二进制文件，恢复比AOF快</li>
-<li>操作的开销：每一次RDB保存都是一次全量保存，操作比较重，通常至少5分钟保存一次。而AOF的刷盘是追加操作，操作比较轻，通常设置为每一秒进行一次刷盘</li>
-</ul>
-<h1 id="RDB和AOF选哪种比较好"><a href="#RDB和AOF选哪种比较好" class="headerlink" title="RDB和AOF选哪种比较好"></a>RDB和AOF选哪种比较好</h1><ul>
-<li>从业务需要来看，如果我们可以接受分钟级别的丢失，可以选择RDB。如果我们尽量让数据安全，可以考虑AOF混合持久化，</li>
-<li>从持久化理论来看，始终开启快照是一个推荐，这也是官方默认开启RDB而不开启AOF</li>
-</ul>
-<h1 id="什么是AOF混合持久化"><a href="#什么是AOF混合持久化" class="headerlink" title="什么是AOF混合持久化"></a>什么是AOF混合持久化</h1><ul>
-<li>使用RDB持久化函数，将内存数据写入到新的AOF文件中（数据格式也是RDB）</li>
-<li>而重写期间新的命令追加到新的AOF中（数据格式是AOF）</li>
-<li>新的AOF文件包含RDB格式和AOF格式的数据</li>
-</ul>
-<h1 id="RDB的触发时机"><a href="#RDB的触发时机" class="headerlink" title="RDB的触发时机"></a>RDB的触发时机</h1><ul>
-<li>调用save和bgsave命令</li>
-<li>根据我们的配置周期决定</li>
-<li>redis关闭前</li>
-<li>主从复制第二阶段：主服务器全量复制RDB文件发送给从服务器</li>
-<li>客户点执行清空命令FLUSHALL</li>
-</ul>
-<h1 id="save和bgsave的区别"><a href="#save和bgsave的区别" class="headerlink" title="save和bgsave的区别"></a>save和bgsave的区别</h1><ul>
-<li>save：会阻塞主进程，客户端无法连接redis，等SAVE完成后，主进程才开始工作，客户端可以连接</li>
-<li>bgsave：是fork一个save的子进程，在执行save过程中，不影响主进程，客户端可以正常链接redis，等子进程fork执行save完成后，通知主进程，子进程关闭。bgsave采取的是<strong>写时复制</strong>。<br>子进程写数据到临时的RDB文件，写完之后替换旧的RDB文件</li>
-</ul>
-<h1 id="AOF的触发时机"><a href="#AOF的触发时机" class="headerlink" title="AOF的触发时机"></a>AOF的触发时机</h1><ul>
-<li>Redis关闭的时候</li>
-<li>每一次事件循环的时候</li>
-<li>通过配置指令关闭AOF的时候</li>
-</ul>
-<h1 id="AOF重写流程"><a href="#AOF重写流程" class="headerlink" title="AOF重写流程"></a>AOF重写流程</h1><ol>
-<li>子进程读取Redis DB中的数据以字符串命令的格式（也可以看作AOF格式）写入到新AOF中</li>
-<li>如果有新数据，由主进程将数据写入到AOF重写缓冲区（aof_rewrite_buf）</li>
-<li>当子进程完成重写操作后，主进程通过管道将AOF重写缓冲区数据传输给子进程，子进程追加到AOF文件中</li>
-</ol>
-<h1 id="AOF的不足"><a href="#AOF的不足" class="headerlink" title="AOF的不足"></a>AOF的不足</h1><ol>
-<li>额外CPU的开销：<ul>
-<li>如果有新数据，由主进程将数据写入到AOF重写缓冲区</li>
-<li>进程通过管道将AOF重写缓冲区数据传输给子进程</li>
-<li>子进程追加到AOF文件中</li>
-</ul>
-</li>
-<li>额外内存的开销：<br>在重写的时候，Redis不仅将新的操作记录在原有的AOF缓冲区，还记录在AOF重写缓冲区</li>
-<li>额外的磁盘开销：<br>在重写的时候，AOF缓冲需要刷入旧的AOF日志，AOF重写缓冲也需要刷入新的AOF日志，导致在重写的时候多了一份数据</li>
-</ol>
-<p>但是Redis在7.0做了优化？下一个问答</p>
-<h1 id="Redis7-0对AOF做了哪些优化"><a href="#Redis7-0对AOF做了哪些优化" class="headerlink" title="Redis7.0对AOF做了哪些优化"></a>Redis7.0对AOF做了哪些优化</h1><p><img src="/img/Redis%E6%8C%81%E4%B9%85%E5%8C%96/img3.png" alt="alt text"></p>
-<p>原来的AOF重写缓存被移除，采用<br>MP-AOF（Multi Part AOF），即多部件AOF。将原来的一个AOF变成了多个AOF，由manifest（追踪管理AOF文件）来管理。重写的时候还是fork一个子进程来对Base AOF重写</p>
-<ul>
-<li>Base AOF：重写之前的命令</li>
-<li>Incr AOF：追加新的命令</li>
-</ul>
-<h1 id="AOF缓冲区和AOF重写缓冲区的区别"><a href="#AOF缓冲区和AOF重写缓冲区的区别" class="headerlink" title="AOF缓冲区和AOF重写缓冲区的区别"></a>AOF缓冲区和AOF重写缓冲区的区别</h1><ul>
-<li>AOF缓冲区:是正常使用AOF作为数据落地中间地带，所有的数据先到AOF缓冲区再到AOF文件中。</li>
-<li>AOF重写缓冲区：是AOF重写时，redis还要继续接收数据，这个数据就写到AOF重写缓冲区，当AOF重写ok时，主进程在把AOF重写缓冲区的数据写到AOF缓冲区，最后fsync到AOF文件中</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
-        <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis切片集群哈希槽为什么是16384个</title>
-    <url>/posts/Redis%E5%88%87%E7%89%87%E9%9B%86%E7%BE%A4%E5%93%88%E5%B8%8C%E6%A7%BD%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF16384%E4%B8%AA.html</url>
-    <content><![CDATA[<p>CRC16算法产生的hash值有16bit，该算法可以产生2^16-&#x3D;65536个值。换句话说，值是分布在0~65535之间。那作者在做mod运算的时候，为什么不mod65536，而选择mod16384？</p>
-<ol>
-<li>如果槽位为65536，发送心跳信息的消息头达8k，发送的心跳包过于庞大。在消息头中，最占空间的是myslots[CLUSTER_SLOTS&#x2F;8]。 当槽位为65536时，这块的大小是:65536÷8÷1024&#x3D;8kb。因为每秒钟，redis节点需要发送一定数量的ping消息作为心跳包，如果槽位为65536，这个ping消息的消息头太大了，浪费带宽</li>
-<li>redis的集群主节点数量基本不可能超过1000个。 集群节点越多，心跳包的消息体内携带的数据越多。如果节点过1000个，也会导致网络拥堵。因此redis作者，不建议redis cluster节点数量超过1000个。 那么，对于节点数在1000以内的redis cluster集群，16384个槽位够用了。没有必要拓展到65536个</li>
-<li>槽位越小，节点少的情况下，压缩比高。Redis主节点的配置信息中，它所负责的哈希槽是通过一张bitmap的形式来保存的，在传输过程中，会对bitmap进行压缩，但是如果bitmap的填充率slots &#x2F; N很高的话(N表示节点数)，bitmap的压缩率就很低</li>
-<li>综上所述，Redis作者决定取16384个槽，不多不少</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
-        <tag>Redis</tag>
       </tags>
   </entry>
   <entry>
@@ -2858,6 +2782,82 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis持久化</title>
+    <url>/posts/Redis%E6%8C%81%E4%B9%85%E5%8C%96.html</url>
+    <content><![CDATA[<h1 id="Redis的持久化方式有哪些"><a href="#Redis的持久化方式有哪些" class="headerlink" title="Redis的持久化方式有哪些"></a>Redis的持久化方式有哪些</h1><p>Redis持久化有两种方式：RDB（Redis DataBase）和AOF（Append Only File）</p>
+<p><img src="/img/Redis%E6%8C%81%E4%B9%85%E5%8C%96/img1.png" alt="alt text"></p>
+<ul>
+<li>RDB：RDB文件是一个经过压缩的二进制文件</li>
+<li>AOF：AOF则是以追加的方式记录Redis执行的每一条写命令</li>
+</ul>
+<h1 id="Redis重启时加载持久化文件"><a href="#Redis重启时加载持久化文件" class="headerlink" title="Redis重启时加载持久化文件"></a>Redis重启时加载持久化文件</h1><p><img src="/img/Redis%E6%8C%81%E4%B9%85%E5%8C%96/img2.png" alt="alt text"></p>
+<h1 id="RDB和AOF的区别"><a href="#RDB和AOF的区别" class="headerlink" title="RDB和AOF的区别"></a>RDB和AOF的区别</h1><ul>
+<li>文件类型：RDB生成的是二进制文件（快照），AOF生成的是文本文件（追加日志）</li>
+<li>安全性：缓存宕机时，RDB容易丢失较多的数据，AOF根据策略决定（默认的everysec可以保证最多有一秒的损失）</li>
+<li>文件恢复速度：由于RDB是二进制文件，恢复比AOF快</li>
+<li>操作的开销：每一次RDB保存都是一次全量保存，操作比较重，通常至少5分钟保存一次。而AOF的刷盘是追加操作，操作比较轻，通常设置为每一秒进行一次刷盘</li>
+</ul>
+<h1 id="RDB和AOF选哪种比较好"><a href="#RDB和AOF选哪种比较好" class="headerlink" title="RDB和AOF选哪种比较好"></a>RDB和AOF选哪种比较好</h1><ul>
+<li>从业务需要来看，如果我们可以接受分钟级别的丢失，可以选择RDB。如果我们尽量让数据安全，可以考虑AOF混合持久化，</li>
+<li>从持久化理论来看，始终开启快照是一个推荐，这也是官方默认开启RDB而不开启AOF</li>
+</ul>
+<h1 id="什么是AOF混合持久化"><a href="#什么是AOF混合持久化" class="headerlink" title="什么是AOF混合持久化"></a>什么是AOF混合持久化</h1><ul>
+<li>使用RDB持久化函数，将内存数据写入到新的AOF文件中（数据格式也是RDB）</li>
+<li>而重写期间新的命令追加到新的AOF中（数据格式是AOF）</li>
+<li>新的AOF文件包含RDB格式和AOF格式的数据</li>
+</ul>
+<h1 id="RDB的触发时机"><a href="#RDB的触发时机" class="headerlink" title="RDB的触发时机"></a>RDB的触发时机</h1><ul>
+<li>调用save和bgsave命令</li>
+<li>根据我们的配置周期决定</li>
+<li>redis关闭前</li>
+<li>主从复制第二阶段：主服务器全量复制RDB文件发送给从服务器</li>
+<li>客户点执行清空命令FLUSHALL</li>
+</ul>
+<h1 id="save和bgsave的区别"><a href="#save和bgsave的区别" class="headerlink" title="save和bgsave的区别"></a>save和bgsave的区别</h1><ul>
+<li>save：会阻塞主进程，客户端无法连接redis，等SAVE完成后，主进程才开始工作，客户端可以连接</li>
+<li>bgsave：是fork一个save的子进程，在执行save过程中，不影响主进程，客户端可以正常链接redis，等子进程fork执行save完成后，通知主进程，子进程关闭。bgsave采取的是<strong>写时复制</strong>。<br>子进程写数据到临时的RDB文件，写完之后替换旧的RDB文件</li>
+</ul>
+<h1 id="AOF的触发时机"><a href="#AOF的触发时机" class="headerlink" title="AOF的触发时机"></a>AOF的触发时机</h1><ul>
+<li>Redis关闭的时候</li>
+<li>每一次事件循环的时候</li>
+<li>通过配置指令关闭AOF的时候</li>
+</ul>
+<h1 id="AOF重写流程"><a href="#AOF重写流程" class="headerlink" title="AOF重写流程"></a>AOF重写流程</h1><ol>
+<li>子进程读取Redis DB中的数据以字符串命令的格式（也可以看作AOF格式）写入到新AOF中</li>
+<li>如果有新数据，由主进程将数据写入到AOF重写缓冲区（aof_rewrite_buf）</li>
+<li>当子进程完成重写操作后，主进程通过管道将AOF重写缓冲区数据传输给子进程，子进程追加到AOF文件中</li>
+</ol>
+<h1 id="AOF的不足"><a href="#AOF的不足" class="headerlink" title="AOF的不足"></a>AOF的不足</h1><ol>
+<li>额外CPU的开销：<ul>
+<li>如果有新数据，由主进程将数据写入到AOF重写缓冲区</li>
+<li>进程通过管道将AOF重写缓冲区数据传输给子进程</li>
+<li>子进程追加到AOF文件中</li>
+</ul>
+</li>
+<li>额外内存的开销：<br>在重写的时候，Redis不仅将新的操作记录在原有的AOF缓冲区，还记录在AOF重写缓冲区</li>
+<li>额外的磁盘开销：<br>在重写的时候，AOF缓冲需要刷入旧的AOF日志，AOF重写缓冲也需要刷入新的AOF日志，导致在重写的时候多了一份数据</li>
+</ol>
+<p>但是Redis在7.0做了优化？下一个问答</p>
+<h1 id="Redis7-0对AOF做了哪些优化"><a href="#Redis7-0对AOF做了哪些优化" class="headerlink" title="Redis7.0对AOF做了哪些优化"></a>Redis7.0对AOF做了哪些优化</h1><p><img src="/img/Redis%E6%8C%81%E4%B9%85%E5%8C%96/img3.png" alt="alt text"></p>
+<p>原来的AOF重写缓存被移除，采用<br>MP-AOF（Multi Part AOF），即多部件AOF。将原来的一个AOF变成了多个AOF，由manifest（追踪管理AOF文件）来管理。重写的时候还是fork一个子进程来对Base AOF重写</p>
+<ul>
+<li>Base AOF：重写之前的命令</li>
+<li>Incr AOF：追加新的命令</li>
+</ul>
+<h1 id="AOF缓冲区和AOF重写缓冲区的区别"><a href="#AOF缓冲区和AOF重写缓冲区的区别" class="headerlink" title="AOF缓冲区和AOF重写缓冲区的区别"></a>AOF缓冲区和AOF重写缓冲区的区别</h1><ul>
+<li>AOF缓冲区:是正常使用AOF作为数据落地中间地带，所有的数据先到AOF缓冲区再到AOF文件中。</li>
+<li>AOF重写缓冲区：是AOF重写时，redis还要继续接收数据，这个数据就写到AOF重写缓冲区，当AOF重写ok时，主进程在把AOF重写缓冲区的数据写到AOF缓冲区，最后fsync到AOF文件中</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis过期删除策略和内存淘汰策略</title>
     <url>/posts/Redis%E8%BF%87%E6%9C%9F%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5.html</url>
     <content><![CDATA[<h1 id="过期删除策略"><a href="#过期删除策略" class="headerlink" title="过期删除策略"></a>过期删除策略</h1><h2 id="设置过期时间"><a href="#设置过期时间" class="headerlink" title="设置过期时间"></a>设置过期时间</h2><ol>
@@ -2954,6 +2954,75 @@
       </tags>
   </entry>
   <entry>
+    <title>SQL语法</title>
+    <url>/posts/SQL%E8%AF%AD%E6%B3%95.html</url>
+    <content><![CDATA[<h1 id="count主键和非主键的结果有什么不同？"><a href="#count主键和非主键的结果有什么不同？" class="headerlink" title="count主键和非主键的结果有什么不同？"></a>count主键和非主键的结果有什么不同？</h1><p>count() 是一个聚合函数，函数的参数不仅可以是字段名，也可以是其他任意表达式，该函数作用是统计符合查询条件的记录中，函数指定的参数不为 NULL 的记录有多少个</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(name) <span class="keyword">from</span> t_order;</span><br><span class="line"> </span><br><span class="line">统计t_order表中，name不为<span class="keyword">null</span>的字段有多少个</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="number">1</span>) <span class="keyword">from</span> t_order;</span><br><span class="line">统计t_order 表中，<span class="number">1</span> 这个表达式不为 <span class="keyword">NULL</span> 的记录有多少个</span><br><span class="line">t_order 表中，<span class="number">1</span> 这个表达式不为 <span class="keyword">NULL</span> 的记录</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>主键是不能存NULL值，因此会统计表中所有行数据的数量</li>
+<li>非主键可以存NULL值，因此会统计表中这个列的非NULL值得数量</li>
+</ul>
+<h1 id="MySQL内连接，外连接有什么区别"><a href="#MySQL内连接，外连接有什么区别" class="headerlink" title="MySQL内连接，外连接有什么区别"></a>MySQL内连接，外连接有什么区别</h1><p>内连接（INNER JOIN）和外连接(LEFT JOIN和RIGHT JOIN)都是连表查询</p>
+<p>内连接是返回两个表的匹配行，外连接可以返回匹配和不匹配的行，外连接主要分为左连接和右连接：</p>
+<ul>
+<li>左连接：返回左表中的所有行和右表中的匹配行，如果右表没有，用NULL值替代</li>
+<li>右连接：返回右表中的所有行和左表中的匹配行，如果左表没有，用NULL值替代</li>
+</ul>
+<h1 id="ON和WHERE过滤条件的区别"><a href="#ON和WHERE过滤条件的区别" class="headerlink" title="ON和WHERE过滤条件的区别"></a>ON和WHERE过滤条件的区别</h1><ul>
+<li>对于内连接查询，WHERE和ON过滤条件等效</li>
+<li>对于外连接查询，ON中的过滤条件在执行时进行，WHERE中的过滤条件在连接操作后进行。用ON如果匹配不上会用NULL填充</li>
+</ul>
+<h1 id="WHERE和HAVING的区别"><a href="#WHERE和HAVING的区别" class="headerlink" title="WHERE和HAVING的区别"></a>WHERE和HAVING的区别</h1><ul>
+<li>WHERE是在GROUP BY分组和聚集函数之前对数据行进行过滤</li>
+<li>HAVING是在GROUP BY分组和聚集函数之后对分组之后的数据过滤</li>
+</ul>
+<p><img src="/img/SQL%E8%AF%AD%E6%B3%95/img1.png" alt="img"></p>
+<p>语法错误，因为WHERE是在分组和聚集函数之前进行过滤，WHERE执行的时候还没有分组函数</p>
+<h1 id="EXISTS和IN的区别是什么"><a href="#EXISTS和IN的区别是什么" class="headerlink" title="EXISTS和IN的区别是什么"></a>EXISTS和IN的区别是什么</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">A是外表，B是内表</span><br><span class="line"></span><br><span class="line">seletct <span class="operator">*</span> <span class="keyword">from</span> A <span class="keyword">where</span> id <span class="keyword">in</span> (selectt id <span class="keyword">from</span> B)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> A <span class="keyword">where</span> <span class="keyword">exists</span> (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> B <span class="keyword">where</span> A.id <span class="operator">=</span> B.id)</span><br></pre></td></tr></table></figure>
+
+<p>工作原理区别：</p>
+<ul>
+<li>in先遍历内表，会把查询到的数据缓存在内存中，然后遍历内表的数据再去查询外表</li>
+<li>exists先遍历外表将数据缓存到内存中，然后遍历外表的数据再去查询内表</li>
+</ul>
+<p>性能区别：</p>
+<ul>
+<li>如果两个表的记录大小相当，in和exists区别不大</li>
+<li>如果两个表，其中一个是大表，另外一个是小表，IN适合外表大内表小的情况，EXISTS适合外表小内表大的情况，遵循<strong>小表驱动大表</strong></li>
+<li>假设B有10000条记录，A有100条，如果用IN, 那么与数据库交互的次数是10000 * log100次（log是因为在数据库中根据连接条件走的是B+树索引），而用EXISTS交互次数是100 * log10000次.差异体现在和数据库交互的次数</li>
+</ul>
+<h1 id="MySQL的约束有哪些"><a href="#MySQL的约束有哪些" class="headerlink" title="MySQL的约束有哪些"></a>MySQL的约束有哪些</h1><p>数据库有六大约束：</p>
+<ul>
+<li>主键约束：作用标识唯一一条记录，不能为NULL，也不能重复，一般设置id为主键</li>
+<li>外键约束：确保表之间记录的完整性</li>
+<li>唯一性约束：保证字段在表中的记录是唯一的，如果插入重复的字段，会出现唯一性约束错误</li>
+<li>非空约束：不允许字段为空</li>
+<li>默认约束：给字段设置默认值，如果插入字段时没有设置初值则有默认值</li>
+<li>检查约束：用于检查字段的取值是不是在取值范围内</li>
+</ul>
+<p>但是MySQL只支持前5种</p>
+<h1 id="union和union-all的区别"><a href="#union和union-all的区别" class="headerlink" title="union和union all的区别"></a>union和union all的区别</h1><ul>
+<li>union在结果集合并后去重</li>
+<li>union all在结果集合并后不去重</li>
+</ul>
+<h1 id="count-比coun-1-性能好吗"><a href="#count-比coun-1-性能好吗" class="headerlink" title="count(*)比coun(1)性能好吗"></a>count(*)比coun(1)性能好吗</h1><ul>
+<li>不会， 因为MySQL会将*当作0来处理，所以二者性能一样</li>
+<li>除此之外，在性能上：count（*）&#x3D; count（1）&gt; count（主键）&gt; count（子段）</li>
+<li>MySQL 会对 count(*) 和 count(1) 有个优化，如果有多个二级索引的时候，优化器会使用key_len 最小的二级索引进行扫描。只有当没有二级索引的时候，才会采用主键索引来进行统计</li>
+</ul>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis集群</title>
     <url>/posts/Redis%E9%9B%86%E7%BE%A4.html</url>
     <content><![CDATA[<h1 id="Redis集群架构有哪些"><a href="#Redis集群架构有哪些" class="headerlink" title="Redis集群架构有哪些"></a>Redis集群架构有哪些</h1><ul>
@@ -3031,75 +3100,6 @@
         <tag>Java</tag>
         <tag>SpringBoot</tag>
         <tag>SSM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SQL语法</title>
-    <url>/posts/SQL%E8%AF%AD%E6%B3%95.html</url>
-    <content><![CDATA[<h1 id="count主键和非主键的结果有什么不同？"><a href="#count主键和非主键的结果有什么不同？" class="headerlink" title="count主键和非主键的结果有什么不同？"></a>count主键和非主键的结果有什么不同？</h1><p>count() 是一个聚合函数，函数的参数不仅可以是字段名，也可以是其他任意表达式，该函数作用是统计符合查询条件的记录中，函数指定的参数不为 NULL 的记录有多少个</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(name) <span class="keyword">from</span> t_order;</span><br><span class="line"> </span><br><span class="line">统计t_order表中，name不为<span class="keyword">null</span>的字段有多少个</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="built_in">count</span>(<span class="number">1</span>) <span class="keyword">from</span> t_order;</span><br><span class="line">统计t_order 表中，<span class="number">1</span> 这个表达式不为 <span class="keyword">NULL</span> 的记录有多少个</span><br><span class="line">t_order 表中，<span class="number">1</span> 这个表达式不为 <span class="keyword">NULL</span> 的记录</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>主键是不能存NULL值，因此会统计表中所有行数据的数量</li>
-<li>非主键可以存NULL值，因此会统计表中这个列的非NULL值得数量</li>
-</ul>
-<h1 id="MySQL内连接，外连接有什么区别"><a href="#MySQL内连接，外连接有什么区别" class="headerlink" title="MySQL内连接，外连接有什么区别"></a>MySQL内连接，外连接有什么区别</h1><p>内连接（INNER JOIN）和外连接(LEFT JOIN和RIGHT JOIN)都是连表查询</p>
-<p>内连接是返回两个表的匹配行，外连接可以返回匹配和不匹配的行，外连接主要分为左连接和右连接：</p>
-<ul>
-<li>左连接：返回左表中的所有行和右表中的匹配行，如果右表没有，用NULL值替代</li>
-<li>右连接：返回右表中的所有行和左表中的匹配行，如果左表没有，用NULL值替代</li>
-</ul>
-<h1 id="ON和WHERE过滤条件的区别"><a href="#ON和WHERE过滤条件的区别" class="headerlink" title="ON和WHERE过滤条件的区别"></a>ON和WHERE过滤条件的区别</h1><ul>
-<li>对于内连接查询，WHERE和ON过滤条件等效</li>
-<li>对于外连接查询，ON中的过滤条件在执行时进行，WHERE中的过滤条件在连接操作后进行。用ON如果匹配不上会用NULL填充</li>
-</ul>
-<h1 id="WHERE和HAVING的区别"><a href="#WHERE和HAVING的区别" class="headerlink" title="WHERE和HAVING的区别"></a>WHERE和HAVING的区别</h1><ul>
-<li>WHERE是在GROUP BY分组和聚集函数之前对数据行进行过滤</li>
-<li>HAVING是在GROUP BY分组和聚集函数之后对分组之后的数据过滤</li>
-</ul>
-<p><img src="/img/SQL%E8%AF%AD%E6%B3%95/img1.png" alt="img"></p>
-<p>语法错误，因为WHERE是在分组和聚集函数之前进行过滤，WHERE执行的时候还没有分组函数</p>
-<h1 id="EXISTS和IN的区别是什么"><a href="#EXISTS和IN的区别是什么" class="headerlink" title="EXISTS和IN的区别是什么"></a>EXISTS和IN的区别是什么</h1><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">A是外表，B是内表</span><br><span class="line"></span><br><span class="line">seletct <span class="operator">*</span> <span class="keyword">from</span> A <span class="keyword">where</span> id <span class="keyword">in</span> (selectt id <span class="keyword">from</span> B)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> A <span class="keyword">where</span> <span class="keyword">exists</span> (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> B <span class="keyword">where</span> A.id <span class="operator">=</span> B.id)</span><br></pre></td></tr></table></figure>
-
-<p>工作原理区别：</p>
-<ul>
-<li>in先遍历内表，会把查询到的数据缓存在内存中，然后遍历内表的数据再去查询外表</li>
-<li>exists先遍历外表将数据缓存到内存中，然后遍历外表的数据再去查询内表</li>
-</ul>
-<p>性能区别：</p>
-<ul>
-<li>如果两个表的记录大小相当，in和exists区别不大</li>
-<li>如果两个表，其中一个是大表，另外一个是小表，IN适合外表大内表小的情况，EXISTS适合外表小内表大的情况，遵循<strong>小表驱动大表</strong></li>
-<li>假设B有10000条记录，A有100条，如果用IN, 那么与数据库交互的次数是10000 * log100次（log是因为在数据库中根据连接条件走的是B+树索引），而用EXISTS交互次数是100 * log10000次.差异体现在和数据库交互的次数</li>
-</ul>
-<h1 id="MySQL的约束有哪些"><a href="#MySQL的约束有哪些" class="headerlink" title="MySQL的约束有哪些"></a>MySQL的约束有哪些</h1><p>数据库有六大约束：</p>
-<ul>
-<li>主键约束：作用标识唯一一条记录，不能为NULL，也不能重复，一般设置id为主键</li>
-<li>外键约束：确保表之间记录的完整性</li>
-<li>唯一性约束：保证字段在表中的记录是唯一的，如果插入重复的字段，会出现唯一性约束错误</li>
-<li>非空约束：不允许字段为空</li>
-<li>默认约束：给字段设置默认值，如果插入字段时没有设置初值则有默认值</li>
-<li>检查约束：用于检查字段的取值是不是在取值范围内</li>
-</ul>
-<p>但是MySQL只支持前5种</p>
-<h1 id="union和union-all的区别"><a href="#union和union-all的区别" class="headerlink" title="union和union all的区别"></a>union和union all的区别</h1><ul>
-<li>union在结果集合并后去重</li>
-<li>union all在结果集合并后不去重</li>
-</ul>
-<h1 id="count-比coun-1-性能好吗"><a href="#count-比coun-1-性能好吗" class="headerlink" title="count(*)比coun(1)性能好吗"></a>count(*)比coun(1)性能好吗</h1><ul>
-<li>不会， 因为MySQL会将*当作0来处理，所以二者性能一样</li>
-<li>除此之外，在性能上：count（*）&#x3D; count（1）&gt; count（主键）&gt; count（子段）</li>
-<li>MySQL 会对 count(*) 和 count(1) 有个优化，如果有多个二级索引的时候，优化器会使用key_len 最小的二级索引进行扫描。只有当没有二级索引的时候，才会采用主键索引来进行统计</li>
-</ul>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -3243,6 +3243,22 @@
       </tags>
   </entry>
   <entry>
+    <title>TCP和UDP的区别</title>
+    <url>/posts/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
+    <content><![CDATA[<p>连接：TCP是面向连接，需要3次握手。UDP不需要</p>
+<p>可靠性：TCP会通过超时重传、流量控制、拥塞控制来保证传输的可靠。UDP没有这些保证可靠性</p>
+<p>传输方式：TCP的传输是以字节流的形式，没有边界，会有粘包问题。UDP的传输是一个包一个包发送，有边界</p>
+<p>TCP优劣势：保证数据的可靠，但是实时性没有UDP好</p>
+<p>UDP优劣势：实时性和速度好，但是不可靠</p>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring事务</title>
     <url>/posts/Spring%E4%BA%8B%E5%8A%A1.html</url>
     <content><![CDATA[<h1 id="Spring事务传播级别"><a href="#Spring事务传播级别" class="headerlink" title="Spring事务传播级别"></a>Spring事务传播级别</h1><p>事务的传播机制定义了一个方法被另一个事务方法调用的时候，这个事务的方法行为该如何，定义了事务的边界和事务上下文在方法调用链中传播</p>
@@ -3280,22 +3296,6 @@
         <tag>Java</tag>
         <tag>SpringBoot</tag>
         <tag>SSM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>TCP和UDP的区别</title>
-    <url>/posts/TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
-    <content><![CDATA[<p>连接：TCP是面向连接，需要3次握手。UDP不需要</p>
-<p>可靠性：TCP会通过超时重传、流量控制、拥塞控制来保证传输的可靠。UDP没有这些保证可靠性</p>
-<p>传输方式：TCP的传输是以字节流的形式，没有边界，会有粘包问题。UDP的传输是一个包一个包发送，有边界</p>
-<p>TCP优劣势：保证数据的可靠，但是实时性没有UDP好</p>
-<p>UDP优劣势：实时性和速度好，但是不可靠</p>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
@@ -3352,24 +3352,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/posts/hello-world.html</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>epoll的ET和LT模式</title>
     <url>/posts/epoll%E7%9A%84ET%E5%92%8CLT%E6%A8%A1%E5%BC%8F.html</url>
     <content><![CDATA[<p>epoll 是 Linux 提供的一种用于处理大规模 I&#x2F;O 并发的机制，全称是 event poll。它属于 I&#x2F;O 多路复用技术的一种，旨在高效管理大量的文件描述符（file descriptors, FDs）以及响应各类 I&#x2F;O 事件</p>
@@ -3401,6 +3383,24 @@
       <tags>
         <tag>操作系统</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/posts/hello-world.html</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
   </entry>
   <entry>
     <title>http和https有什么区别</title>
@@ -3642,6 +3642,19 @@
       </tags>
   </entry>
   <entry>
+    <title>从前序与中序遍历序列构造二叉树</title>
+    <url>/posts/%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91.html</url>
+    <content><![CDATA[<p>该题主要是通过前序和中序遍历来还原一颗二叉树，核心的思路：在前序中找到根节点，根据该节点在中序遍历数组中的位置，根据中序划分左右子树，递归这个过程，还原一颗二叉树</p>
+<p>本质上就是前序遍历中依次拿，不断地从中序遍历数组中缩小范围，范围为空的时候代表该范围拿不到了，需要换一颗子树。二叉树遍历的特点保证了前序遍历拿的元素一定可以在范围内找到</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="built_in">TreeNode</span>() : <span class="built_in">val</span>(<span class="number">0</span>), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;;</span><br><span class="line">    <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;;</span><br><span class="line">    <span class="built_in">TreeNode</span>(<span class="type">int</span> x, TreeNode* left, TreeNode* right) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(left), <span class="built_in">right</span>(right) &#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">buildTree</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; preorder, vector&lt;<span class="type">int</span>&gt;&amp; inorder)</span> </span>&#123;</span><br><span class="line">        map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; mp;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; inorder.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            mp[inorder[i]] = i;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode* dummy = <span class="keyword">new</span> <span class="built_in">TreeNode</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">auto</span> dfs = [&amp;](<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; dfs, <span class="type">int</span> l, <span class="type">int</span> r) -&gt; TreeNode* &#123;</span><br><span class="line">            <span class="keyword">if</span> (l &gt; r) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">            TreeNode* root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(preorder[k++]);</span><br><span class="line">            root-&gt;left = <span class="built_in">dfs</span>(l, mp[root-&gt;val] - <span class="number">1</span>);</span><br><span class="line">            root-&gt;right = <span class="built_in">dfs</span>(mp[root-&gt;val] + <span class="number">1</span>, r);</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">            &#125;;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">dfs</span>(<span class="number">0</span>, preorder.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>传输层协议</title>
     <url>/posts/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE.html</url>
     <content><![CDATA[<p><strong>以下部分图片节选自小林coding，有侵权问题必删</strong></p>
@@ -3839,19 +3852,6 @@
       </tags>
   </entry>
   <entry>
-    <title>从前序与中序遍历序列构造二叉树</title>
-    <url>/posts/%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91.html</url>
-    <content><![CDATA[<p>该题主要是通过前序和中序遍历来还原一颗二叉树，核心的思路：在前序中找到根节点，根据该节点在中序遍历数组中的位置，根据中序划分左右子树，递归这个过程，还原一颗二叉树</p>
-<p>本质上就是前序遍历中依次拿，不断地从中序遍历数组中缩小范围，范围为空的时候代表该范围拿不到了，需要换一颗子树。二叉树遍历的特点保证了前序遍历拿的元素一定可以在范围内找到</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="built_in">TreeNode</span>() : <span class="built_in">val</span>(<span class="number">0</span>), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;;</span><br><span class="line">    <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;;</span><br><span class="line">    <span class="built_in">TreeNode</span>(<span class="type">int</span> x, TreeNode* left, TreeNode* right) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(left), <span class="built_in">right</span>(right) &#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">buildTree</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; preorder, vector&lt;<span class="type">int</span>&gt;&amp; inorder)</span> </span>&#123;</span><br><span class="line">        map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; mp;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; inorder.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">            mp[inorder[i]] = i;</span><br><span class="line">        &#125;</span><br><span class="line">        TreeNode* dummy = <span class="keyword">new</span> <span class="built_in">TreeNode</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> k = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">auto</span> dfs = [&amp;](<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; dfs, <span class="type">int</span> l, <span class="type">int</span> r) -&gt; TreeNode* &#123;</span><br><span class="line">            <span class="keyword">if</span> (l &gt; r) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">            TreeNode* root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(preorder[k++]);</span><br><span class="line">            root-&gt;left = <span class="built_in">dfs</span>(l, mp[root-&gt;val] - <span class="number">1</span>);</span><br><span class="line">            root-&gt;right = <span class="built_in">dfs</span>(mp[root-&gt;val] + <span class="number">1</span>, r);</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">            &#125;;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">dfs</span>(<span class="number">0</span>, preorder.<span class="built_in">size</span>() - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>堆排序</title>
     <url>/posts/%E5%A0%86%E6%8E%92%E5%BA%8F.html</url>
     <content><![CDATA[<ol>
@@ -3872,6 +3872,31 @@
       </tags>
   </entry>
   <entry>
+    <title>大端存储和小端存储的区别</title>
+    <url>/posts/%E5%A4%A7%E7%AB%AF%E5%AD%98%E5%82%A8%E5%92%8C%E5%B0%8F%E7%AB%AF%E5%AD%98%E5%82%A8%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>首先要记住：读数据永远是从低地址开始的！！！</strong></p>
+<h1 id="什么是低地址、高地址？"><a href="#什么是低地址、高地址？" class="headerlink" title="什么是低地址、高地址？"></a>什么是低地址、高地址？</h1><p>地址编号小的是低地址，地址编号大的是高地址</p>
+<h1 id="什么是数据的低位、高位？"><a href="#什么是数据的低位、高位？" class="headerlink" title="什么是数据的低位、高位？"></a>什么是数据的低位、高位？</h1><p>权值低的位是低位，权重高的位是高位</p>
+<h1 id="小端模式"><a href="#小端模式" class="headerlink" title="小端模式"></a>小端模式</h1><p>数据的低位放在低地址空间，数据的高位放在高地址空间</p>
+<p>简记：小端就是低位对应低地址，高位对应高地址</p>
+<p>存放二进制数：1011-0100-1111-0110-1000-1100-0001-0101</p>
+<p>从地址0到地址3分别是：0001-0101   1000-1100   1111-0110   1011-0100</p>
+<p>读取数据：永远从低地址开始读，从低位放起，因此是这个方向存放：&lt;-</p>
+<p>得到 1011-0100-1111-0110-1000-1100-0001-0101</p>
+<h1 id="大端模式"><a href="#大端模式" class="headerlink" title="大端模式"></a>大端模式</h1><p>数据的高位放在低地址空间，数据的低位放在高地址空间</p>
+<p>存放二进制数：1011-0100-1111-0110-1000-1100-0001-0101</p>
+<p>从地址0到地址3分别是：1011-0100   1111-0110   1000-1100   0001-0101</p>
+<p>读取数据：从低地址开始读，从高位放起，因此是这个方向存放：-&gt;</p>
+<p>得到 1011-0100-1111-0110-1000-1100-0001-0101</p>
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何排查Java项目中事务出现异常的情况</title>
     <url>/posts/%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5Java%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BA%8B%E5%8A%A1%E5%87%BA%E7%8E%B0%E5%BC%82%E5%B8%B8%E7%9A%84%E6%83%85%E5%86%B5.html</url>
     <content><![CDATA[]]></content>
@@ -3885,14 +3910,59 @@
       </tags>
   </entry>
   <entry>
-    <title>最长回文子串——区间dp</title>
-    <url>/posts/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%E2%80%94%E2%80%94%E5%8C%BA%E9%97%B4dp.html</url>
-    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">longestPalindrome</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(n + <span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n + <span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// dp[i][j] = dp[i + 1][j - 1]</span></span><br><span class="line"></span><br><span class="line">        string ans = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="type">int</span> idx = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i; j &lt; n; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s[i] == s[j]) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (i + <span class="number">1</span> &gt; j - <span class="number">1</span>) dp[i][j] = <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">else</span> dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (dp[i][j] &amp;&amp; m &lt; j - i + <span class="number">1</span>) &#123;</span><br><span class="line">                    m = j - i + <span class="number">1</span>;</span><br><span class="line">                    idx = i;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = idx; i &lt;= idx + m - <span class="number">1</span>; i++) ans += s[i];</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
+    <title>幂等性</title>
+    <url>/posts/%E5%B9%82%E7%AD%89%E6%80%A7.html</url>
+    <content><![CDATA[<h1 id="什么是接口幂等性"><a href="#什么是接口幂等性" class="headerlink" title="什么是接口幂等性"></a>什么是接口幂等性</h1><p>接口幂等性是指一个接口在被调用一次和被调用多次后的结果是一样的</p>
+<h1 id="为什么需要接口幂等性"><a href="#为什么需要接口幂等性" class="headerlink" title="为什么需要接口幂等性"></a>为什么需要接口幂等性</h1><ol>
+<li>用户的重复提交或者用户的恶意攻击</li>
+<li>网络波动导致的超时重传可能会导致接口重复调用</li>
+<li>比如你在购买商品下单成功后需要支付，如果你付了钱但是由于网络波动，你没有收到支付成功，因此你多点击了几下，如果没有幂等性就会导致多次扣钱</li>
+</ol>
+<h1 id="常见的重复请求场景"><a href="#常见的重复请求场景" class="headerlink" title="常见的重复请求场景"></a>常见的重复请求场景</h1><ul>
+<li>前端表单的重复提交</li>
+<li>黑客恶意攻击</li>
+<li>接口超时重传</li>
+<li>消息队列中的消息重复消费</li>
+</ul>
+<h1 id="哪些接口需要幂等"><a href="#哪些接口需要幂等" class="headerlink" title="哪些接口需要幂等"></a>哪些接口需要幂等</h1><p>本身幂等的：</p>
+<ul>
+<li>查询操作和删除操作不需要幂等保证，因为本身就是幂等</li>
+<li>更新操作的赋值操作本身也是幂等，不需要幂等保证</li>
+</ul>
+<p>本身不是幂等需要幂等保证：</p>
+<ul>
+<li>新增操作</li>
+<li>更新操作如果是将某个字段增量更新需要幂等</li>
+</ul>
+<h1 id="幂等性如何保证"><a href="#幂等性如何保证" class="headerlink" title="幂等性如何保证"></a>幂等性如何保证</h1><ol>
+<li>数据库唯一性约束，需要生成全局唯一性ID，适用于新增操作</li>
+<li>防重表，要生成全局唯一性ID，以及还要考虑数据量大的情况下的分库分表或者过期数据清理情况，适用于新增操作。好处是如果有两个业务场景,A场景不允许重复，B场景允许重复，通过防重表将唯一键和业务分离开，降低耦合</li>
+<li>数据库乐观锁，通过版本号法，在记录字段上加上version，update的时候需要满足where version &#x3D; #{version}，适用于更新操作</li>
+<li>防重token令牌 <ol>
+<li>客户端会先去向服务端发送一个请求去得到一个token，服务端生成一个token并存在redis中设置ttl</li>
+<li>客户端第二次调用业务请求的时候必须要携带这一个token，然后服务端校验</li>
+<li>检验成功后去查看redis中有没有token，如果有则执行业务并且删除redis中的token，如果没有则说明redis中没有对应的token，表示重复操作</li>
+</ol>
+</li>
+</ol>
+<h1 id="防重token令牌的问题"><a href="#防重token令牌的问题" class="headerlink" title="防重token令牌的问题"></a>防重token令牌的问题</h1><p>假设某个客户端第一次发起请求，服务端收到请求后将token从redis中删除，接着去执行业务逻辑。但是业务逻辑执行失败，有两种可能：</p>
+<ol>
+<li>服务端向客户端返回执行失败，客户端收到后会请求重新生成一个token，这里没有幂等性问题</li>
+<li>服务端向客户端返回执行失败，但是由于网络问题导致了丢包，此时客户端会超时重传，但是服务端返回的却是重复请求或者执行成功（有的业务鉴别出重复请求当作执行成功处理）</li>
+<li>因此我们可以结合业务场景，在防重token令牌的基础上，再在db层加上前三种方案作为兜底</li>
+</ol>
+<h1 id="可以用分布式锁做幂等性吗"><a href="#可以用分布式锁做幂等性吗" class="headerlink" title="可以用分布式锁做幂等性吗"></a>可以用分布式锁做幂等性吗</h1><p>不可以</p>
+<ol>
+<li>如果用于连续发了两次请求，第一次请求先到底去执行，第二次请求由于一些原因过了一会才能执行，如果第一次请求执行完了并且释放锁，第二次请求也拿到了锁，那么不能保证幂等性</li>
+<li>客户端第一次发起请求，服务端执行完成并且释放了锁，但由于网络原因客户端没有收到，于是客户端再次发起请求，但是如果ttl过期了第二次请求也能获取到锁并执行，不能保证幂等性</li>
+</ol>
+]]></content>
       <categories>
-        <category>算法</category>
+        <category>工程应用</category>
       </categories>
       <tags>
-        <tag>算法</tag>
+        <tag>Java</tag>
+        <tag>工程应用</tag>
       </tags>
   </entry>
   <entry>
@@ -3921,28 +3991,14 @@
       </tags>
   </entry>
   <entry>
-    <title>大端存储和小端存储的区别</title>
-    <url>/posts/%E5%A4%A7%E7%AB%AF%E5%AD%98%E5%82%A8%E5%92%8C%E5%B0%8F%E7%AB%AF%E5%AD%98%E5%82%A8%E7%9A%84%E5%8C%BA%E5%88%AB.html</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>首先要记住：读数据永远是从低地址开始的！！！</strong></p>
-<h1 id="什么是低地址、高地址？"><a href="#什么是低地址、高地址？" class="headerlink" title="什么是低地址、高地址？"></a>什么是低地址、高地址？</h1><p>地址编号小的是低地址，地址编号大的是高地址</p>
-<h1 id="什么是数据的低位、高位？"><a href="#什么是数据的低位、高位？" class="headerlink" title="什么是数据的低位、高位？"></a>什么是数据的低位、高位？</h1><p>权值低的位是低位，权重高的位是高位</p>
-<h1 id="小端模式"><a href="#小端模式" class="headerlink" title="小端模式"></a>小端模式</h1><p>数据的低位放在低地址空间，数据的高位放在高地址空间</p>
-<p>简记：小端就是低位对应低地址，高位对应高地址</p>
-<p>存放二进制数：1011-0100-1111-0110-1000-1100-0001-0101</p>
-<p>从地址0到地址3分别是：0001-0101   1000-1100   1111-0110   1011-0100</p>
-<p>读取数据：永远从低地址开始读，从低位放起，因此是这个方向存放：&lt;-</p>
-<p>得到 1011-0100-1111-0110-1000-1100-0001-0101</p>
-<h1 id="大端模式"><a href="#大端模式" class="headerlink" title="大端模式"></a>大端模式</h1><p>数据的高位放在低地址空间，数据的低位放在高地址空间</p>
-<p>存放二进制数：1011-0100-1111-0110-1000-1100-0001-0101</p>
-<p>从地址0到地址3分别是：1011-0100   1111-0110   1000-1100   0001-0101</p>
-<p>读取数据：从低地址开始读，从高位放起，因此是这个方向存放：-&gt;</p>
-<p>得到 1011-0100-1111-0110-1000-1100-0001-0101</p>
-]]></content>
+    <title>最长回文子串——区间dp</title>
+    <url>/posts/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2%E2%80%94%E2%80%94%E5%8C%BA%E9%97%B4dp.html</url>
+    <content><![CDATA[<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">longestPalindrome</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = s.<span class="built_in">size</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(n + <span class="number">1</span>, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n + <span class="number">1</span>, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// dp[i][j] = dp[i + 1][j - 1]</span></span><br><span class="line"></span><br><span class="line">        string ans = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="type">int</span> idx = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> m = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i; j &lt; n; j++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (s[i] == s[j]) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (i + <span class="number">1</span> &gt; j - <span class="number">1</span>) dp[i][j] = <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">else</span> dp[i][j] = dp[i + <span class="number">1</span>][j - <span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (dp[i][j] &amp;&amp; m &lt; j - i + <span class="number">1</span>) &#123;</span><br><span class="line">                    m = j - i + <span class="number">1</span>;</span><br><span class="line">                    idx = i;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = idx; i &lt;= idx + m - <span class="number">1</span>; i++) ans += s[i];</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>操作系统</category>
+        <category>算法</category>
       </categories>
       <tags>
-        <tag>操作系统</tag>
+        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -4104,6 +4160,26 @@
       </tags>
   </entry>
   <entry>
+    <title>统一资源定位符URL</title>
+    <url>/posts/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6URL.html</url>
+    <content><![CDATA[<p>URI 本质上是一个字符串，这个字符串的作用是唯一地标记资源的位置或者名字</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://www.chrono.com:8080/11-1?uid=1234&amp;name=mario&amp;referer=xxx</span><br></pre></td></tr></table></figure>
+
+<p>scheme + :&#x2F;&#x2F; + host:port + path + [?query] + [#fragment]</p>
+<p>path: &#x2F; + [目录名] + &#x2F; + … + 文件名 ,path中第一个&#x2F;是web服务器配置文件中的根，不是操作系统的根</p>
+<ul>
+<li>第一个多出的部分是协议名之后、主机名之前的身份信息“user:passwd@”，表示登录主机时的用户名和密码，但现在已经不推荐使用这种形式了（RFC7230），因为它把敏感信息以明文形式暴露出来，存在严重的安全隐患</li>
+<li>第二个多出的部分是查询参数后的片段标识符“#fragment”,它是 URI 所定位的资源内部的一个“锚点”或者说是“标签”，浏览器可以在获取资源后直接跳转到它指示的位置。但片段标识符仅能由浏览器这样的客户端使用，服务器是看不到的。也就是说，浏览器永远不会把带“#fragment”的 URI 发送给服务器，服务器也永远不会用这种方式去处理资源的片段</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>深入理解synchronzied以及底层源码剖析</title>
     <url>/posts/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3synchronzied%E4%BB%A5%E5%8F%8A%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.html</url>
     <content><![CDATA[<h1 id="synchronized-保证三大特性"><a href="#synchronized-保证三大特性" class="headerlink" title="synchronized 保证三大特性"></a>synchronized 保证三大特性</h1><ul>
@@ -4224,82 +4300,6 @@
         <tag>Java</tag>
         <tag>多线程</tag>
         <tag>锁</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>统一资源定位符URL</title>
-    <url>/posts/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6URL.html</url>
-    <content><![CDATA[<p>URI 本质上是一个字符串，这个字符串的作用是唯一地标记资源的位置或者名字</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://www.chrono.com:8080/11-1?uid=1234&amp;name=mario&amp;referer=xxx</span><br></pre></td></tr></table></figure>
-
-<p>scheme + :&#x2F;&#x2F; + host:port + path + [?query] + [#fragment]</p>
-<p>path: &#x2F; + [目录名] + &#x2F; + … + 文件名 ,path中第一个&#x2F;是web服务器配置文件中的根，不是操作系统的根</p>
-<ul>
-<li>第一个多出的部分是协议名之后、主机名之前的身份信息“user:passwd@”，表示登录主机时的用户名和密码，但现在已经不推荐使用这种形式了（RFC7230），因为它把敏感信息以明文形式暴露出来，存在严重的安全隐患</li>
-<li>第二个多出的部分是查询参数后的片段标识符“#fragment”,它是 URI 所定位的资源内部的一个“锚点”或者说是“标签”，浏览器可以在获取资源后直接跳转到它指示的位置。但片段标识符仅能由浏览器这样的客户端使用，服务器是看不到的。也就是说，浏览器永远不会把带“#fragment”的 URI 发送给服务器，服务器也永远不会用这种方式去处理资源的片段</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>幂等性</title>
-    <url>/posts/%E5%B9%82%E7%AD%89%E6%80%A7.html</url>
-    <content><![CDATA[<h1 id="什么是接口幂等性"><a href="#什么是接口幂等性" class="headerlink" title="什么是接口幂等性"></a>什么是接口幂等性</h1><p>接口幂等性是指一个接口在被调用一次和被调用多次后的结果是一样的</p>
-<h1 id="为什么需要接口幂等性"><a href="#为什么需要接口幂等性" class="headerlink" title="为什么需要接口幂等性"></a>为什么需要接口幂等性</h1><ol>
-<li>用户的重复提交或者用户的恶意攻击</li>
-<li>网络波动导致的超时重传可能会导致接口重复调用</li>
-<li>比如你在购买商品下单成功后需要支付，如果你付了钱但是由于网络波动，你没有收到支付成功，因此你多点击了几下，如果没有幂等性就会导致多次扣钱</li>
-</ol>
-<h1 id="常见的重复请求场景"><a href="#常见的重复请求场景" class="headerlink" title="常见的重复请求场景"></a>常见的重复请求场景</h1><ul>
-<li>前端表单的重复提交</li>
-<li>黑客恶意攻击</li>
-<li>接口超时重传</li>
-<li>消息队列中的消息重复消费</li>
-</ul>
-<h1 id="哪些接口需要幂等"><a href="#哪些接口需要幂等" class="headerlink" title="哪些接口需要幂等"></a>哪些接口需要幂等</h1><p>本身幂等的：</p>
-<ul>
-<li>查询操作和删除操作不需要幂等保证，因为本身就是幂等</li>
-<li>更新操作的赋值操作本身也是幂等，不需要幂等保证</li>
-</ul>
-<p>本身不是幂等需要幂等保证：</p>
-<ul>
-<li>新增操作</li>
-<li>更新操作如果是将某个字段增量更新需要幂等</li>
-</ul>
-<h1 id="幂等性如何保证"><a href="#幂等性如何保证" class="headerlink" title="幂等性如何保证"></a>幂等性如何保证</h1><ol>
-<li>数据库唯一性约束，需要生成全局唯一性ID，适用于新增操作</li>
-<li>防重表，要生成全局唯一性ID，以及还要考虑数据量大的情况下的分库分表或者过期数据清理情况，适用于新增操作。好处是如果有两个业务场景,A场景不允许重复，B场景允许重复，通过防重表将唯一键和业务分离开，降低耦合</li>
-<li>数据库乐观锁，通过版本号法，在记录字段上加上version，update的时候需要满足where version &#x3D; #{version}，适用于更新操作</li>
-<li>防重token令牌 <ol>
-<li>客户端会先去向服务端发送一个请求去得到一个token，服务端生成一个token并存在redis中设置ttl</li>
-<li>客户端第二次调用业务请求的时候必须要携带这一个token，然后服务端校验</li>
-<li>检验成功后去查看redis中有没有token，如果有则执行业务并且删除redis中的token，如果没有则说明redis中没有对应的token，表示重复操作</li>
-</ol>
-</li>
-</ol>
-<h1 id="防重token令牌的问题"><a href="#防重token令牌的问题" class="headerlink" title="防重token令牌的问题"></a>防重token令牌的问题</h1><p>假设某个客户端第一次发起请求，服务端收到请求后将token从redis中删除，接着去执行业务逻辑。但是业务逻辑执行失败，有两种可能：</p>
-<ol>
-<li>服务端向客户端返回执行失败，客户端收到后会请求重新生成一个token，这里没有幂等性问题</li>
-<li>服务端向客户端返回执行失败，但是由于网络问题导致了丢包，此时客户端会超时重传，但是服务端返回的却是重复请求或者执行成功（有的业务鉴别出重复请求当作执行成功处理）</li>
-<li>因此我们可以结合业务场景，在防重token令牌的基础上，再在db层加上前三种方案作为兜底</li>
-</ol>
-<h1 id="可以用分布式锁做幂等性吗"><a href="#可以用分布式锁做幂等性吗" class="headerlink" title="可以用分布式锁做幂等性吗"></a>可以用分布式锁做幂等性吗</h1><p>不可以</p>
-<ol>
-<li>如果用于连续发了两次请求，第一次请求先到底去执行，第二次请求由于一些原因过了一会才能执行，如果第一次请求执行完了并且释放锁，第二次请求也拿到了锁，那么不能保证幂等性</li>
-<li>客户端第一次发起请求，服务端执行完成并且释放了锁，但由于网络原因客户端没有收到，于是客户端再次发起请求，但是如果ttl过期了第二次请求也能获取到锁并执行，不能保证幂等性</li>
-</ol>
-]]></content>
-      <categories>
-        <category>工程应用</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>工程应用</tag>
       </tags>
   </entry>
   <entry>
@@ -4554,40 +4554,6 @@
       </tags>
   </entry>
   <entry>
-    <title>键入网址场景问题</title>
-    <url>/posts/%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html</url>
-    <content><![CDATA[<h1 id="输入网址后，期间发生了什么"><a href="#输入网址后，期间发生了什么" class="headerlink" title="输入网址后，期间发生了什么"></a>输入网址后，期间发生了什么</h1><ol>
-<li>浏览器会先解析URL，解析出域名、资源路径、端口等信息，然后构造HTTP请求报文</li>
-<li>域名解析，将域名解析成IP地址。会先查系统缓存是否有域名信息，如果有返回IP地址。如果没有再去查看本地系统hosts文件有没有域名信息，如果有就返回。如果没有再去本地DNS服务器查看。如果仍然没有就分别去根域名服务器-&gt;顶级域名服务器-&gt;权威域名服务器询问，最后返回IP</li>
-<li>进行TCP三次握手建立连接，第一次握手会填上SYN标记位，同时填上源端口和目标端口</li>
-<li>到网络层会加上IP头，填上目标IP地址和源IP地址</li>
-<li>到数据链路层通过ARP协议获取到路由器的MAC地址，然后加上MAC头，填上目标MAC地址和源MAC地址</li>
-<li>到物理层直接把数据包发送给路由器，路由器再通过下一条找到目标服务器，然后目标服务器收到SYN报文后，响应第二次握手</li>
-<li>当双方都完成三次握手后，如果是http协议客户端就会将http请求发送给服务端；如果是https还需要ssl四次握手</li>
-<li>目标服务器收到http请求后，就返回http响应消息，浏览器会对消息进行解析渲染，呈现给用户</li>
-</ol>
-<h1 id="DNS是如何解析的，是属于哪一层的协议"><a href="#DNS是如何解析的，是属于哪一层的协议" class="headerlink" title="DNS是如何解析的，是属于哪一层的协议"></a>DNS是如何解析的，是属于哪一层的协议</h1><p>DNS是属于应用层的协议</p>
-<p><img src="/img/%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98/img1.png" alt="alt text"></p>
-<p>会先查系统缓存是否有域名信息，如果有返回IP地址。如果没有再去查看本地系统hosts文件有没有域名信息，如果有就返回。如果没有再去本地DNS服务器查看。如果仍然没有就分别去根域名服务器-&gt;顶级域名服务器-&gt;权威域名服务器询问，最后返回IP保存到本地DNS服务器，然后本地DNS服务器将IP保存到本地缓存，并将查询结果返回给客户端</p>
-<h1 id="DNS解析用到了什么协议"><a href="#DNS解析用到了什么协议" class="headerlink" title="DNS解析用到了什么协议"></a>DNS解析用到了什么协议</h1><p>UDP协议，因为UDP协议传输快，如果要保证可靠可以在应用层实现一个超时重传机制</p>
-<h1 id="输入域名如何知道端口"><a href="#输入域名如何知道端口" class="headerlink" title="输入域名如何知道端口"></a>输入域名如何知道端口</h1><p>http的默认端口是80，https的默认端口是443，或者指定端口（比如:8080）</p>
-<h1 id="客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用"><a href="#客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用" class="headerlink" title="客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用"></a>客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用</h1><p>每个传输层（如TCP和UDP）都使用不同的端口号来区分应用程序，服务端通过监听特殊的端口号来接受来自客户端的数据</p>
-<h1 id="现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的"><a href="#现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的" class="headerlink" title="现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的"></a>现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的</h1><p>涉及服务器的配置，以下是nginx服务器端的配置方法来实现重定向</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">    listen 80</span><br><span class="line">    server_name example.com</span><br><span class="line">    return 301 https:</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>服务器网关收到http请求后，会返回给客户端一个响应，状态码为301（永久重定向）</li>
-<li>浏览器收到重定向响应后，自动向服务器发送一个https请求</li>
-</ol>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>进程间通信</title>
     <url>/posts/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1.html</url>
     <content><![CDATA[<h1 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h1><h2 id="匿名管道「-」"><a href="#匿名管道「-」" class="headerlink" title="匿名管道「|」"></a>匿名管道「|」</h2><p><code>ps auxf | grep mysql</code></p>
@@ -4687,6 +4653,40 @@
       </categories>
       <tags>
         <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>键入网址场景问题</title>
+    <url>/posts/%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98.html</url>
+    <content><![CDATA[<h1 id="输入网址后，期间发生了什么"><a href="#输入网址后，期间发生了什么" class="headerlink" title="输入网址后，期间发生了什么"></a>输入网址后，期间发生了什么</h1><ol>
+<li>浏览器会先解析URL，解析出域名、资源路径、端口等信息，然后构造HTTP请求报文</li>
+<li>域名解析，将域名解析成IP地址。会先查系统缓存是否有域名信息，如果有返回IP地址。如果没有再去查看本地系统hosts文件有没有域名信息，如果有就返回。如果没有再去本地DNS服务器查看。如果仍然没有就分别去根域名服务器-&gt;顶级域名服务器-&gt;权威域名服务器询问，最后返回IP</li>
+<li>进行TCP三次握手建立连接，第一次握手会填上SYN标记位，同时填上源端口和目标端口</li>
+<li>到网络层会加上IP头，填上目标IP地址和源IP地址</li>
+<li>到数据链路层通过ARP协议获取到路由器的MAC地址，然后加上MAC头，填上目标MAC地址和源MAC地址</li>
+<li>到物理层直接把数据包发送给路由器，路由器再通过下一条找到目标服务器，然后目标服务器收到SYN报文后，响应第二次握手</li>
+<li>当双方都完成三次握手后，如果是http协议客户端就会将http请求发送给服务端；如果是https还需要ssl四次握手</li>
+<li>目标服务器收到http请求后，就返回http响应消息，浏览器会对消息进行解析渲染，呈现给用户</li>
+</ol>
+<h1 id="DNS是如何解析的，是属于哪一层的协议"><a href="#DNS是如何解析的，是属于哪一层的协议" class="headerlink" title="DNS是如何解析的，是属于哪一层的协议"></a>DNS是如何解析的，是属于哪一层的协议</h1><p>DNS是属于应用层的协议</p>
+<p><img src="/img/%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%9C%BA%E6%99%AF%E9%97%AE%E9%A2%98/img1.png" alt="alt text"></p>
+<p>会先查系统缓存是否有域名信息，如果有返回IP地址。如果没有再去查看本地系统hosts文件有没有域名信息，如果有就返回。如果没有再去本地DNS服务器查看。如果仍然没有就分别去根域名服务器-&gt;顶级域名服务器-&gt;权威域名服务器询问，最后返回IP保存到本地DNS服务器，然后本地DNS服务器将IP保存到本地缓存，并将查询结果返回给客户端</p>
+<h1 id="DNS解析用到了什么协议"><a href="#DNS解析用到了什么协议" class="headerlink" title="DNS解析用到了什么协议"></a>DNS解析用到了什么协议</h1><p>UDP协议，因为UDP协议传输快，如果要保证可靠可以在应用层实现一个超时重传机制</p>
+<h1 id="输入域名如何知道端口"><a href="#输入域名如何知道端口" class="headerlink" title="输入域名如何知道端口"></a>输入域名如何知道端口</h1><p>http的默认端口是80，https的默认端口是443，或者指定端口（比如:8080）</p>
+<h1 id="客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用"><a href="#客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用" class="headerlink" title="客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用"></a>客户端向服务端的IP地址发送数据，服务端如何确定把消息传给哪个应用</h1><p>每个传输层（如TCP和UDP）都使用不同的端口号来区分应用程序，服务端通过监听特殊的端口号来接受来自客户端的数据</p>
+<h1 id="现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的"><a href="#现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的" class="headerlink" title="现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的"></a>现在很多网站都要求使用https，我们输入一个http网站，网站是如何实现由http调到https的</h1><p>涉及服务器的配置，以下是nginx服务器端的配置方法来实现重定向</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">    listen 80</span><br><span class="line">    server_name example.com</span><br><span class="line">    return 301 https:</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>服务器网关收到http请求后，会返回给客户端一个响应，状态码为301（永久重定向）</li>
+<li>浏览器收到重定向响应后，自动向服务器发送一个https请求</li>
+</ol>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
