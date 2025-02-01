@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Kafka生产者 | cloud_fly blog</title><meta name="author" content="cloud_fly"><meta name="copyright" content="cloud_fly"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="介绍一下生产消息的流程 构建消息，将需要发送的内容打包成一个消息结构 序列化消息为二进制结构，以在网络中传播 进行分区选择，计算需要发送到哪个partition，发送消息到该partition对应的Broker  Kafka的ACK的三种机制 ack &#x3D; 0：生成者在发送消息后不会等待来自服务器的确认，所以生产者是不知道消息是否成功，也就无法去重试。最不可靠但是性能最好 ack &amp;#x3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka生产者">
+<meta property="og:url" content="https://www.cdfy.top/posts/Kafka%E7%94%9F%E4%BA%A7%E8%80%85.html">
+<meta property="og:site_name" content="cloud_fly blog">
+<meta property="og:description" content="介绍一下生产消息的流程 构建消息，将需要发送的内容打包成一个消息结构 序列化消息为二进制结构，以在网络中传播 进行分区选择，计算需要发送到哪个partition，发送消息到该partition对应的Broker  Kafka的ACK的三种机制 ack &#x3D; 0：生成者在发送消息后不会等待来自服务器的确认，所以生产者是不知道消息是否成功，也就无法去重试。最不可靠但是性能最好 ack &amp;#x3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.cdfy.top/img/website/avatar.jpg">
+<meta property="article:published_time" content="2025-02-01T11:07:50.000Z">
+<meta property="article:modified_time" content="2025-02-01T11:22:45.573Z">
+<meta property="article:author" content="cloud_fly">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.cdfy.top/img/website/avatar.jpg"><link rel="shortcut icon" href="/img/website/favicon.jpg"><link rel="canonical" href="https://www.cdfy.top/posts/Kafka%E7%94%9F%E4%BA%A7%E8%80%85.html"><link rel="preconnect" href="//cdnjs.cloudflare.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":3,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdnjs.cloudflare.com/ajax/libs/egjs-infinitegrid/4.12.0/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Kafka生产者',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><link rel="stylesheet" href="/css/modify.css"><link href="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.10.2/katex.min.css" rel="stylesheet"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/website/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/website/loading.gif" data-original="/img/website/avatar.jpg" onerror="onerror=null;src='/img/website/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">cloud_fly blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Kafka生产者</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 分享</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Kafka生产者</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-01T11:07:50.000Z" title="发表于 2025-02-01 19:07:50">2025-02-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-01T11:22:45.573Z" title="更新于 2025-02-01 19:22:45">2025-02-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Kafka/">Kafka</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">552</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="介绍一下生产消息的流程"><a href="#介绍一下生产消息的流程" class="headerlink" title="介绍一下生产消息的流程"></a>介绍一下生产消息的流程</h1><ol>
+<li>构建消息，将需要发送的内容打包成一个消息结构</li>
+<li>序列化消息为二进制结构，以在网络中传播</li>
+<li>进行分区选择，计算需要发送到哪个partition，发送消息到该partition对应的Broker</li>
+</ol>
+<h1 id="Kafka的ACK的三种机制"><a href="#Kafka的ACK的三种机制" class="headerlink" title="Kafka的ACK的三种机制"></a>Kafka的ACK的三种机制</h1><ul>
+<li>ack &#x3D; 0：生成者在发送消息后不会等待来自服务器的确认，所以生产者是不知道消息是否成功，也就无法去重试。最不可靠但是性能最好</li>
+<li>ack &#x3D; 1：生产者在发送消息后会等待主节点的确认，但不会等待所有副本的确认。相对可靠，性能比较高</li>
+<li>ack &#x3D; all：只有在主节点和所有副本都确认后，生产者才会确认。保证了消息的可靠性，但是性能最差</li>
+</ul>
+<h1 id="生产过程何时会发生QueueFullException以及如何处理"><a href="#生产过程何时会发生QueueFullException以及如何处理" class="headerlink" title="生产过程何时会发生QueueFullException以及如何处理"></a>生产过程何时会发生QueueFullException以及如何处理</h1><p>生产者发送消息的速度过快，导致Kafka生产者这一侧缓冲区满了，就会抛出异常</p>
+<p>解决：</p>
+<ul>
+<li>等待重试：发生QueueFullException异常的时候，可以等待一段时间后再次尝试重新发送消息。在等待的过程中可以调整生产者的发送速度或者增加Kafka消息队列大小等方式来避免发生QueueFullException</li>
+<li>增加Kafka的缓冲区大小：修改Kafka的配置文件来增大生产者这一侧的缓冲区</li>
+<li>限流控制：限制生产者发送消息的速度</li>
+</ul>
+<h1 id="Kafka生产者何时发送出消息"><a href="#Kafka生产者何时发送出消息" class="headerlink" title="Kafka生产者何时发送出消息"></a>Kafka生产者何时发送出消息</h1><ul>
+<li>累计的数据大小达到Batch，默认是16KB</li>
+<li>缓冲区累计的空闲等待时间间隔，默认是0ms，也就是收到数据就发送</li>
+</ul>
+<h1 id="生产者发送消息的模式有几种（Java）"><a href="#生产者发送消息的模式有几种（Java）" class="headerlink" title="生产者发送消息的模式有几种（Java）"></a>生产者发送消息的模式有几种（Java）</h1><p>Java的SDK支持三种</p>
+<ol>
+<li>同步发送，性能最差，可靠性最强</li>
+<li>发送即忘：这种模式不需要等待Kafka服务器的响应，可靠性低，但是性能最好</li>
+<li>异步发送不阻塞调用线程：允许调用者注册回调函数处理发送结果或异常，适用于对可靠性有要求也保持高性能的场景</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://www.cdfy.top">cloud_fly</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://www.cdfy.top/posts/Kafka%E7%94%9F%E4%BA%A7%E8%80%85.html">https://www.cdfy.top/posts/Kafka生产者.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://www.cdfy.top" target="_blank">cloud_fly blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Kafka/">Kafka</a></div><div class="post-share"><div class="social-share" data-image="/img/website/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/Kafka%E6%B6%88%E8%B4%B9%E8%80%85.html" title="Kafka消费者"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Kafka消费者</div></div><div class="info-2"><div class="info-item-1">Kafka消费者是拉模式还是推模式&#x2F;Kafka消息的消费模式Kafka采用拉模式拉取消息，采用拉模式可以使每个消费者以自身的消费能力去消费。缺点是如果Broker没有提供可供消费的消息，将导致Consumer不断在循环中轮询，直到新消息到达。为了避免这点，kafka消费者可以在消费数据时传递timeout参数，在这个时间范围内轮询，直到有数据到达或者超时再返回 消费者故障，出现活锁问题如何解决首先要理解什么是活锁：消费者持续的维持心跳，但因为异常进行消息处理，或者消息处理时间长卡住了，这种情况下，这个消费者就会一直持有分区，该分区的消息就无法得到处理 要解决这个问题，需要有活锁检测机制 可以使用最大拉取间隔参数来解决，即max.poll.interval.ms，如果消费者轮询间隔大于了这个值，消费者就会离开分区，这样其他消费者就可以接管对应分区 </div></div></div></a><a class="pagination-related" href="/posts/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF.html" title="Kafka服务端"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Kafka服务端</div></div><div class="info-2"><div class="info-item-1">Kafka的大致框架是什么样 Kafka分为三层：生产者（Producer）、中转者（Server）、消费者（Consumer） 生产者负责发送消息，服务端负责存储消息，消费者负责拉取消息 其中服务端是由多个Broker节点组成，我们常说的主题Topic在Broker节点上。当然，Topic是一个逻辑概念，实际物理存储是主题分片，也就是Partition  如何获取topic主题的列表 Kafka提供了获取主题列表的接口，可以通过kafka-topic.sh这个工具获取，如果要在业务中获取，主流语言比如Java、Golang都支持，都可以直接调用KafkaAdminClient这个接口来获取 kafka-topics.sh 脚本主要负责 topic 相关的操作。它的具体实现是通过 kafka-run-class 来调用 TopicCommand 类，并根据参数执行指定的功能  通过kafka-topics.sh获取： 1./kafka-topics.sh --list --bootstrap-server...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/Kafka%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF.html" title="Kafka应用场景"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-31</div><div class="info-item-2">Kafka应用场景</div></div><div class="info-2"><div class="info-item-1">消息队列常见应用常见有哪些 系统解耦：在重要操作完成之后，发送消息到Kafka，由别的服务系统来完成 流量削峰：缓存短时间内高流量带来的压力 异步处理：把一个消息放入到Kafka中，不立即处理，需要的时候再来处理 消息分发：一条消息发送给多个服务  Kafka优点 高性能 高可靠 支持分片水平扩展 被广泛使用  什么情况需要解耦比如模块A发送消息给模块B，模块B发送短信给客户，A不需要得到回应，对于A而言只需要将消息发送给B，让B去处理即可 什么情况需要削峰比如B一下子收到100条信息可能会挂掉，这时候需要将消息先发送给消息队列，然后B再根据自己的消费能力去消费 什么情况需要分发消息比如信息更新场景，某个用户更新了，而B、C、D都缓存了这个消息。只要B、C、D订阅了这个主题，也都会更新 为什么选择Kafka作为消息队列 我们的项目对性能和可靠性有要求 性能要有500QPS，这里Kafka和RocketMQ都远远够用 可靠性要有多副本机制，这点Kafka和RocketMQ也都OK 其他功能不是我们项目的核心要点 Kafka是我们团队成熟的技术栈  </div></div></div></a><a class="pagination-related" href="/posts/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF.html" title="Kafka服务端"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-31</div><div class="info-item-2">Kafka服务端</div></div><div class="info-2"><div class="info-item-1">Kafka的大致框架是什么样 Kafka分为三层：生产者（Producer）、中转者（Server）、消费者（Consumer） 生产者负责发送消息，服务端负责存储消息，消费者负责拉取消息 其中服务端是由多个Broker节点组成，我们常说的主题Topic在Broker节点上。当然，Topic是一个逻辑概念，实际物理存储是主题分片，也就是Partition  如何获取topic主题的列表 Kafka提供了获取主题列表的接口，可以通过kafka-topic.sh这个工具获取，如果要在业务中获取，主流语言比如Java、Golang都支持，都可以直接调用KafkaAdminClient这个接口来获取 kafka-topics.sh 脚本主要负责 topic 相关的操作。它的具体实现是通过 kafka-run-class 来调用 TopicCommand 类，并根据参数执行指定的功能  通过kafka-topics.sh获取： 1./kafka-topics.sh --list --bootstrap-server...</div></div></div></a><a class="pagination-related" href="/posts/Kafka%E6%B6%88%E8%B4%B9%E8%80%85.html" title="Kafka消费者"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-01</div><div class="info-item-2">Kafka消费者</div></div><div class="info-2"><div class="info-item-1">Kafka消费者是拉模式还是推模式&#x2F;Kafka消息的消费模式Kafka采用拉模式拉取消息，采用拉模式可以使每个消费者以自身的消费能力去消费。缺点是如果Broker没有提供可供消费的消息，将导致Consumer不断在循环中轮询，直到新消息到达。为了避免这点，kafka消费者可以在消费数据时传递timeout参数，在这个时间范围内轮询，直到有数据到达或者超时再返回 消费者故障，出现活锁问题如何解决首先要理解什么是活锁：消费者持续的维持心跳，但因为异常进行消息处理，或者消息处理时间长卡住了，这种情况下，这个消费者就会一直持有分区，该分区的消息就无法得到处理 要解决这个问题，需要有活锁检测机制 可以使用最大拉取间隔参数来解决，即max.poll.interval.ms，如果消费者轮询间隔大于了这个值，消费者就会离开分区，这样其他消费者就可以接管对应分区 </div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/website/loading.gif" data-original="/img/website/avatar.jpg" onerror="this.onerror=null;this.src='/img/website/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cloud_fly</div><div class="author-info-description">Know the loom. Be the stone</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">72</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cloudfly03/"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cloudfly03/" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://blog.csdn.net/LFY20031120" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="https://qm.qq.com/q/LUQpYxEzGU" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:ie_feiyunluo@163.com" target="_blank" title="Email"><i class="fas fa-envelope-open-text"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎加入郑州大学ACM交流群 QQ群562888278，一起学习</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8B%E7%94%9F%E4%BA%A7%E6%B6%88%E6%81%AF%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-text">介绍一下生产消息的流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Kafka%E7%9A%84ACK%E7%9A%84%E4%B8%89%E7%A7%8D%E6%9C%BA%E5%88%B6"><span class="toc-text">Kafka的ACK的三种机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E8%BF%87%E7%A8%8B%E4%BD%95%E6%97%B6%E4%BC%9A%E5%8F%91%E7%94%9FQueueFullException%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86"><span class="toc-text">生产过程何时会发生QueueFullException以及如何处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Kafka%E7%94%9F%E4%BA%A7%E8%80%85%E4%BD%95%E6%97%B6%E5%8F%91%E9%80%81%E5%87%BA%E6%B6%88%E6%81%AF"><span class="toc-text">Kafka生产者何时发送出消息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E7%9A%84%E6%A8%A1%E5%BC%8F%E6%9C%89%E5%87%A0%E7%A7%8D%EF%BC%88Java%EF%BC%89"><span class="toc-text">生产者发送消息的模式有几种（Java）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/Kafka%E6%B6%88%E8%B4%B9%E8%80%85.html" title="Kafka消费者">Kafka消费者</a><time datetime="2025-02-01T11:23:50.000Z" title="发表于 2025-02-01 19:23:50">2025-02-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/Kafka%E7%94%9F%E4%BA%A7%E8%80%85.html" title="Kafka生产者">Kafka生产者</a><time datetime="2025-02-01T11:07:50.000Z" title="发表于 2025-02-01 19:07:50">2025-02-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/Kafka%E6%9C%8D%E5%8A%A1%E7%AB%AF.html" title="Kafka服务端">Kafka服务端</a><time datetime="2025-01-31T09:48:05.000Z" title="发表于 2025-01-31 17:48:05">2025-01-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/Kafka%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF.html" title="Kafka应用场景">Kafka应用场景</a><time datetime="2025-01-31T08:24:56.000Z" title="发表于 2025-01-31 16:24:56">2025-01-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/%E9%99%90%E6%B5%81%E7%AD%96%E7%95%A5.html" title="限流策略">限流策略</a><time datetime="2025-01-25T06:47:33.000Z" title="发表于 2025-01-25 14:47:33">2025-01-25</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(img/website/footer.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By cloud_fly</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.4/canvas-nest.min.js"></script><script id="click-heart" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.4/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div>
+        <style>
+            [bg-lazy] {
+                background-image: none !important;
+                background-color: #eee !important;
+            }
+        </style>
+        <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z\d\-\.\+]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(t.test(e.href)||r.test(e.href))&&(e.href=a.dataset.original)})});</script><script>(r=>{r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,o=r.imageLazyLoadSetting.preloadRatio||1,d=i();function i(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=i());for(var e,n=0;n<d.length;n++)0<=(e=(e=d[n]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*o||document.documentElement.clientHeight*o)&&(()=>{var t,e,a,o,i=d[n];e=function(){d=d.filter(function(t){return i!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(i)},(t=i).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,o=t.getAttribute("data-original"),a.onload=function(){t.src=o,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=o},t.src!==o&&(a.src=o)))})()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)})(this);</script></body></html>
